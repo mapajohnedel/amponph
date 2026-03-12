@@ -4,12 +4,23 @@ import Link from 'next/link'
 import { Heart, MapPin } from 'lucide-react'
 import type { Dog } from '@/lib/mock-dogs'
 
-export function DogCard({ dog }: { dog: Dog }) {
+type DogCardProps = {
+  dog: Dog
+  layout?: 'default' | 'landscape'
+}
+
+export function DogCard({ dog, layout = 'default' }: DogCardProps) {
+  const isLandscape = layout === 'landscape'
+
   return (
     <Link href={`/browse/${dog.id}`}>
       <div className="bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer group border border-transparent hover:border-border/50">
         {/* Image Container - Larger */}
-        <div className="relative overflow-hidden bg-muted h-64 sm:h-72">
+        <div
+          className={`relative overflow-hidden bg-muted ${
+            isLandscape ? 'aspect-[16/9]' : 'h-64 sm:h-72'
+          }`}
+        >
           <img
             src={dog.image}
             alt={dog.name}

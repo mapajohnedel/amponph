@@ -35,11 +35,20 @@ export function DogFilter({ onFilterChange }: DogFilterProps) {
   const [location, setLocation] = useState<string>('')
   const [isExpanded, setIsExpanded] = useState(true)
 
-  const handleFilterChange = () => {
+  const applyFilters = (nextValues?: {
+    breed?: string
+    size?: string
+    location?: string
+  }) => {
+    const nextBreed = nextValues?.breed ?? breed
+    const nextSize = nextValues?.size ?? size
+    const nextLocation = nextValues?.location ?? location
     const filters: FilterOptions = {}
-    if (breed) filters.breed = breed
-    if (size) filters.size = size
-    if (location) filters.location = location
+
+    if (nextBreed) filters.breed = nextBreed
+    if (nextSize) filters.size = nextSize
+    if (nextLocation) filters.location = nextLocation
+
     onFilterChange(filters)
   }
 
@@ -70,8 +79,9 @@ export function DogFilter({ onFilterChange }: DogFilterProps) {
             <select
               value={breed}
               onChange={(e) => {
-                setBreed(e.target.value)
-                handleFilterChange()
+                const nextBreed = e.target.value
+                setBreed(nextBreed)
+                applyFilters({ breed: nextBreed })
               }}
               className="w-full px-4 py-2.5 border border-border rounded-lg text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
             >
@@ -98,8 +108,9 @@ export function DogFilter({ onFilterChange }: DogFilterProps) {
                     value={s}
                     checked={size === s}
                     onChange={(e) => {
-                      setSize(e.target.value)
-                      handleFilterChange()
+                      const nextSize = e.target.value
+                      setSize(nextSize)
+                      applyFilters({ size: nextSize })
                     }}
                     className="w-4 h-4 cursor-pointer accent-primary"
                   />
@@ -113,8 +124,9 @@ export function DogFilter({ onFilterChange }: DogFilterProps) {
                   value=""
                   checked={size === ''}
                   onChange={(e) => {
-                    setSize(e.target.value)
-                    handleFilterChange()
+                    const nextSize = e.target.value
+                    setSize(nextSize)
+                    applyFilters({ size: nextSize })
                   }}
                   className="w-4 h-4 cursor-pointer accent-primary"
                 />
@@ -132,8 +144,9 @@ export function DogFilter({ onFilterChange }: DogFilterProps) {
               type="text"
               value={location}
               onChange={(e) => {
-                setLocation(e.target.value)
-                handleFilterChange()
+                const nextLocation = e.target.value
+                setLocation(nextLocation)
+                applyFilters({ location: nextLocation })
               }}
               placeholder="e.g., San Francisco"
               className="w-full px-4 py-2.5 border border-border rounded-lg text-sm bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"

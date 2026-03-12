@@ -16,18 +16,42 @@ export interface Dog {
   price?: number
 }
 
-// Using Unsplash image URLs for demo purposes
+function createDogPlaceholder(label: string, accent: string): string {
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+      <defs>
+        <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="${accent}" />
+          <stop offset="100%" stop-color="#f8fafc" />
+        </linearGradient>
+      </defs>
+      <rect width="800" height="800" fill="url(#bg)" />
+      <circle cx="400" cy="310" r="140" fill="#ffffff" fill-opacity="0.92" />
+      <path d="M275 235c-34-48-9-111 55-124-7 69 36 128 70 150-51 4-92-1-125-26Z" fill="#ffffff" fill-opacity="0.88" />
+      <path d="M525 235c34-48 9-111-55-124 7 69-36 128-70 150 51 4 92-1 125-26Z" fill="#ffffff" fill-opacity="0.88" />
+      <circle cx="350" cy="305" r="14" fill="#1f2937" />
+      <circle cx="450" cy="305" r="14" fill="#1f2937" />
+      <ellipse cx="400" cy="360" rx="34" ry="24" fill="#1f2937" />
+      <path d="M360 394c20 18 59 18 79 0" fill="none" stroke="#1f2937" stroke-width="14" stroke-linecap="round" />
+      <text x="400" y="610" text-anchor="middle" font-family="Arial, sans-serif" font-size="44" font-weight="700" fill="#0f172a">${label}</text>
+      <text x="400" y="668" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" fill="#334155">Loading photos from Dog CEO</text>
+    </svg>
+  `
+
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`
+}
+
 const dogImages = [
-  'https://images.unsplash.com/photo-1633722715463-d30628519d68?w=500&h=500&fit=crop',
-  'https://images.unsplash.com/photo-1587300411515-5b60a2c4cb08?w=500&h=500&fit=crop',
-  'https://images.unsplash.com/photo-1552053831-71594a27c62d?w=500&h=500&fit=crop',
-  'https://images.unsplash.com/photo-1587462382346-81342ee27537?w=500&h=500&fit=crop',
-  'https://images.unsplash.com/photo-1558788353-f76d92427f16?w=500&h=500&fit=crop',
-  'https://images.unsplash.com/photo-1601003834285-406ba2e636c0?w=500&h=500&fit=crop',
-  'https://images.unsplash.com/photo-1570129477492-45b003493af0?w=500&h=500&fit=crop',
-  'https://images.unsplash.com/photo-1537151608828-fac2d4547b0f?w=500&h=500&fit=crop',
-  'https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=500&h=500&fit=crop',
-  'https://images.unsplash.com/photo-1612536315141-3a2dba1e6e66?w=500&h=500&fit=crop',
+  createDogPlaceholder('Playful pup', '#fde68a'),
+  createDogPlaceholder('Ready to adopt', '#bfdbfe'),
+  createDogPlaceholder('Gentle friend', '#fecaca'),
+  createDogPlaceholder('Happy tail wags', '#ddd6fe'),
+  createDogPlaceholder('Loves adventures', '#bbf7d0'),
+  createDogPlaceholder('Sweet companion', '#fecdd3'),
+  createDogPlaceholder('Rescue favorite', '#bae6fd'),
+  createDogPlaceholder('Looking for home', '#fed7aa'),
+  createDogPlaceholder('Cuddle expert', '#f5d0fe'),
+  createDogPlaceholder('Best friend energy', '#c7d2fe'),
 ]
 
 export const mockDogs: Dog[] = [
@@ -225,8 +249,8 @@ export const mockDogs: Dog[] = [
   },
 ]
 
-export function getDogById(id: string): Dog | undefined {
-  return mockDogs.find(dog => dog.id === id)
+export function getDogById(id: string, dogs: Dog[] = mockDogs): Dog | undefined {
+  return dogs.find(dog => dog.id === id)
 }
 
 export function filterDogs(filters: {
@@ -235,8 +259,8 @@ export function filterDogs(filters: {
   maxAge?: number
   size?: string
   location?: string
-}): Dog[] {
-  return mockDogs.filter(dog => {
+}, dogs: Dog[] = mockDogs): Dog[] {
+  return dogs.filter(dog => {
     if (filters.breed && dog.breed.toLowerCase() !== filters.breed.toLowerCase()) {
       return false
     }

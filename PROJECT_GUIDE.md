@@ -121,7 +121,7 @@ Each dog has:
 - Location, bio/description
 - Health status (vaccinated, neutered)
 - Shelter name and email
-- Multiple images (using Unsplash)
+- Multiple images loaded from the Dog CEO API
 
 ## 🛠️ Technologies Used
 
@@ -214,7 +214,7 @@ Or connect your GitHub repository to Vercel for automatic deployments.
 
 - No backend authentication is implemented (UI only)
 - Dogs use mock data from `/lib/mock-dogs.ts`
-- Images are from Unsplash
+- Images are hydrated from the Dog CEO API with local placeholders as fallback
 - Filter functionality is fully operational with real-time updates
 - All components are responsive and accessible
 

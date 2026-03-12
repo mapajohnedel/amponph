@@ -3,14 +3,15 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { DogCard } from '@/components/dog-card'
-import { mockDogs } from '@/lib/mock-dogs'
+import { useDogCatalog } from '@/lib/dog-catalog'
 import { Heart, FileText, Settings, LogOut, Clock, CheckCircle, XCircle } from 'lucide-react'
 
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState<'favorites' | 'requests' | 'profile'>('favorites')
+  const dogs = useDogCatalog()
 
   // Mock favorites and requests
-  const favorites = mockDogs.slice(0, 4)
+  const favorites = dogs.slice(0, 4)
   const adoptionRequests = [
     {
       id: 1,
@@ -111,7 +112,7 @@ export default function DashboardPage() {
                 {favorites.length > 0 ? (
                   <div className="grid md:grid-cols-2 gap-6">
                     {favorites.map((dog) => (
-                      <DogCard key={dog.id} dog={dog} />
+                      <DogCard key={dog.id} dog={dog} layout="landscape" />
                     ))}
                   </div>
                 ) : (

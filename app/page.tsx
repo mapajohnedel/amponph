@@ -2,11 +2,13 @@
 
 import Link from 'next/link'
 import { DogCard } from '@/components/dog-card'
-import { mockDogs } from '@/lib/mock-dogs'
+import { useDogCatalog } from '@/lib/dog-catalog'
 import { ArrowRight, Heart, Users, Shield } from 'lucide-react'
 
 export default function Home() {
-  const featuredDogs = mockDogs.slice(0, 3)
+  const dogs = useDogCatalog()
+  const featuredDogs = dogs.slice(0, 3)
+  const heroImage = featuredDogs[0]?.image ?? dogs[0]?.image
 
   return (
     <div className="min-h-screen bg-background">
@@ -18,7 +20,7 @@ export default function Home() {
             <div className="order-2 md:order-1">
               <div className="rounded-3xl overflow-hidden shadow-2xl bg-muted">
                 <img
-                  src="https://images.unsplash.com/photo-1633722715463-d30628519d68?w=600&h=600&fit=crop"
+                  src={heroImage}
                   alt="Happy dogs"
                   className="w-full h-full object-cover"
                 />

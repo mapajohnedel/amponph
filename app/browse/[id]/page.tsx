@@ -4,7 +4,8 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { DogGallery } from '@/components/dog-gallery'
 import { DogCard } from '@/components/dog-card'
-import { getDogById, mockDogs } from '@/lib/mock-dogs'
+import { getDogById } from '@/lib/mock-dogs'
+import { useDogCatalog } from '@/lib/dog-catalog'
 import { CheckCircle, Mail, Phone, MapPin, Heart, Share2, ArrowLeft } from 'lucide-react'
 
 export default function DogProfilePage({
@@ -12,14 +13,15 @@ export default function DogProfilePage({
 }: {
   params: { id: string }
 }) {
-  const dog = getDogById(params.id)
+  const dogs = useDogCatalog()
+  const dog = getDogById(params.id, dogs)
 
   if (!dog) {
     notFound()
   }
 
   // Get related dogs (same breed or similar)
-  const relatedDogs = mockDogs
+  const relatedDogs = dogs
     .filter(
       (d) =>
         d.id !== dog.id &&

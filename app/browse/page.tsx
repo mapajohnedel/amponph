@@ -1,17 +1,22 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { DogCard } from '@/components/dog-card'
 import { DogFilter, FilterOptions } from '@/components/dog-filter'
-import { mockDogs, filterDogs } from '@/lib/mock-dogs'
+import { filterDogs } from '@/lib/mock-dogs'
+import { useDogCatalog } from '@/lib/dog-catalog'
 
 export default function BrowsePage() {
-  const [filteredDogs, setFilteredDogs] = useState(mockDogs)
+  const dogs = useDogCatalog()
+  const [filters, setFilters] = useState<FilterOptions>({})
 
   const handleFilterChange = (filters: FilterOptions) => {
-    const results = filterDogs(filters)
-    setFilteredDogs(results)
+    setFilters(filters)
   }
+
+  const filteredDogs = useMemo(() => {
+    return filterDogs(filters, dogs)
+  }, [dogs, filters])
 
   return (
     <div className="min-h-screen bg-background">
