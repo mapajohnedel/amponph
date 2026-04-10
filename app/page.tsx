@@ -1,230 +1,155 @@
 'use client'
 
 import Link from 'next/link'
-import { DogCard } from '@/components/dog-card'
+import { ArrowRight, HeartHandshake, ShieldCheck, Sparkles } from 'lucide-react'
+import { Hero } from '@/components/home/Hero'
+import { HowItWorks } from '@/components/home/HowItWorks'
+import { PetCard } from '@/components/home/PetCard'
 import { useDogCatalog } from '@/lib/dog-catalog'
-import { ArrowRight, Heart, Users, Shield } from 'lucide-react'
+
+const trustPoints = [
+  {
+    title: 'Verified rescues',
+    description: 'Every listing is reviewed so families can adopt with confidence.',
+    icon: ShieldCheck,
+  },
+  {
+    title: 'Simple process',
+    description: 'Clear steps make it easier to meet, apply, and bring a pet home.',
+    icon: Sparkles,
+  },
+  {
+    title: 'Made for matches',
+    description: 'We highlight temperament, size, and lifestyle fit to help you choose well.',
+    icon: HeartHandshake,
+  },
+]
+
+function WaveDivider() {
+  return (
+    <div className="relative -mt-8 overflow-hidden leading-none text-[#fffaf6]">
+      <svg
+        viewBox="0 0 1440 180"
+        className="block h-20 w-full sm:h-28"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <path
+          fill="currentColor"
+          d="M0,96L48,90.7C96,85,192,75,288,69.3C384,64,480,64,576,74.7C672,85,768,107,864,122.7C960,139,1056,149,1152,144C1248,139,1344,117,1392,106.7L1440,96L1440,181L1392,181C1344,181,1248,181,1152,181C1056,181,960,181,864,181C768,181,672,181,576,181C480,181,384,181,288,181C192,181,96,181,48,181L0,181Z"
+        />
+      </svg>
+    </div>
+  )
+}
 
 export default function Home() {
   const dogs = useDogCatalog()
-  const featuredDogs = dogs.slice(0, 3)
-  const heroImage = featuredDogs[0]?.image ?? dogs[0]?.image
+  const featuredDogs = dogs.slice(0, 4)
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Hero Section - Modern */}
-      <section className="relative py-20 sm:py-32 lg:py-40 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-center">
-            <div className="order-2 md:order-1">
-              <div className="rounded-3xl overflow-hidden shadow-2xl bg-muted">
-                <img
-                  src={heroImage}
-                  alt="Happy dogs"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </div>
-            <div className="order-1 md:order-2">
-              <h1 className="text-5xl sm:text-6xl font-bold text-foreground text-balance leading-tight mb-8">
-                Find Your Perfect Companion
-              </h1>
-              <p className="text-lg sm:text-xl text-muted-foreground mb-10 text-balance leading-relaxed">
-                Browse adoptable dogs from rescues and shelters. Each dog deserves a loving home, and we're here to help you find yours.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link
-                  href="/browse"
-                  className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground px-8 py-4 rounded-xl font-semibold hover:shadow-lg transition-all duration-200 hover:scale-105"
-                >
-                  Start Browsing <ArrowRight size={20} />
-                </Link>
-                <Link
-                  href="#learn"
-                  className="inline-flex items-center justify-center gap-2 border-2 border-primary text-primary px-8 py-4 rounded-xl font-semibold hover:bg-primary/5 transition-all duration-200"
-                >
-                  Learn More
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+    <div className="min-h-screen bg-[linear-gradient(180deg,#fff8f2_0%,#eef7ff_42%,#fffaf6_100%)]">
+      <Hero dogs={featuredDogs} />
+      <WaveDivider />
 
-      {/* Featured Dogs - Card-Based */}
-      <section className="py-20 sm:py-28 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-6">
-              Featured Companions
+      <section className="bg-[#fffaf6] py-20 sm:py-24">
+        <div className="site-container flex flex-col gap-10">
+          <div className="max-w-3xl space-y-4">
+            <span className="inline-flex rounded-full bg-[#ffefe6] px-4 py-1.5 text-sm font-semibold text-primary shadow-sm">
+              Adoption made easier
+            </span>
+            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-5xl">
+              Built to help more pets find safe, loving homes faster.
             </h2>
-            <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Meet some of our wonderful dogs looking for their forever homes
+            <p className="text-lg leading-8 text-muted-foreground">
+              A warmer first impression, clearer adoption flow, and stronger calls to action help
+              turn interest into real rescue outcomes.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
-            {featuredDogs.map((dog) => (
-              <DogCard key={dog.id} dog={dog} />
+          <div className="grid gap-5 md:grid-cols-3">
+            {trustPoints.map(({ title, description, icon: Icon }) => (
+              <div
+                key={title}
+                className="rounded-[2rem] border border-white/70 bg-white/80 p-7 shadow-[0_20px_60px_-30px_rgba(20,44,90,0.28)] backdrop-blur transition-transform duration-300 hover:-translate-y-1"
+              >
+                <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/15 to-[#3b82f6]/15 text-primary">
+                  <Icon className="h-6 w-6" />
+                </div>
+                <h3 className="mb-2 text-xl font-semibold text-foreground">{title}</h3>
+                <p className="leading-7 text-muted-foreground">{description}</p>
+              </div>
             ))}
           </div>
+        </div>
+      </section>
 
-          <div className="text-center">
+      <HowItWorks />
+
+      <section id="featured-pets" className="bg-white py-20 sm:py-24">
+        <div className="site-container">
+          <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div className="max-w-2xl space-y-4">
+              <span className="inline-flex rounded-full bg-secondary/15 px-4 py-1.5 text-sm font-semibold text-[#145da0]">
+                Featured pets
+              </span>
+              <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-5xl">
+                Meet friendly faces waiting for their forever family.
+              </h2>
+              <p className="text-lg leading-8 text-muted-foreground">
+                A few lovable companions to get your search started, with quick details that make
+                it easy to take the next step.
+              </p>
+            </div>
+
             <Link
               href="/browse"
-              className="inline-flex items-center gap-2 text-primary font-semibold text-lg hover:gap-3 transition-all duration-200"
+              className="inline-flex items-center gap-2 self-start rounded-full border border-[#d8e8fb] bg-[#f7fbff] px-5 py-3 font-semibold text-[#145da0] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
             >
-              View All Dogs <ArrowRight size={24} />
+              Explore all pets
+              <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
-        </div>
-      </section>
 
-      {/* Why Adopt Section */}
-      <section id="learn" className="py-16 sm:py-24 bg-secondary/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl font-bold text-foreground text-center mb-12">
-            Why Adopt?
-          </h2>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Card 1 */}
-            <div className="bg-white p-8 rounded-lg border border-border">
-              <div className="bg-primary/10 w-14 h-14 rounded-lg flex items-center justify-center mb-4">
-                <Heart className="text-primary" size={28} />
-              </div>
-              <h3 className="text-xl font-bold text-foreground mb-3">Save a Life</h3>
-              <p className="text-muted-foreground">
-                By adopting, you free up shelter resources for other animals in need and give a deserving dog a second chance.
-              </p>
-            </div>
-
-            {/* Card 2 */}
-            <div className="bg-white p-8 rounded-lg border border-border">
-              <div className="bg-primary/10 w-14 h-14 rounded-lg flex items-center justify-center mb-4">
-                <Users className="text-primary" size={28} />
-              </div>
-              <h3 className="text-xl font-bold text-foreground mb-3">Amazing Companions</h3>
-              <p className="text-muted-foreground">
-                Rescue dogs are grateful and loyal. They make wonderful family members and can provide unconditional love.
-              </p>
-            </div>
-
-            {/* Card 3 */}
-            <div className="bg-white p-8 rounded-lg border border-border">
-              <div className="bg-primary/10 w-14 h-14 rounded-lg flex items-center justify-center mb-4">
-                <Shield className="text-primary" size={28} />
-              </div>
-              <h3 className="text-xl font-bold text-foreground mb-3">Health Checked</h3>
-              <p className="text-muted-foreground">
-                All our dogs are vaccinated, neutered/spayed, and health checked by veterinarians before adoption.
-              </p>
-            </div>
+          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+            {featuredDogs.map((dog) => (
+              <PetCard key={dog.id} dog={dog} />
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="py-16 sm:py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl font-bold text-foreground text-center mb-12">
-            Happy Families
-          </h2>
+      <section id="contact" className="bg-[#f2f8ff] py-20 sm:py-24">
+        <div className="site-container">
+          <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-r from-primary via-[#ff6b2c] to-[#ef4444] px-6 py-12 text-white shadow-[0_30px_80px_-35px_rgba(249,115,22,0.7)] sm:px-10 lg:px-14 lg:py-14">
+            <div className="absolute -right-10 top-1/2 h-40 w-40 -translate-y-1/2 rounded-full bg-white/15 blur-3xl" />
+            <div className="absolute left-12 top-0 h-24 w-24 rounded-full bg-white/10 blur-2xl" />
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {/* Testimonial 1 */}
-            <div className="bg-secondary/5 p-6 rounded-lg border border-border">
-              <div className="flex gap-1 mb-3">
-                {'⭐'.repeat(5)}
+            <div className="relative flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+              <div className="max-w-2xl space-y-4">
+                <span className="inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm font-semibold">
+                  Ready when you are
+                </span>
+                <h2 className="text-3xl font-bold tracking-tight sm:text-5xl">
+                  Give a pet a second chance at life.
+                </h2>
+                <p className="text-lg leading-8 text-white/85">
+                  Start browsing adoptable pets and take the first step toward a life-changing
+                  connection.
+                </p>
               </div>
-              <p className="text-muted-foreground mb-4">
-                &quot;We adopted Max from PawMatch and he's completely transformed our lives! He's the sweetest, most loving family member.&quot;
-              </p>
-              <p className="font-semibold text-foreground">Sarah & John</p>
-              <p className="text-sm text-muted-foreground">San Francisco, CA</p>
-            </div>
 
-            {/* Testimonial 2 */}
-            <div className="bg-secondary/5 p-6 rounded-lg border border-border">
-              <div className="flex gap-1 mb-3">
-                {'⭐'.repeat(5)}
-              </div>
-              <p className="text-muted-foreground mb-4">
-                &quot;Finding Luna through this platform was so easy. The whole process was smooth, and we got our perfect match!&quot;
-              </p>
-              <p className="font-semibold text-foreground">Emily Chen</p>
-              <p className="text-sm text-muted-foreground">Seattle, WA</p>
-            </div>
-
-            {/* Testimonial 3 */}
-            <div className="bg-secondary/5 p-6 rounded-lg border border-border">
-              <div className="flex gap-1 mb-3">
-                {'⭐'.repeat(5)}
-              </div>
-              <p className="text-muted-foreground mb-4">
-                &quot;Charlie came to us as a shy rescue, but with love and patience, he's now our most confident and happy dog!&quot;
-              </p>
-              <p className="font-semibold text-foreground">Michael Rodriguez</p>
-              <p className="text-sm text-muted-foreground">Portland, OR</p>
+              <Link
+                href="/browse"
+                className="inline-flex items-center justify-center gap-2 self-start rounded-full bg-white px-6 py-3.5 font-semibold text-primary shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl"
+              >
+                Start Adopting
+                <ArrowRight className="h-4 w-4" />
+              </Link>
             </div>
           </div>
         </div>
       </section>
-
-      {/* CTA Section */}
-      <section id="contact" className="py-16 sm:py-24 bg-primary text-primary-foreground">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-6">Ready to Find Your Match?</h2>
-          <p className="text-lg mb-8 opacity-90">
-            Browse our adoptable dogs today and start the journey to your new best friend.
-          </p>
-          <Link
-            href="/browse"
-            className="inline-flex items-center justify-center gap-2 bg-primary-foreground text-primary px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity"
-          >
-            Browse Dogs Now <ArrowRight size={20} />
-          </Link>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-foreground text-primary-foreground py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <h3 className="font-bold mb-4">PawMatch</h3>
-              <p className="text-sm opacity-80">Connecting loving homes with rescue dogs.</p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Quick Links</h4>
-              <ul className="space-y-2 text-sm opacity-80">
-                <li><Link href="/browse" className="hover:opacity-100">Browse Dogs</Link></li>
-                <li><Link href="#" className="hover:opacity-100">How It Works</Link></li>
-                <li><Link href="#" className="hover:opacity-100">Shelters</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Legal</h4>
-              <ul className="space-y-2 text-sm opacity-80">
-                <li><Link href="#" className="hover:opacity-100">Privacy</Link></li>
-                <li><Link href="#" className="hover:opacity-100">Terms</Link></li>
-                <li><Link href="#" className="hover:opacity-100">Cookie Policy</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Contact</h4>
-              <p className="text-sm opacity-80">hello@pawmatch.org</p>
-              <p className="text-sm opacity-80">1-800-PAW-HELP</p>
-            </div>
-          </div>
-          <div className="border-t border-primary-foreground/20 pt-8">
-            <p className="text-center text-sm opacity-80">
-              © 2024 PawMatch. All rights reserved. Helping dogs find their forever homes. 🐾
-            </p>
-          </div>
-        </div>
-      </footer>
     </div>
   )
 }

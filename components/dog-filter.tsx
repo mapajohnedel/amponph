@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { Filter } from 'lucide-react'
+import { Filter, MapPin, Search, SlidersHorizontal } from 'lucide-react'
+import { mockDogs } from '@/lib/mock-dogs'
 
 export interface FilterOptions {
   breed?: string
@@ -15,17 +16,7 @@ interface DogFilterProps {
   onFilterChange: (filters: FilterOptions) => void
 }
 
-const breeds = [
-  'Golden Retriever',
-  'Husky',
-  'Labrador Mix',
-  'German Shepherd',
-  'Corgi',
-  'Dachshund',
-  'Boxer',
-  'Beagle',
-  'Poodle Mix',
-]
+const breeds = Array.from(new Set(mockDogs.map((dog) => dog.breed))).sort()
 
 const sizes = ['small', 'medium', 'large']
 
@@ -60,103 +51,116 @@ export function DogFilter({ onFilterChange }: DogFilterProps) {
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-border p-6 shadow-sm">
+    <div className="rounded-[1.5rem] border border-white/70 bg-white/85 p-4 shadow-[0_18px_45px_-28px_rgba(20,44,90,0.28)] backdrop-blur">
+      <div className="mb-4 hidden items-center gap-3 md:flex">
+        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary/15 to-[#3b82f6]/15 text-primary">
+          <SlidersHorizontal size={16} />
+        </div>
+        <div>
+          <h2 className="text-sm font-semibold text-foreground">Filter Pets</h2>
+          <p className="text-xs text-muted-foreground">Quick, compact filters.</p>
+        </div>
+      </div>
+
       <button
-        className="md:hidden flex items-center gap-2 font-semibold mb-6 text-foreground"
+        className="mb-4 flex items-center gap-2 font-semibold text-foreground md:hidden"
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <Filter size={20} />
+        <Filter size={18} />
         Filters
       </button>
 
       {(isExpanded || !('ontouchstart' in window)) && (
         <>
-          {/* Breed Filter */}
-          <div className="mb-8">
-            <label className="text-sm font-bold text-foreground block mb-3">
+          <div className="mb-5">
+            <label className="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-foreground/80">
               Breed
             </label>
-            <select
-              value={breed}
-              onChange={(e) => {
-                const nextBreed = e.target.value
-                setBreed(nextBreed)
-                applyFilters({ breed: nextBreed })
-              }}
-              className="w-full px-4 py-2.5 border border-border rounded-lg text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
-            >
-              <option value="">All Breeds</option>
-              {breeds.map((b) => (
-                <option key={b} value={b}>
-                  {b}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Size Filter */}
-          <div className="mb-8">
-            <label className="text-sm font-bold text-foreground block mb-4">
-              Size
-            </label>
-            <div className="space-y-3">
-              {sizes.map((s) => (
-                <label key={s} className="flex items-center gap-3 cursor-pointer group">
-                  <input
-                    type="radio"
-                    name="size"
-                    value={s}
-                    checked={size === s}
-                    onChange={(e) => {
-                      const nextSize = e.target.value
-                      setSize(nextSize)
-                      applyFilters({ size: nextSize })
-                    }}
-                    className="w-4 h-4 cursor-pointer accent-primary"
-                  />
-                  <span className="text-sm text-foreground capitalize group-hover:text-primary transition-colors">{s}</span>
-                </label>
-              ))}
-              <label className="flex items-center gap-3 cursor-pointer group">
-                <input
-                  type="radio"
-                  name="size"
-                  value=""
-                  checked={size === ''}
-                  onChange={(e) => {
-                    const nextSize = e.target.value
-                    setSize(nextSize)
-                    applyFilters({ size: nextSize })
-                  }}
-                  className="w-4 h-4 cursor-pointer accent-primary"
-                />
-                <span className="text-sm text-foreground group-hover:text-primary transition-colors">All Sizes</span>
-              </label>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#145da0]" />
+              <input
+                list="breed-options"
+                type="text"
+                value={breed}
+                onChange={(e) => {
+                  const nextBreed = e.target.value
+                  setBreed(nextBreed)
+                  applyFilters({ breed: nextBreed })
+                }}
+                placeholder="All breeds"
+                className="w-full rounded-xl border border-[#dce9f8] bg-[#fcfdff] py-2.5 pl-9 pr-3 text-sm text-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
+              />
+              <datalist id="breed-options">
+                {breeds.map((b) => (
+                  <option key={b} value={b} />
+                ))}
+              </datalist>
             </div>
           </div>
 
-          {/* Location Filter */}
-          <div className="mb-8">
-            <label className="text-sm font-bold text-foreground block mb-3">
-              Location
+          <div className="mb-5">
+            <label className="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-foreground/80">
+              Size
             </label>
-            <input
-              type="text"
-              value={location}
-              onChange={(e) => {
-                const nextLocation = e.target.value
-                setLocation(nextLocation)
-                applyFilters({ location: nextLocation })
-              }}
-              placeholder="e.g., San Francisco"
-              className="w-full px-4 py-2.5 border border-border rounded-lg text-sm bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
-            />
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setSize('')
+                  applyFilters({ size: '' })
+                }}
+                className={`rounded-xl px-3 py-2 text-sm font-medium transition-all ${
+                  size === ''
+                    ? 'bg-primary text-primary-foreground shadow-[0_12px_26px_-18px_rgba(249,115,22,0.85)]'
+                    : 'border border-[#dce9f8] bg-[#fcfdff] text-foreground hover:bg-[#f7fbff]'
+                }`}
+              >
+                All Sizes
+              </button>
+              {sizes.map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => {
+                    setSize(s)
+                    applyFilters({ size: s })
+                  }}
+                  className={`rounded-xl px-3 py-2 text-sm font-medium capitalize transition-all ${
+                    size === s
+                      ? 'bg-primary text-primary-foreground shadow-[0_12px_26px_-18px_rgba(249,115,22,0.85)]'
+                      : 'border border-[#dce9f8] bg-[#fcfdff] text-foreground hover:bg-[#f7fbff]'
+                  }`}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Reset Button */}
+          <div className="mb-5">
+            <label className="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-foreground/80">
+              Location
+            </label>
+            <div className="relative">
+              <MapPin className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#145da0]" />
+              <input
+                type="text"
+                value={location}
+                onChange={(e) => {
+                  const nextLocation = e.target.value
+                  setLocation(nextLocation)
+                  applyFilters({ location: nextLocation })
+                }}
+                placeholder="Quezon City"
+                className="w-full rounded-xl border border-[#dce9f8] bg-[#fcfdff] py-2.5 pl-9 pr-3 text-sm text-foreground placeholder-muted-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
+              />
+            </div>
+          </div>
+
           <button
+            type="button"
             onClick={handleReset}
-            className="w-full px-4 py-2.5 border border-primary text-primary rounded-lg text-sm font-semibold hover:bg-primary/5 transition-all duration-200"
+            className="w-full rounded-full border border-primary px-4 py-2.5 text-sm font-semibold text-primary transition-all duration-300 hover:bg-primary/5"
           >
             Reset Filters
           </button>
