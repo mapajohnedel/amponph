@@ -1,16 +1,38 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { DogCard } from '@/components/dog-card'
 import { useDogCatalog } from '@/lib/dog-catalog'
+import { useAuthUser } from '@/hooks/use-auth-user'
 import { Heart, FileText, Settings, LogOut, Clock, CheckCircle, XCircle } from 'lucide-react'
 
 export default function DashboardPage() {
+  const router = useRouter()
+  const { supabase, user, loading } = useAuthUser()
   const [activeTab, setActiveTab] = useState<'favorites' | 'requests' | 'profile'>('favorites')
+  const [isSigningOut, setIsSigningOut] = useState(false)
   const dogs = useDogCatalog()
+  const displayName = user?.user_metadata?.full_name ?? 'Your profile'
+  const displayEmail = user?.email ?? 'Add your email'
+  const displayPhone = user?.user_metadata?.phone ?? 'Add your phone number'
+  const displayCity = user?.user_metadata?.city ?? 'Add your city'
 
-  // Mock favorites and requests
+  useEffect(() => {
+    if (!loading && !user) {
+      router.replace('/auth')
+    }
+  }, [loading, router, user])
+
+  const handleSignOut = async () => {
+    setIsSigningOut(true)
+    await supabase.auth.signOut()
+    router.replace('/auth')
+    router.refresh()
+  }
+
+  // Mock favorites and requests until the Supabase data layer is added.
   const favorites = dogs.slice(0, 4)
   const adoptionRequests = [
     {
@@ -36,28 +58,44 @@ export default function DashboardPage() {
     },
   ]
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="site-container py-12">
+          <div className="rounded-3xl border border-border bg-white p-10 text-center shadow-sm">
+            <h1 className="text-2xl font-bold text-foreground">Loading your dashboard...</h1>
+            <p className="mt-3 text-muted-foreground">
+              Checking your session and preparing your account.
+            </p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return null
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <div className="site-container py-12">
-        {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-2">
+          <h1 className="text-3xl font-bold text-foreground sm:text-4xl">
             My Dashboard
           </h1>
-          <p className="text-lg text-muted-foreground">
+          <p className="mt-2 text-lg text-muted-foreground">
             Manage your favorites, adoption requests, and profile
           </p>
         </div>
 
-        {/* Main Content Grid */}
-        <div className="grid lg:grid-cols-4 gap-6">
-          {/* Sidebar Navigation */}
+        <div className="grid gap-6 lg:grid-cols-4">
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg border border-border p-4 sticky top-20">
+            <div className="sticky top-20 rounded-lg border border-border bg-white p-4">
               <div className="space-y-2">
                 <button
                   onClick={() => setActiveTab('favorites')}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors font-medium text-left ${
+                  className={`w-full rounded-lg px-4 py-3 text-left font-medium transition-colors flex items-center gap-3 ${
                     activeTab === 'favorites'
                       ? 'bg-primary text-primary-foreground'
                       : 'text-foreground hover:bg-secondary/10'
@@ -68,7 +106,7 @@ export default function DashboardPage() {
                 </button>
                 <button
                   onClick={() => setActiveTab('requests')}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors font-medium text-left ${
+                  className={`w-full rounded-lg px-4 py-3 text-left font-medium transition-colors flex items-center gap-3 ${
                     activeTab === 'requests'
                       ? 'bg-primary text-primary-foreground'
                       : 'text-foreground hover:bg-secondary/10'
@@ -79,7 +117,7 @@ export default function DashboardPage() {
                 </button>
                 <button
                   onClick={() => setActiveTab('profile')}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors font-medium text-left ${
+                  className={`w-full rounded-lg px-4 py-3 text-left font-medium transition-colors flex items-center gap-3 ${
                     activeTab === 'profile'
                       ? 'bg-primary text-primary-foreground'
                       : 'text-foreground hover:bg-secondary/10'
@@ -88,21 +126,23 @@ export default function DashboardPage() {
                   <Settings size={20} />
                   Profile Settings
                 </button>
-                <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 transition-colors font-medium text-left">
+                <button
+                  onClick={handleSignOut}
+                  disabled={isSigningOut}
+                  className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
+                >
                   <LogOut size={20} />
-                  Sign Out
+                  {isSigningOut ? 'Signing Out...' : 'Sign Out'}
                 </button>
               </div>
             </div>
           </div>
 
-          {/* Content Area */}
           <div className="lg:col-span-3">
-            {/* Favorites Tab */}
             {activeTab === 'favorites' && (
               <div>
                 <div className="mb-6">
-                  <h2 className="text-2xl font-bold text-foreground mb-2">
+                  <h2 className="mb-2 text-2xl font-bold text-foreground">
                     My Favorite Dogs
                   </h2>
                   <p className="text-muted-foreground">
@@ -110,23 +150,23 @@ export default function DashboardPage() {
                   </p>
                 </div>
                 {favorites.length > 0 ? (
-                  <div className="grid md:grid-cols-2 gap-6">
+                  <div className="grid gap-6 md:grid-cols-2">
                     {favorites.map((dog) => (
                       <DogCard key={dog.id} dog={dog} layout="landscape" />
                     ))}
                   </div>
                 ) : (
-                  <div className="bg-white rounded-lg border border-border p-12 text-center">
-                    <Heart size={48} className="mx-auto text-muted-foreground mb-4" />
-                    <p className="text-lg font-medium text-foreground mb-2">
+                  <div className="rounded-lg border border-border bg-white p-12 text-center">
+                    <Heart size={48} className="mx-auto mb-4 text-muted-foreground" />
+                    <p className="mb-2 text-lg font-medium text-foreground">
                       No favorites yet
                     </p>
-                    <p className="text-muted-foreground mb-6">
+                    <p className="mb-6 text-muted-foreground">
                       Start browsing and save your favorite dogs to see them here
                     </p>
                     <Link
                       href="/browse"
-                      className="inline-block bg-primary text-primary-foreground px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition-opacity"
+                      className="inline-block rounded-lg bg-primary px-6 py-2 font-semibold text-primary-foreground transition-opacity hover:opacity-90"
                     >
                       Browse Dogs
                     </Link>
@@ -135,11 +175,10 @@ export default function DashboardPage() {
               </div>
             )}
 
-            {/* Adoption Requests Tab */}
             {activeTab === 'requests' && (
               <div>
                 <div className="mb-6">
-                  <h2 className="text-2xl font-bold text-foreground mb-2">
+                  <h2 className="mb-2 text-2xl font-bold text-foreground">
                     Adoption Requests
                   </h2>
                   <p className="text-muted-foreground">
@@ -151,16 +190,16 @@ export default function DashboardPage() {
                     {adoptionRequests.map((request) => (
                       <div
                         key={request.id}
-                        className="bg-white rounded-lg border border-border p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+                        className="flex flex-col gap-4 rounded-lg border border-border bg-white p-6 sm:flex-row sm:items-center sm:justify-between"
                       >
                         <div className="flex-1">
-                          <h3 className="text-lg font-semibold text-foreground mb-1">
+                          <h3 className="mb-1 text-lg font-semibold text-foreground">
                             {request.dogName}
                           </h3>
-                          <p className="text-sm text-muted-foreground mb-2">
+                          <p className="mb-2 text-sm text-muted-foreground">
                             {request.shelterName}
                           </p>
-                          <p className="text-xs text-muted-foreground flex items-center gap-1">
+                          <p className="flex items-center gap-1 text-xs text-muted-foreground">
                             <Clock size={14} />
                             Applied on {new Date(request.date).toLocaleDateString()}
                           </p>
@@ -168,7 +207,7 @@ export default function DashboardPage() {
                         <div className="flex items-center gap-2">
                           {request.status === 'pending' && (
                             <>
-                              <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
+                              <div className="h-3 w-3 rounded-full bg-yellow-400" />
                               <span className="text-sm font-medium text-yellow-700">
                                 Pending
                               </span>
@@ -176,10 +215,7 @@ export default function DashboardPage() {
                           )}
                           {request.status === 'approved' && (
                             <>
-                              <CheckCircle
-                                size={20}
-                                className="text-green-600"
-                              />
+                              <CheckCircle size={20} className="text-green-600" />
                               <span className="text-sm font-medium text-green-600">
                                 Approved
                               </span>
@@ -187,10 +223,7 @@ export default function DashboardPage() {
                           )}
                           {request.status === 'rejected' && (
                             <>
-                              <XCircle
-                                size={20}
-                                className="text-red-600"
-                              />
+                              <XCircle size={20} className="text-red-600" />
                               <span className="text-sm font-medium text-red-600">
                                 Rejected
                               </span>
@@ -201,9 +234,9 @@ export default function DashboardPage() {
                     ))}
                   </div>
                 ) : (
-                  <div className="bg-white rounded-lg border border-border p-12 text-center">
-                    <FileText size={48} className="mx-auto text-muted-foreground mb-4" />
-                    <p className="text-lg font-medium text-foreground mb-2">
+                  <div className="rounded-lg border border-border bg-white p-12 text-center">
+                    <FileText size={48} className="mx-auto mb-4 text-muted-foreground" />
+                    <p className="mb-2 text-lg font-medium text-foreground">
                       No adoption requests yet
                     </p>
                     <p className="text-muted-foreground">
@@ -214,11 +247,10 @@ export default function DashboardPage() {
               </div>
             )}
 
-            {/* Profile Settings Tab */}
             {activeTab === 'profile' && (
               <div>
                 <div className="mb-6">
-                  <h2 className="text-2xl font-bold text-foreground mb-2">
+                  <h2 className="mb-2 text-2xl font-bold text-foreground">
                     Profile Settings
                   </h2>
                   <p className="text-muted-foreground">
@@ -226,89 +258,78 @@ export default function DashboardPage() {
                   </p>
                 </div>
 
-                <div className="bg-white rounded-lg border border-border p-8">
+                <div className="rounded-lg border border-border bg-white p-8">
                   <div className="mb-8">
-                    <h3 className="text-xl font-bold text-foreground mb-6">
+                    <h3 className="mb-6 text-xl font-bold text-foreground">
                       Personal Information
                     </h3>
-                    <div className="grid md:grid-cols-2 gap-6 mb-6">
+                    <div className="mb-6 grid gap-6 md:grid-cols-2">
                       <div>
-                        <label className="block text-sm font-medium text-foreground mb-2">
+                        <label className="mb-2 block text-sm font-medium text-foreground">
                           Full Name
                         </label>
                         <input
                           type="text"
-                          value="John Doe"
+                          value={displayName}
                           readOnly
-                          className="w-full px-4 py-2 border border-border rounded-lg text-foreground bg-background"
+                          className="w-full rounded-lg border border-border bg-background px-4 py-2 text-foreground"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-foreground mb-2">
+                        <label className="mb-2 block text-sm font-medium text-foreground">
                           Email Address
                         </label>
                         <input
                           type="email"
-                          value="john@example.com"
+                          value={displayEmail}
                           readOnly
-                          className="w-full px-4 py-2 border border-border rounded-lg text-foreground bg-background"
+                          className="w-full rounded-lg border border-border bg-background px-4 py-2 text-foreground"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-foreground mb-2">
+                        <label className="mb-2 block text-sm font-medium text-foreground">
                           Phone Number
                         </label>
                         <input
                           type="tel"
-                          value="(555) 123-4567"
+                          value={displayPhone}
                           readOnly
-                          className="w-full px-4 py-2 border border-border rounded-lg text-foreground bg-background"
+                          className="w-full rounded-lg border border-border bg-background px-4 py-2 text-foreground"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-foreground mb-2">
+                        <label className="mb-2 block text-sm font-medium text-foreground">
                           City
                         </label>
                         <input
                           type="text"
-                          value="San Francisco, CA"
+                          value={displayCity}
                           readOnly
-                          className="w-full px-4 py-2 border border-border rounded-lg text-foreground bg-background"
+                          className="w-full rounded-lg border border-border bg-background px-4 py-2 text-foreground"
                         />
                       </div>
                     </div>
                   </div>
 
                   <div className="border-t border-border pt-8">
-                    <h3 className="text-xl font-bold text-foreground mb-6">
+                    <h3 className="mb-6 text-xl font-bold text-foreground">
                       Preferences
                     </h3>
                     <div className="space-y-4">
-                      <label className="flex items-center gap-3 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          defaultChecked
-                          className="w-4 h-4"
-                        />
+                      <label className="flex cursor-pointer items-center gap-3">
+                        <input type="checkbox" defaultChecked className="h-4 w-4" />
                         <span className="text-foreground">
                           Email notifications for matching dogs
                         </span>
                       </label>
-                      <label className="flex items-center gap-3 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          defaultChecked
-                          className="w-4 h-4"
-                        />
+                      <label className="flex cursor-pointer items-center gap-3">
+                        <input type="checkbox" defaultChecked className="h-4 w-4" />
                         <span className="text-foreground">
                           Updates on adoption requests
                         </span>
                       </label>
-                      <label className="flex items-center gap-3 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          className="w-4 h-4"
-                        />
+                      <label className="flex cursor-pointer items-center gap-3">
+                        <input type="checkbox" className="h-4 w-4" />
                         <span className="text-foreground">
                           Monthly newsletter with dog stories
                         </span>
@@ -316,8 +337,8 @@ export default function DashboardPage() {
                     </div>
                   </div>
 
-                  <div className="border-t border-border mt-8 pt-8">
-                    <button className="bg-primary text-primary-foreground px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition-opacity">
+                  <div className="mt-8 border-t border-border pt-8">
+                    <button className="rounded-lg bg-primary px-6 py-2 font-semibold text-primary-foreground transition-opacity hover:opacity-90">
                       Save Changes
                     </button>
                   </div>

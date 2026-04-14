@@ -1,21 +1,101 @@
 'use client'
 
 import Image from 'next/image'
-import { useState } from 'react'
 import Link from 'next/link'
+import { type FormEvent, useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Mail, Lock, User, Eye, EyeOff, ArrowRight, HeartHandshake, ShieldCheck } from 'lucide-react'
+import { useAuthUser } from '@/hooks/use-auth-user'
 
 export default function AuthPage() {
+  const router = useRouter()
+  const { supabase, user, loading } = useAuthUser()
   const [isLogin, setIsLogin] = useState(true)
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (!loading && user) {
+      router.replace('/dashboard')
+    }
+  }, [loading, router, user])
+
+  const resetMessages = () => {
+    setErrorMessage(null)
+    setSuccessMessage(null)
+  }
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    // Mock auth - in production, would call actual auth service
-    console.log(isLogin ? 'Login' : 'Register', { email, password, ...(isLogin ? {} : { name }) })
+    resetMessages()
+    setIsSubmitting(true)
+
+    if (isLogin) {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
+
+      if (error) {
+        setErrorMessage(error.message)
+        setIsSubmitting(false)
+        return
+      }
+
+      router.replace('/dashboard')
+      router.refresh()
+      return
+    }
+
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: name,
+        },
+      },
+    })
+
+    if (error) {
+      setErrorMessage(error.message)
+      setIsSubmitting(false)
+      return
+    }
+
+    if (data.session) {
+      router.replace('/dashboard')
+      router.refresh()
+      return
+    }
+
+    setSuccessMessage('Account created. Check your email to confirm your account before signing in.')
+    setIsSubmitting(false)
+  }
+
+  const toggleMode = (nextIsLogin: boolean) => {
+    setIsLogin(nextIsLogin)
+    resetMessages()
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[linear-gradient(180deg,#fff8f2_0%,#eef7ff_50%,#fffaf6_100%)] py-12">
+        <div className="site-container">
+          <div className="rounded-[2.5rem] border border-white/70 bg-white/85 p-10 text-center shadow-[0_30px_80px_-35px_rgba(20,44,90,0.35)] backdrop-blur">
+            <h1 className="text-2xl font-bold text-foreground">Checking your account...</h1>
+            <p className="mt-3 text-muted-foreground">
+              We&apos;re confirming your session before showing the auth form.
+            </p>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -85,7 +165,7 @@ export default function AuthPage() {
             <div className="mb-8">
               <div className="flex gap-2 rounded-full bg-[#f6f9fe] p-1.5">
                 <button
-                  onClick={() => setIsLogin(true)}
+                  onClick={() => toggleMode(true)}
                   className={`flex-1 rounded-full py-3 transition-all font-medium text-sm ${
                     isLogin
                       ? 'bg-primary text-primary-foreground shadow-[0_16px_36px_-22px_rgba(249,115,22,0.9)]'
@@ -95,7 +175,7 @@ export default function AuthPage() {
                   Sign In
                 </button>
                 <button
-                  onClick={() => setIsLogin(false)}
+                  onClick={() => toggleMode(false)}
                   className={`flex-1 rounded-full py-3 transition-all font-medium text-sm ${
                     !isLogin
                       ? 'bg-primary text-primary-foreground shadow-[0_16px_36px_-22px_rgba(249,115,22,0.9)]'
@@ -117,6 +197,18 @@ export default function AuthPage() {
                   : 'Start saving pets and preparing for your adoption journey.'}
               </p>
             </div>
+
+            {errorMessage && (
+              <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                {errorMessage}
+              </div>
+            )}
+
+            {successMessage && (
+              <div className="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+                {successMessage}
+              </div>
+            )}
 
             <form onSubmit={handleSubmit} className="space-y-4 mb-6">
               {!isLogin && (
@@ -193,9 +285,12 @@ export default function AuthPage() {
 
               <button
                 type="submit"
+                disabled={isSubmitting}
                 className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 font-semibold text-primary-foreground shadow-[0_18px_38px_-18px_rgba(249,115,22,0.8)] transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.01]"
               >
-                {isLogin ? 'Sign In' : 'Create Account'}
+                {isSubmitting
+                  ? (isLogin ? 'Signing In...' : 'Creating Account...')
+                  : (isLogin ? 'Sign In' : 'Create Account')}
                 <ArrowRight className="h-4 w-4" />
               </button>
             </form>
@@ -212,20 +307,28 @@ export default function AuthPage() {
             </div>
 
             <div className="mb-6 space-y-3">
-              <button className="flex w-full items-center justify-center gap-2 rounded-2xl border border-[#dce9f8] bg-[#fcfdff] py-3 font-medium text-foreground transition-colors hover:bg-[#f6faff]">
+              <button
+                type="button"
+                disabled
+                className="flex w-full items-center justify-center gap-2 rounded-2xl border border-[#dce9f8] bg-[#fcfdff] py-3 font-medium text-foreground opacity-60"
+              >
                 <span>🔵</span>
-                Google
+                Google coming soon
               </button>
-              <button className="flex w-full items-center justify-center gap-2 rounded-2xl border border-[#dce9f8] bg-[#fcfdff] py-3 font-medium text-foreground transition-colors hover:bg-[#f6faff]">
+              <button
+                type="button"
+                disabled
+                className="flex w-full items-center justify-center gap-2 rounded-2xl border border-[#dce9f8] bg-[#fcfdff] py-3 font-medium text-foreground opacity-60"
+              >
                 <span>👤</span>
-                Facebook
+                Facebook coming soon
               </button>
             </div>
 
             <p className="text-center text-sm text-muted-foreground">
               {isLogin ? "Don't have an account? " : 'Already have an account? '}
               <button
-                onClick={() => setIsLogin(!isLogin)}
+                onClick={() => toggleMode(!isLogin)}
                 className="font-semibold text-primary transition-opacity hover:opacity-80"
               >
                 {isLogin ? 'Register' : 'Sign in'}
