@@ -24,9 +24,7 @@ export async function POST(
     const result = await approvePartnerApplication(id, user, payload)
 
     return NextResponse.json({
-      message: result.emailSent
-        ? 'Partner approved and credentials emailed successfully.'
-        : 'Partner approved, but the credentials email could not be sent automatically.',
+      message: 'Partner approved and account credentials generated successfully.',
       ...result,
     })
   } catch (error) {

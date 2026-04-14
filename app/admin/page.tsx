@@ -34,6 +34,14 @@ export default function AdminPage() {
   )
   const [reviewNotes, setReviewNotes] = useState('')
   const [reviewMessage, setReviewMessage] = useState<string | null>(null)
+  const [generatedCredentials, setGeneratedCredentials] = useState<{
+    email: string
+    password: string
+    organizationName: string
+    contactPersonName: string
+  } | null>(null)
+  const [isCopyingCredentials, setIsCopyingCredentials] = useState(false)
+  const [copyMessage, setCopyMessage] = useState<string | null>(null)
   const [isApproving, setIsApproving] = useState(false)
   const [isRejecting, setIsRejecting] = useState(false)
 
@@ -141,20 +149,31 @@ export default function AdminPage() {
       const result = (await response.json()) as {
         error?: string
         message?: string
-        emailSent?: boolean
-        emailError?: string
+        email?: string
+        password?: string
+        organizationName?: string
+        contactPersonName?: string
       }
 
       if (!response.ok) {
         throw new Error(result.error ?? `Failed to ${action} application.`)
       }
 
-      const message =
-        action === 'approve' && result.emailSent === false
-          ? `${result.message ?? 'Partner approved.'} ${result.emailError ?? ''}`.trim()
-          : result.message ?? `Application ${action}d successfully.`
+      const message = result.message ?? `Application ${action}d successfully.`
 
       setReviewMessage(message)
+      if (action === 'approve' && result.email && result.password) {
+        setGeneratedCredentials({
+          email: result.email,
+          password: result.password,
+          organizationName: result.organizationName ?? selectedApplication.organization_name,
+          contactPersonName: result.contactPersonName ?? selectedApplication.contact_person_name,
+        })
+        setCopyMessage(null)
+      } else if (action === 'reject') {
+        setGeneratedCredentials(null)
+        setCopyMessage(null)
+      }
       setSelectedApplication(null)
       setReviewNotes('')
       await loadApplications()
@@ -163,6 +182,26 @@ export default function AdminPage() {
     } finally {
       setIsApproving(false)
       setIsRejecting(false)
+    }
+  }
+
+  const handleCopyCredentials = async () => {
+    if (!generatedCredentials) {
+      return
+    }
+
+    setIsCopyingCredentials(true)
+    setCopyMessage(null)
+
+    try {
+      await navigator.clipboard.writeText(
+        `Email: ${generatedCredentials.email}\nPassword: ${generatedCredentials.password}`
+      )
+      setCopyMessage('Credentials copied to clipboard.')
+    } catch {
+      setCopyMessage('Could not copy automatically. Please copy the credentials manually.')
+    } finally {
+      setIsCopyingCredentials(false)
     }
   }
 
@@ -463,6 +502,61 @@ export default function AdminPage() {
               </div>
             )}
 
+            {generatedCredentials && (
+              <div className="mb-6 rounded-2xl border border-[#dce9f8] bg-[#f8fbff] p-5 text-sm text-foreground">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <h3 className="font-semibold text-foreground">Generated partner credentials</h3>
+                    <p className="mt-1 text-muted-foreground">
+                      Share these credentials with {generatedCredentials.contactPersonName} from{' '}
+                      {generatedCredentials.organizationName}. The password is only shown here right
+                      after approval.
+                    </p>
+                    {copyMessage && (
+                      <p className="mt-2 text-sm text-[#145da0]">{copyMessage}</p>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => void handleCopyCredentials()}
+                      disabled={isCopyingCredentials}
+                      className="rounded-full border border-[#d6e8fb] bg-white px-4 py-2 text-xs font-semibold text-[#145da0] transition-colors hover:bg-[#eef7ff] disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      {isCopyingCredentials ? 'Copying...' : 'Copy credentials'}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setGeneratedCredentials(null)
+                        setCopyMessage(null)
+                      }}
+                      className="rounded-full border border-border p-2 text-muted-foreground transition-colors hover:bg-white hover:text-foreground"
+                      aria-label="Dismiss generated credentials"
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
+                </div>
+                <div className="mt-4 grid gap-4 md:grid-cols-2">
+                  <div className="rounded-xl border border-border bg-white p-4">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-[#145da0]">
+                      Email
+                    </p>
+                    <p className="mt-2 font-mono text-sm text-foreground">
+                      {generatedCredentials.email}
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-border bg-white p-4">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-[#145da0]">
+                      Password
+                    </p>
+                    <p className="mt-2 font-mono text-sm text-foreground">
+                      {generatedCredentials.password}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {applicationsError && (
               <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
                 {applicationsError}
@@ -507,11 +601,6 @@ export default function AdminPage() {
                           >
                             {application.status}
                           </span>
-                          {application.approval_email_error && (
-                            <span className="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
-                              Email retry needed
-                            </span>
-                          )}
                         </div>
 
                         <div>
@@ -655,14 +744,6 @@ export default function AdminPage() {
                       <dt className="font-medium text-foreground">Submitted</dt>
                       <dd className="text-muted-foreground">
                         {new Date(selectedApplication.created_at).toLocaleString()}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="font-medium text-foreground">Email delivery status</dt>
-                      <dd className="text-muted-foreground">
-                        {selectedApplication.approval_email_sent_at
-                          ? 'Credentials already emailed'
-                          : selectedApplication.approval_email_error ?? 'Not emailed yet'}
                       </dd>
                     </div>
                   </dl>

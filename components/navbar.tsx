@@ -28,6 +28,21 @@ export function Navbar() {
   const userEmail = user?.email ?? 'Signed in'
   const accountHref = isAdmin ? '/admin' : isPartner ? '/partner' : '/dashboard'
   const signedOutHref = isAdmin ? '/admin/login' : '/auth'
+  const desktopNavLinks = isAdmin
+    ? [{ href: '/admin', label: 'Admin Panel' }]
+    : isPartner
+      ? [{ href: '/partner', label: 'Partner Dashboard' }]
+      : [
+          { href: '/', label: 'Home' },
+          { href: '/browse', label: 'Browse Pets' },
+          { href: '/partner/register', label: 'For Shelters' },
+          { href: '/#how-it-works', label: 'How It Works' },
+          { href: '/#featured-pets', label: 'Featured' },
+          { href: '/#contact', label: 'Support' },
+        ]
+  const mobileNavLinks = desktopNavLinks
+  const ctaHref = isAdmin ? '/admin' : isPartner ? '/partner' : '/browse'
+  const ctaLabel = isAdmin ? 'Admin Panel' : isPartner ? 'Partner Dashboard' : 'Browse Pets'
 
   const handleSignOut = async () => {
     setIsSigningOut(true)
@@ -62,24 +77,15 @@ export function Navbar() {
           </Link>
 
           <div className="hidden items-center gap-9 md:flex">
-            <Link href="/" className="text-sm font-medium text-foreground transition-colors hover:text-primary">
-              Home
-            </Link>
-            <Link href="/browse" className="text-sm font-medium text-foreground transition-colors hover:text-primary">
-              Browse Pets
-            </Link>
-            <Link href="/partner/register" className="text-sm font-medium text-foreground transition-colors hover:text-primary">
-              For Shelters
-            </Link>
-            <Link href="/#how-it-works" className="text-sm font-medium text-foreground transition-colors hover:text-primary">
-              How It Works
-            </Link>
-            <Link href="/#featured-pets" className="text-sm font-medium text-foreground transition-colors hover:text-primary">
-              Featured
-            </Link>
-            <Link href="/#contact" className="text-sm font-medium text-foreground transition-colors hover:text-primary">
-              Support
-            </Link>
+            {desktopNavLinks.map((link) => (
+              <Link
+                key={link.label}
+                href={link.href}
+                className="text-sm font-medium text-foreground transition-colors hover:text-primary"
+              >
+                {link.label}
+              </Link>
+            ))}
           </div>
 
           <div className="hidden items-center gap-3 md:flex">
@@ -125,8 +131,8 @@ export function Navbar() {
                 Log in
               </Link>
             )}
-            <Link href="/browse" className="rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[0_16px_36px_-20px_rgba(249,115,22,0.9)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg">
-              Browse Pets
+            <Link href={ctaHref} className="rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[0_16px_36px_-20px_rgba(249,115,22,0.9)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg">
+              {ctaLabel}
             </Link>
           </div>
 
@@ -142,24 +148,16 @@ export function Navbar() {
         {isOpen && (
           <div className="md:hidden border-t border-border/70">
             <div className="space-y-1 px-1 pb-4 pt-3">
-              <Link href="/" className="block rounded-xl px-4 py-3 text-base font-medium text-foreground transition-colors hover:bg-secondary/20">
-                Home
-              </Link>
-              <Link href="/browse" className="block rounded-xl px-4 py-3 text-base font-medium text-foreground transition-colors hover:bg-secondary/20">
-                Browse Pets
-              </Link>
-              <Link href="/partner/register" className="block rounded-xl px-4 py-3 text-base font-medium text-foreground transition-colors hover:bg-secondary/20">
-                For Shelters
-              </Link>
-              <Link href="/#how-it-works" className="block rounded-xl px-4 py-3 text-base font-medium text-foreground transition-colors hover:bg-secondary/20">
-                How It Works
-              </Link>
-              <Link href="/#featured-pets" className="block rounded-xl px-4 py-3 text-base font-medium text-foreground transition-colors hover:bg-secondary/20">
-                Featured
-              </Link>
-              <Link href="/#contact" className="block rounded-xl px-4 py-3 text-base font-medium text-foreground transition-colors hover:bg-secondary/20">
-                Support
-              </Link>
+              {mobileNavLinks.map((link) => (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  className="block rounded-xl px-4 py-3 text-base font-medium text-foreground transition-colors hover:bg-secondary/20"
+                  onClick={() => setIsOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              ))}
               {!loading && !user && (
                 <Link
                   href="/auth"
@@ -190,8 +188,12 @@ export function Navbar() {
                   </button>
                 </>
               )}
-              <Link href="/browse" className="mt-3 block w-full rounded-full bg-primary px-4 py-3 text-center text-base font-medium text-primary-foreground transition-opacity hover:opacity-90">
-                Browse Pets
+              <Link
+                href={ctaHref}
+                className="mt-3 block w-full rounded-full bg-primary px-4 py-3 text-center text-base font-medium text-primary-foreground transition-opacity hover:opacity-90"
+                onClick={() => setIsOpen(false)}
+              >
+                {ctaLabel}
               </Link>
             </div>
           </div>

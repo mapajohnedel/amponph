@@ -2,7 +2,6 @@ import 'server-only'
 
 import { randomBytes } from 'node:crypto'
 import type { User } from '@supabase/supabase-js'
-import { sendPartnerApprovalEmail } from '@/lib/email/partner-approval'
 import {
   normalizeOptionalText,
   partnerApplicationReviewSchema,
@@ -139,6 +138,7 @@ export async function approvePartnerApplication(
       reviewed_at: new Date().toISOString(),
       review_notes: normalizeOptionalText(payload.reviewNotes),
       approved_auth_user_id: createdUserId,
+      approval_email_sent_at: null,
       approval_email_error: null,
     })
     .eq('id', partnerApplication.id)
@@ -149,40 +149,11 @@ export async function approvePartnerApplication(
     throw new Error(updateError.message)
   }
 
-  try {
-    await sendPartnerApprovalEmail({
-      to: partnerApplication.email,
-      contactPersonName: partnerApplication.contact_person_name,
-      organizationName: partnerApplication.organization_name,
-      email: partnerApplication.email,
-      password: generatedPassword,
-    })
-
-    await supabase
-      .from('partner_applications')
-      .update({
-        approval_email_sent_at: new Date().toISOString(),
-        approval_email_error: null,
-      })
-      .eq('id', partnerApplication.id)
-
-    return {
-      emailSent: true,
-    }
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Failed to send partner approval email.'
-
-    await supabase
-      .from('partner_applications')
-      .update({
-        approval_email_error: message,
-      })
-      .eq('id', partnerApplication.id)
-
-    return {
-      emailSent: false,
-      emailError: message,
-    }
+  return {
+    email: partnerApplication.email,
+    password: generatedPassword,
+    organizationName: partnerApplication.organization_name,
+    contactPersonName: partnerApplication.contact_person_name,
   }
 }
 
