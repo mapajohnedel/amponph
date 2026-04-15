@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { ChevronDown, KeyRound, LayoutDashboard, LogOut, Menu, X } from 'lucide-react'
+import { ChevronDown, FilePlus2, KeyRound, LayoutDashboard, LogOut, Menu, PawPrint, X } from 'lucide-react'
 import { useAuthUser } from '@/hooks/use-auth-user'
 import {
   DropdownMenu,
@@ -28,11 +28,17 @@ export function Navbar() {
   const userEmail = user?.email ?? 'Signed in'
   const accountHref = isAdmin ? '/admin' : isPartner ? '/partner' : '/dashboard'
   const passwordHref = !isAdmin ? '/account/password' : null
+  const partnerListingsHref = isPartner ? '/partner/listings' : null
+  const createListingHref = isPartner ? '/partner/listings/new' : null
   const signedOutHref = isAdmin ? '/admin/login' : '/auth'
   const desktopNavLinks = isAdmin
     ? [{ href: '/admin', label: 'Admin Panel' }]
     : isPartner
-      ? [{ href: '/partner', label: 'Partner Dashboard' }]
+      ? [
+          { href: '/partner', label: 'Partner Dashboard' },
+          { href: '/partner/listings', label: 'My Pets' },
+          { href: '/partner/listings/new', label: 'Create Listing' },
+        ]
       : [
           { href: '/', label: 'Home' },
           { href: '/browse', label: 'Browse Pets' },
@@ -120,6 +126,22 @@ export function Navbar() {
                       </Link>
                     </DropdownMenuItem>
                   )}
+                  {partnerListingsHref && (
+                    <DropdownMenuItem asChild className="rounded-xl px-3 py-2">
+                      <Link href={partnerListingsHref}>
+                        <PawPrint className="h-4 w-4" />
+                        My Pets
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+                  {createListingHref && (
+                    <DropdownMenuItem asChild className="rounded-xl px-3 py-2">
+                      <Link href={createListingHref}>
+                        <FilePlus2 className="h-4 w-4" />
+                        Create Listing
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem
                     variant="destructive"
                     className="rounded-xl px-3 py-2"
@@ -195,6 +217,24 @@ export function Navbar() {
                       onClick={() => setIsOpen(false)}
                     >
                       Update Password
+                    </Link>
+                  )}
+                  {partnerListingsHref && (
+                    <Link
+                      href={partnerListingsHref}
+                      className="block rounded-xl px-4 py-3 text-base font-medium text-foreground transition-colors hover:bg-secondary/20"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      My Pets
+                    </Link>
+                  )}
+                  {createListingHref && (
+                    <Link
+                      href={createListingHref}
+                      className="block rounded-xl px-4 py-3 text-base font-medium text-foreground transition-colors hover:bg-secondary/20"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      Create Listing
                     </Link>
                   )}
                   <button

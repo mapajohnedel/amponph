@@ -127,6 +127,18 @@ export default async function PartnerPage() {
               </h2>
               <div className="space-y-3">
                 <Link
+                  href="/partner/listings"
+                  className="block rounded-2xl border border-border px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-secondary/10"
+                >
+                  View my pet listings
+                </Link>
+                <Link
+                  href="/partner/listings/new"
+                  className="block rounded-2xl border border-border px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-secondary/10"
+                >
+                  Create a new pet listing
+                </Link>
+                <Link
                   href="/browse"
                   className="block rounded-2xl border border-border px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-secondary/10"
                 >
