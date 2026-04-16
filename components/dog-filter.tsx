@@ -1,8 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import { Filter, MapPin, Search, SlidersHorizontal } from 'lucide-react'
-import { mockDogs } from '@/lib/mock-dogs'
+import { ChevronDown, Filter, MapPin, SlidersHorizontal } from 'lucide-react'
+import { breedOptions } from '@/lib/breed-options'
+import {
+  getCityOptionsByProvince,
+  getProvinceLabel,
+  philippineProvinceOptions,
+} from '@/lib/philippines-locations'
 
 export interface FilterOptions {
   breed?: string
@@ -16,25 +21,29 @@ interface DogFilterProps {
   onFilterChange: (filters: FilterOptions) => void
 }
 
-const breeds = Array.from(new Set(mockDogs.map((dog) => dog.breed))).sort()
-
 const sizes = ['small', 'medium', 'large']
+const filterBreedOptions = breedOptions.filter((breed) => breed !== 'Other')
 
 export function DogFilter({ onFilterChange }: DogFilterProps) {
   const [breed, setBreed] = useState<string>('')
   const [size, setSize] = useState<string>('')
-  const [location, setLocation] = useState<string>('')
+  const [selectedProvinceKey, setSelectedProvinceKey] = useState<string>('')
+  const [city, setCity] = useState<string>('')
   const [isExpanded, setIsExpanded] = useState(true)
 
   const applyFilters = (nextValues?: {
     breed?: string
     size?: string
-    location?: string
+    provinceKey?: string
+    city?: string
   }) => {
     const nextBreed = nextValues?.breed ?? breed
     const nextSize = nextValues?.size ?? size
-    const nextLocation = nextValues?.location ?? location
+    const nextProvinceKey = nextValues?.provinceKey ?? selectedProvinceKey
+    const nextCity = nextValues?.city ?? city
     const filters: FilterOptions = {}
+    const nextLocation =
+      nextCity || (nextProvinceKey ? getProvinceLabel(nextProvinceKey) : '')
 
     if (nextBreed) filters.breed = nextBreed
     if (nextSize) filters.size = nextSize
@@ -46,7 +55,8 @@ export function DogFilter({ onFilterChange }: DogFilterProps) {
   const handleReset = () => {
     setBreed('')
     setSize('')
-    setLocation('')
+    setSelectedProvinceKey('')
+    setCity('')
     onFilterChange({})
   }
 
@@ -77,24 +87,23 @@ export function DogFilter({ onFilterChange }: DogFilterProps) {
               Breed
             </label>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#145da0]" />
-              <input
-                list="breed-options"
-                type="text"
+              <select
                 value={breed}
                 onChange={(e) => {
                   const nextBreed = e.target.value
                   setBreed(nextBreed)
                   applyFilters({ breed: nextBreed })
                 }}
-                placeholder="All breeds"
-                className="w-full rounded-xl border border-[#dce9f8] bg-[#fcfdff] py-2.5 pl-9 pr-3 text-sm text-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
-              />
-              <datalist id="breed-options">
-                {breeds.map((b) => (
-                  <option key={b} value={b} />
+                className="w-full appearance-none rounded-xl border border-[#dce9f8] bg-[#fcfdff] px-3 py-2.5 pr-10 text-sm text-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
+              >
+                <option value="">All breeds</option>
+                {filterBreedOptions.map((b) => (
+                  <option key={b} value={b}>
+                    {b}
+                  </option>
                 ))}
-              </datalist>
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#145da0]" />
             </div>
           </div>
 
@@ -141,19 +150,51 @@ export function DogFilter({ onFilterChange }: DogFilterProps) {
             <label className="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-foreground/80">
               Location
             </label>
-            <div className="relative">
-              <MapPin className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#145da0]" />
-              <input
-                type="text"
-                value={location}
-                onChange={(e) => {
-                  const nextLocation = e.target.value
-                  setLocation(nextLocation)
-                  applyFilters({ location: nextLocation })
-                }}
-                placeholder="Quezon City"
-                className="w-full rounded-xl border border-[#dce9f8] bg-[#fcfdff] py-2.5 pl-9 pr-3 text-sm text-foreground placeholder-muted-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
-              />
+            <div className="space-y-3">
+              <div className="relative">
+                <MapPin className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#145da0]" />
+                <select
+                  value={selectedProvinceKey}
+                  onChange={(e) => {
+                    const nextProvinceKey = e.target.value
+                    setSelectedProvinceKey(nextProvinceKey)
+                    setCity('')
+                    applyFilters({ provinceKey: nextProvinceKey, city: '' })
+                  }}
+                  className="w-full appearance-none rounded-xl border border-[#dce9f8] bg-[#fcfdff] py-2.5 pl-9 pr-10 text-sm text-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
+                >
+                  <option value="">All provinces or regions</option>
+                  {philippineProvinceOptions.map((province) => (
+                    <option key={province.key} value={province.key}>
+                      {province.label}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#145da0]" />
+              </div>
+
+              <div className="relative">
+                <select
+                  value={city}
+                  onChange={(e) => {
+                    const nextCity = e.target.value
+                    setCity(nextCity)
+                    applyFilters({ city: nextCity })
+                  }}
+                  disabled={!selectedProvinceKey}
+                  className="w-full appearance-none rounded-xl border border-[#dce9f8] bg-[#fcfdff] px-3 py-2.5 pr-10 text-sm text-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  <option value="">
+                    {selectedProvinceKey ? 'All cities' : 'Select a province first'}
+                  </option>
+                  {getCityOptionsByProvince(selectedProvinceKey).map((locationOption) => (
+                    <option key={locationOption.value} value={locationOption.value}>
+                      {locationOption.label}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#145da0]" />
+              </div>
             </div>
           </div>
 

@@ -31,6 +31,7 @@ export function Navbar() {
   const partnerListingsHref = isPartner ? '/partner/listings' : null
   const createListingHref = isPartner ? '/partner/listings/new' : null
   const signedOutHref = isAdmin ? '/admin/login' : '/auth'
+  const isRegularUser = Boolean(user) && !isAdmin && !isPartner
   const desktopNavLinks = isAdmin
     ? [{ href: '/admin', label: 'Admin Panel' }]
     : isPartner
@@ -39,6 +40,11 @@ export function Navbar() {
           { href: '/partner/listings', label: 'My Pets' },
           { href: '/partner/listings/new', label: 'Create Listing' },
         ]
+      : isRegularUser
+        ? [
+            { href: '/dashboard', label: 'Dashboard' },
+            { href: '/browse', label: 'Browse Pets' },
+          ]
       : [
           { href: '/', label: 'Home' },
           { href: '/browse', label: 'Browse Pets' },

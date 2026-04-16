@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight, Heart, MapPin } from 'lucide-react'
 import type { Dog } from '@/lib/mock-dogs'
@@ -21,11 +20,9 @@ export function DogCard({ dog, layout = 'default' }: DogCardProps) {
             isLandscape ? 'aspect-[16/9]' : 'h-64 sm:h-72'
           }`}
         >
-          <Image
+          <img
             src={dog.image}
             alt={dog.name}
-            fill
-            sizes={isLandscape ? '(max-width: 1024px) 100vw, 33vw' : '(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw'}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
           <button

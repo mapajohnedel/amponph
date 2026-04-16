@@ -13,6 +13,7 @@ export interface Dog {
   neutered: boolean
   shelterName: string
   shelterEmail: string
+  shelterPhone?: string
   price?: number
 }
 

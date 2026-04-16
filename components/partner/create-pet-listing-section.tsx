@@ -2,36 +2,8 @@
 
 import { type FormEvent, useMemo, useState } from 'react'
 import { Camera, CheckCircle2, Dog, MapPin, ShieldCheck } from 'lucide-react'
+import { breedOptions } from '@/lib/breed-options'
 import { createClient } from '@/lib/supabase/client'
-
-const breedOptions = [
-  'Aspin',
-  'Aspin Mix',
-  'Mixed Breed',
-  'Labrador Retriever',
-  'Labrador Mix',
-  'Golden Retriever',
-  'Golden Retriever Mix',
-  'German Shepherd',
-  'German Shepherd Mix',
-  'Shih Tzu',
-  'Pomeranian',
-  'Chihuahua',
-  'Beagle',
-  'Siberian Husky',
-  'Husky Mix',
-  'Poodle',
-  'Poodle Mix',
-  'Dachshund',
-  'Corgi',
-  'Rottweiler',
-  'Border Collie',
-  'Jack Russell Terrier',
-  'Belgian Malinois',
-  'Boxer',
-  'Doberman',
-  'Other',
-] as const
 
 type ListingDraft = {
   name: string
