@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { ArrowLeft, FilePlus2, MapPin, PawPrint } from 'lucide-react'
+import { ArrowLeft, FilePlus2, MapPin, PawPrint, PencilLine } from 'lucide-react'
+import { DeletePetListingButton } from '@/components/partner/delete-pet-listing-button'
 import { PetListingThumbnail } from '@/components/partner/pet-listing-thumbnail'
 import { getAuthenticatedHome, isPartnerUser } from '@/lib/auth/roles'
 import { createClient } from '@/lib/supabase/server'
@@ -22,7 +23,7 @@ export default async function PartnerListingsPage() {
   const { data: pets, error: petsError } = await supabase
     .from('pets')
     .select(
-      'id, name, breed, age_years, gender, size, location, description, image_url, vaccinated, neutered, status, published_at, created_at'
+      'id, name, breed, age_years, gender, size, location, description, image_url, image_urls, vaccinated, neutered, status, published_at, created_at'
     )
     .eq('partner_user_id', user.id)
     .order('created_at', { ascending: false })
@@ -101,6 +102,9 @@ export default async function PartnerListingsPage() {
                     <th className="px-5 py-4 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
                       Date
                     </th>
+                    <th className="px-5 py-4 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
@@ -156,7 +160,15 @@ export default async function PartnerListingsPage() {
                         </div>
                       </td>
                       <td className="px-5 py-4">
-                        <span className="rounded-full bg-[#eef7ff] px-3 py-1.5 text-xs font-semibold capitalize text-[#145da0]">
+                        <span
+                          className={`rounded-full px-3 py-1.5 text-xs font-semibold capitalize ${
+                            pet.status === 'published'
+                              ? 'bg-[#eef7ff] text-[#145da0]'
+                              : pet.status === 'fostered'
+                                ? 'bg-emerald-100 text-emerald-700'
+                                : 'bg-muted text-foreground'
+                          }`}
+                        >
                           {pet.status}
                         </span>
                       </td>
@@ -164,6 +176,23 @@ export default async function PartnerListingsPage() {
                         {pet.published_at
                           ? `Published ${new Date(pet.published_at).toLocaleDateString()}`
                           : `Created ${new Date(pet.created_at).toLocaleDateString()}`}
+                      </td>
+                      <td className="px-5 py-4">
+                        <div className="flex flex-col gap-2">
+                          {Array.isArray(pet.image_urls) && pet.image_urls.length > 1 && (
+                            <span className="text-xs text-muted-foreground">
+                              {pet.image_urls.length} gallery images
+                            </span>
+                          )}
+                          <Link
+                            href={`/partner/listings/${pet.id}/edit`}
+                            className="inline-flex items-center gap-2 rounded-full border border-[#d6e8fb] bg-white px-4 py-2 text-xs font-semibold text-[#145da0] transition-colors hover:bg-[#f3f9ff]"
+                          >
+                            <PencilLine className="h-4 w-4" />
+                            Edit
+                          </Link>
+                          <DeletePetListingButton petId={pet.id} petName={pet.name} />
+                        </div>
                       </td>
                     </tr>
                   ))}

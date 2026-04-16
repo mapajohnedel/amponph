@@ -17,7 +17,7 @@ type PetRow = {
   image_urls: string[] | null
   vaccinated: boolean
   neutered: boolean
-  status: 'draft' | 'published' | 'archived'
+  status: 'draft' | 'published' | 'fostered' | 'archived'
 }
 
 type PartnerProfileSummary = {

@@ -1,6 +1,7 @@
 'use client'
 
 import { type ChangeEvent, type FormEvent, useEffect, useMemo, useRef, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Camera, CheckCircle2, Dog, MapPin, ShieldCheck, Upload, X } from 'lucide-react'
 import { breedOptions } from '@/lib/breed-options'
 import {
@@ -17,6 +18,7 @@ type ListingDraft = {
   age: string
   gender: 'male' | 'female'
   size: 'small' | 'medium' | 'large'
+  status: 'draft' | 'published' | 'fostered' | 'archived'
   location: string
   description: string
   vaccinated: boolean
@@ -29,22 +31,81 @@ type SelectedImage = {
   previewUrl: string
 }
 
-type CreatePetListingSectionProps = {
-  initialLocation?: string
+type ExistingImage = {
+  id: string
+  url: string
+  publicId: string | null
 }
 
-function createDefaultDraft(initialLocation = ''): ListingDraft {
-  return {
-    name: '',
-    breed: '',
-    age: '',
-    gender: 'male',
-    size: 'medium',
-    location: initialLocation,
-    description: '',
-    vaccinated: true,
-    neutered: false,
+export type PetListingInitialValues = {
+  id: string
+  name: string
+  breed: string
+  age: number
+  gender: 'male' | 'female'
+  size: 'small' | 'medium' | 'large'
+  status: 'draft' | 'published' | 'fostered' | 'archived'
+  location: string
+  description: string
+  vaccinated: boolean
+  neutered: boolean
+  imageUrls: string[]
+  imagePublicIds: string[]
+}
+
+type CreatePetListingSectionProps = {
+  initialLocation?: string
+  mode?: 'create' | 'edit'
+  petId?: string
+  initialValues?: PetListingInitialValues
+}
+
+function getInitialBreedState(initialBreed = '') {
+  const trimmedBreed = initialBreed.trim()
+
+  if (!trimmedBreed) {
+    return {
+      breed: '',
+      customBreed: '',
+    }
   }
+
+  if (breedOptions.some((breedOption) => breedOption === trimmedBreed)) {
+    return {
+      breed: trimmedBreed,
+      customBreed: '',
+    }
+  }
+
+  return {
+    breed: 'Other',
+    customBreed: trimmedBreed,
+  }
+}
+
+function createDraft(initialLocation = '', initialValues?: PetListingInitialValues): ListingDraft {
+  const breedState = getInitialBreedState(initialValues?.breed ?? '')
+
+  return {
+    name: initialValues?.name ?? '',
+    breed: breedState.breed,
+    age: initialValues ? String(initialValues.age) : '',
+    gender: initialValues?.gender ?? 'male',
+    size: initialValues?.size ?? 'medium',
+    status: initialValues?.status ?? 'published',
+    location: initialValues?.location ?? initialLocation,
+    description: initialValues?.description ?? '',
+    vaccinated: initialValues?.vaccinated ?? true,
+    neutered: initialValues?.neutered ?? false,
+  }
+}
+
+function createExistingImages(initialValues?: PetListingInitialValues): ExistingImage[] {
+  return (initialValues?.imageUrls ?? []).slice(0, MAX_PET_IMAGE_COUNT).map((url, index) => ({
+    id: `existing-${index}-${url}`,
+    url,
+    publicId: initialValues?.imagePublicIds[index] ?? null,
+  }))
 }
 
 function revokePreviewUrls(images: SelectedImage[]) {
@@ -61,10 +122,20 @@ function buildSelectedImages(files: File[]) {
 
 export function CreatePetListingSection({
   initialLocation = '',
+  mode = 'create',
+  petId,
+  initialValues,
 }: CreatePetListingSectionProps) {
+  const router = useRouter()
   const supabase = useMemo(() => createClient(), [])
-  const [draft, setDraft] = useState<ListingDraft>(() => createDefaultDraft(initialLocation))
-  const [customBreed, setCustomBreed] = useState('')
+  const [savedInitialValues, setSavedInitialValues] = useState<PetListingInitialValues | undefined>(
+    initialValues
+  )
+  const [draft, setDraft] = useState<ListingDraft>(() => createDraft(initialLocation, initialValues))
+  const [customBreed, setCustomBreed] = useState(() => getInitialBreedState(initialValues?.breed).customBreed)
+  const [existingImages, setExistingImages] = useState<ExistingImage[]>(() =>
+    createExistingImages(initialValues)
+  )
   const [selectedImages, setSelectedImages] = useState<SelectedImage[]>([])
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
@@ -72,9 +143,15 @@ export function CreatePetListingSection({
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStateMessage, setSubmitStateMessage] = useState<string | null>(null)
   const selectedImagesRef = useRef<SelectedImage[]>([])
+  const isEditMode = mode === 'edit' && Boolean(petId)
   const isOtherBreed = draft.breed === 'Other'
   const resolvedBreed = isOtherBreed ? customBreed.trim() : draft.breed.trim()
-  const primaryPreviewUrl = selectedImages[0]?.previewUrl ?? null
+  const totalImageCount = existingImages.length + selectedImages.length
+  const allPreviewUrls = [
+    ...existingImages.map((image) => image.url),
+    ...selectedImages.map((image) => image.previewUrl),
+  ]
+  const primaryPreviewUrl = allPreviewUrls[0] ?? null
 
   useEffect(() => {
     selectedImagesRef.current = selectedImages
@@ -107,8 +184,11 @@ export function CreatePetListingSection({
   }
 
   const resetForm = () => {
-    setDraft(createDefaultDraft(initialLocation))
-    setCustomBreed('')
+    const breedState = getInitialBreedState(savedInitialValues?.breed)
+
+    setDraft(createDraft(initialLocation, savedInitialValues))
+    setCustomBreed(breedState.customBreed)
+    setExistingImages(createExistingImages(savedInitialValues))
     setErrorMessage(null)
     setSuccessMessage(null)
     setHasPreview(false)
@@ -127,7 +207,7 @@ export function CreatePetListingSection({
       return
     }
 
-    if (selectedImages.length + files.length > MAX_PET_IMAGE_COUNT) {
+    if (totalImageCount + files.length > MAX_PET_IMAGE_COUNT) {
       setErrorMessage(`You can upload up to ${MAX_PET_IMAGE_COUNT} pet images only.`)
       return
     }
@@ -136,7 +216,7 @@ export function CreatePetListingSection({
     setSelectedImages((current) => [...current, ...buildSelectedImages(files)])
   }
 
-  const removeImage = (imageId: string) => {
+  const removeSelectedImage = (imageId: string) => {
     setSelectedImages((current) => {
       const imageToRemove = current.find((image) => image.id === imageId)
 
@@ -146,6 +226,10 @@ export function CreatePetListingSection({
 
       return current.filter((image) => image.id !== imageId)
     })
+  }
+
+  const removeExistingImage = (imageId: string) => {
+    setExistingImages((current) => current.filter((image) => image.id !== imageId))
   }
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -159,8 +243,8 @@ export function CreatePetListingSection({
       return
     }
 
-    if (selectedImages.length === 0) {
-      setErrorMessage('Please upload at least one pet image before publishing.')
+    if (totalImageCount === 0) {
+      setErrorMessage('Please keep or upload at least one pet image before saving.')
       return
     }
 
@@ -172,7 +256,7 @@ export function CreatePetListingSection({
     }
 
     setIsSubmitting(true)
-    setSubmitStateMessage('Checking your partner account...')
+    setSubmitStateMessage(isEditMode ? 'Preparing listing update...' : 'Checking your partner account...')
 
     try {
       const {
@@ -184,50 +268,141 @@ export function CreatePetListingSection({
         throw new Error(userError?.message ?? 'You must be signed in as a partner to save listings.')
       }
 
-      const uploadedImageUrls: string[] = []
+      const uploadedImages: Array<{ url: string; publicId: string }> = []
       const petName = draft.name.trim()
 
       for (const [index, image] of selectedImages.entries()) {
         setSubmitStateMessage(`Uploading image ${index + 1} of ${selectedImages.length}...`)
         const uploadedImage = await uploadPetImageToCloudinary(image.file)
-        uploadedImageUrls.push(uploadedImage.url)
+        uploadedImages.push({
+          url: uploadedImage.url,
+          publicId: uploadedImage.publicId,
+        })
       }
 
-      setSubmitStateMessage('Saving listing to Supabase...')
+      const finalImages = [
+        ...existingImages.map((image) => ({
+          url: image.url,
+          publicId: image.publicId,
+        })),
+        ...uploadedImages,
+      ]
 
-      const { error } = await supabase.from('pets').insert({
-        partner_user_id: user.id,
-        name: petName,
-        breed: resolvedBreed,
-        age_years: parsedAge,
-        gender: draft.gender,
-        size: draft.size,
-        location: draft.location.trim(),
-        description: draft.description.trim() || '',
-        image_url: uploadedImageUrls[0] ?? null,
-        image_urls: uploadedImageUrls,
-        vaccinated: draft.vaccinated,
-        neutered: draft.neutered,
-        status: 'published',
-        published_at: new Date().toISOString(),
-      })
+      if (isEditMode && petId) {
+        setSubmitStateMessage('Updating listing...')
 
-      if (error) {
-        throw new Error(error.message)
+        const response = await fetch(`/api/partner/pets/${petId}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: petName,
+            breed: resolvedBreed,
+            age_years: parsedAge,
+            gender: draft.gender,
+            size: draft.size,
+            status: draft.status,
+            location: draft.location.trim(),
+            description: draft.description.trim() || '',
+            image_urls: finalImages.map((image) => image.url),
+            image_public_ids: finalImages
+              .map((image) => image.publicId)
+              .filter((value): value is string => Boolean(value)),
+            vaccinated: draft.vaccinated,
+            neutered: draft.neutered,
+          }),
+        })
+
+        const payload = await response.json()
+
+        if (!response.ok) {
+          throw new Error(payload.error ?? 'Unable to update the pet listing.')
+        }
+
+        const updatedPet = payload.pet as {
+          id: string
+          name: string
+          breed: string
+          age_years: number
+          gender: 'male' | 'female'
+          size: 'small' | 'medium' | 'large'
+          status: 'draft' | 'published' | 'fostered' | 'archived'
+          location: string
+          description: string
+          vaccinated: boolean
+          neutered: boolean
+          image_urls: string[]
+          image_public_ids: string[]
+        }
+
+        const nextInitialValues: PetListingInitialValues = {
+          id: updatedPet.id,
+          name: updatedPet.name,
+          breed: updatedPet.breed,
+          age: Number(updatedPet.age_years),
+          gender: updatedPet.gender,
+          size: updatedPet.size,
+          status: updatedPet.status,
+          location: updatedPet.location,
+          description: updatedPet.description ?? '',
+          vaccinated: updatedPet.vaccinated,
+          neutered: updatedPet.neutered,
+          imageUrls: updatedPet.image_urls ?? [],
+          imagePublicIds: updatedPet.image_public_ids ?? [],
+        }
+
+        clearSelectedImages()
+        setExistingImages(createExistingImages(nextInitialValues))
+        setSavedInitialValues(nextInitialValues)
+        setHasPreview(true)
+        setSuccessMessage(
+          payload.cleanupWarning
+            ? `Listing updated. ${payload.cleanupWarning}`
+            : `${petName} was updated successfully.`
+        )
+        router.refresh()
+      } else {
+        setSubmitStateMessage('Saving listing to Supabase...')
+
+        const { error } = await supabase.from('pets').insert({
+          partner_user_id: user.id,
+          name: petName,
+          breed: resolvedBreed,
+          age_years: parsedAge,
+          gender: draft.gender,
+          size: draft.size,
+          status: draft.status,
+          location: draft.location.trim(),
+          description: draft.description.trim() || '',
+          image_url: finalImages[0]?.url ?? null,
+          image_urls: finalImages.map((image) => image.url),
+          image_public_ids: finalImages
+            .map((image) => image.publicId)
+            .filter((value): value is string => Boolean(value)),
+          vaccinated: draft.vaccinated,
+          neutered: draft.neutered,
+          published_at: new Date().toISOString(),
+        })
+
+        if (error) {
+          throw new Error(error.message)
+        }
+
+        setHasPreview(true)
+        setSuccessMessage(
+          `${petName} is now live with ${finalImages.length} optimized photo${finalImages.length === 1 ? '' : 's'}.`
+        )
+        setDraft(createDraft(initialLocation))
+        setCustomBreed('')
+        clearSelectedImages()
+        setExistingImages([])
       }
-
-      setHasPreview(true)
-      setSuccessMessage(
-        `${petName} is now live with ${uploadedImageUrls.length} optimized photo${uploadedImageUrls.length === 1 ? '' : 's'}.`
-      )
-      setDraft(createDefaultDraft(initialLocation))
-      setCustomBreed('')
-      clearSelectedImages()
     } catch (caughtError) {
       setErrorMessage(
         caughtError instanceof Error
           ? caughtError.message
-          : 'Something went wrong while uploading the pet images.'
+          : 'Something went wrong while saving the pet listing.'
       )
     } finally {
       setIsSubmitting(false)
@@ -241,11 +416,12 @@ export function CreatePetListingSection({
         <div>
           <h2 className="flex items-center gap-2 text-2xl font-bold text-foreground">
             <Dog className="h-5 w-5 text-primary" />
-            Create Pet Listing
+            {isEditMode ? 'Edit Pet Listing' : 'Create Pet Listing'}
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-7 text-muted-foreground">
-            Add the pet details, choose up to three photos, and we&apos;ll compress each image to
-            about 200 KB before uploading it to Cloudinary and saving the URLs to Supabase.
+            {isEditMode
+              ? 'Update the pet details, replace photos if needed, and we will clean up removed Cloudinary images after the listing is saved.'
+              : 'Add the pet details, choose up to three photos, and we&apos;ll compress each image to about 200 KB before uploading it to Cloudinary and saving the URLs to Supabase.'}
           </p>
         </div>
         <span className="rounded-full bg-[#eef7ff] px-3 py-1.5 text-xs font-semibold text-[#145da0]">
@@ -370,6 +546,29 @@ export function CreatePetListingSection({
                 <option value="large">Large</option>
               </select>
             </div>
+
+            {isEditMode && (
+              <div>
+                <label className="mb-2 block text-sm font-medium text-foreground">Status</label>
+                <select
+                  value={draft.status}
+                  onChange={(event) =>
+                    setDraft((current) => ({
+                      ...current,
+                      status: event.target.value as ListingDraft['status'],
+                    }))
+                  }
+                  className="w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm capitalize text-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
+                >
+                  <option value="published">Published</option>
+                  <option value="fostered">Fostered</option>
+                  <option value="archived">Archived</option>
+                </select>
+                <p className="mt-2 text-xs leading-6 text-muted-foreground">
+                  Choose `Fostered` when this pet is no longer available for new adopters.
+                </p>
+              </div>
+            )}
           </div>
 
           <div>
@@ -389,7 +588,7 @@ export function CreatePetListingSection({
             <div className="mb-2 flex items-center justify-between gap-3">
               <label className="block text-sm font-medium text-foreground">Pet Photos</label>
               <span className="text-xs font-semibold text-[#145da0]">
-                {selectedImages.length}/{MAX_PET_IMAGE_COUNT} selected
+                {totalImageCount}/{MAX_PET_IMAGE_COUNT} selected
               </span>
             </div>
 
@@ -398,7 +597,7 @@ export function CreatePetListingSection({
                 <Upload className="h-5 w-5" />
               </div>
               <p className="mt-4 text-sm font-semibold text-foreground">
-                Upload up to {MAX_PET_IMAGE_COUNT} images
+                {isEditMode ? 'Add replacement or extra photos' : `Upload up to ${MAX_PET_IMAGE_COUNT} images`}
               </p>
               <p className="mt-2 max-w-md text-xs leading-6 text-muted-foreground">
                 Each image is compressed client-side to about {formatBytes(MAX_PET_IMAGE_BYTES)}
@@ -410,12 +609,40 @@ export function CreatePetListingSection({
                 multiple
                 onChange={handleImageSelection}
                 className="hidden"
-                disabled={isSubmitting || selectedImages.length >= MAX_PET_IMAGE_COUNT}
+                disabled={isSubmitting || totalImageCount >= MAX_PET_IMAGE_COUNT}
               />
             </label>
 
-            {selectedImages.length > 0 && (
+            {totalImageCount > 0 && (
               <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                {existingImages.map((image, index) => (
+                  <div
+                    key={image.id}
+                    className="overflow-hidden rounded-3xl border border-border bg-white shadow-sm"
+                  >
+                    <div className="relative aspect-[4/3] bg-muted">
+                      <img
+                        src={image.url}
+                        alt={`Current pet photo ${index + 1}`}
+                        className="h-full w-full object-cover"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeExistingImage(image.id)}
+                        className="absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-black/65 text-white transition hover:bg-black/80"
+                        aria-label={`Remove current image ${index + 1}`}
+                        disabled={isSubmitting}
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                    <div className="p-3">
+                      <p className="truncate text-sm font-medium text-foreground">Saved image</p>
+                      <p className="mt-1 text-xs text-muted-foreground">Already stored in Cloudinary</p>
+                    </div>
+                  </div>
+                ))}
+
                 {selectedImages.map((image, index) => (
                   <div
                     key={image.id}
@@ -424,14 +651,14 @@ export function CreatePetListingSection({
                     <div className="relative aspect-[4/3] bg-muted">
                       <img
                         src={image.previewUrl}
-                        alt={`Selected pet photo ${index + 1}`}
+                        alt={`Selected pet photo ${existingImages.length + index + 1}`}
                         className="h-full w-full object-cover"
                       />
                       <button
                         type="button"
-                        onClick={() => removeImage(image.id)}
+                        onClick={() => removeSelectedImage(image.id)}
                         className="absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-black/65 text-white transition hover:bg-black/80"
-                        aria-label={`Remove image ${index + 1}`}
+                        aria-label={`Remove new image ${index + 1}`}
                         disabled={isSubmitting}
                       >
                         <X className="h-4 w-4" />
@@ -481,7 +708,11 @@ export function CreatePetListingSection({
               disabled={isSubmitting}
               className="inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 font-semibold text-primary-foreground shadow-[0_18px_38px_-18px_rgba(249,115,22,0.8)] transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-70"
             >
-              {isSubmitting ? submitStateMessage || 'Saving Listing...' : 'Save Listing'}
+              {isSubmitting
+                ? submitStateMessage || 'Saving Listing...'
+                : isEditMode
+                  ? 'Save Changes'
+                  : 'Save Listing'}
             </button>
 
             <button
@@ -490,7 +721,7 @@ export function CreatePetListingSection({
               onClick={resetForm}
               className="inline-flex items-center justify-center rounded-full border border-border bg-white px-6 py-3 font-semibold text-foreground transition-colors hover:bg-secondary/10 disabled:cursor-not-allowed disabled:opacity-70"
             >
-              Clear Form
+              {isEditMode ? 'Reset Changes' : 'Clear Form'}
             </button>
           </div>
         </div>
@@ -513,7 +744,11 @@ export function CreatePetListingSection({
                   <div className="flex h-full w-full items-center justify-center">
                     <div className="flex flex-col items-center gap-3 text-center text-muted-foreground">
                       <Camera className="h-8 w-8 text-primary" />
-                      <p className="text-sm font-medium">Your first uploaded image becomes the cover.</p>
+                      <p className="text-sm font-medium">
+                        {isEditMode
+                          ? 'Keep at least one current image or upload a new one.'
+                          : 'Your first uploaded image becomes the cover.'}
+                      </p>
                     </div>
                   </div>
                 )}
@@ -556,12 +791,12 @@ export function CreatePetListingSection({
                   <span>{draft.location.trim() || 'Set a city or area'}</span>
                 </div>
 
-                {selectedImages.length > 1 && (
+                {allPreviewUrls.length > 1 && (
                   <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
-                    {selectedImages.map((image, index) => (
+                    {allPreviewUrls.map((imageUrl, index) => (
                       <img
-                        key={image.id}
-                        src={image.previewUrl}
+                        key={`${imageUrl}-${index}`}
+                        src={imageUrl}
                         alt={`Preview gallery ${index + 1}`}
                         className="h-14 w-14 shrink-0 rounded-2xl object-cover ring-1 ring-border"
                       />
@@ -595,11 +830,12 @@ export function CreatePetListingSection({
             <div className="rounded-3xl border border-emerald-200 bg-emerald-50 p-5">
               <p className="flex items-center gap-2 text-sm font-semibold text-emerald-800">
                 <CheckCircle2 className="h-4 w-4" />
-                Listing published successfully
+                {isEditMode ? 'Listing updated successfully' : 'Listing published successfully'}
               </p>
               <p className="mt-2 text-sm leading-6 text-emerald-700">
-                Your pet listing now has optimized Cloudinary image URLs stored in the `pets`
-                table and is published automatically.
+                {isEditMode
+                  ? 'Your pet listing details and gallery have been updated. Removed Cloudinary images were scheduled for cleanup after the save.'
+                  : 'Your pet listing now has optimized Cloudinary image URLs stored in the `pets` table and is published automatically.'}
               </p>
             </div>
           )}
