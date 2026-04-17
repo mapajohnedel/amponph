@@ -3,6 +3,7 @@ import { Analytics } from '@vercel/analytics/next'
 import { Footer } from '@/components/footer'
 import { Navbar } from '@/components/navbar'
 import { NavigationLoading } from '@/components/navigation-loading'
+import { Toaster } from '@/components/ui/toaster'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -65,6 +66,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <Toaster />
         <Analytics />
       </body>
     </html>

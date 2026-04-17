@@ -33,30 +33,60 @@ export function Navbar() {
   const signedOutHref = isAdmin ? '/admin/login' : '/auth'
   const isRegularUser = Boolean(user) && !isAdmin && !isPartner
   const isGuest = !loading && !user
+
+  const guestDesktopNav = [
+    { href: '/', label: 'Home' },
+    { href: '/browse', label: 'Adopt' },
+    { href: '/#success-stories', label: 'Success Stories' },
+    { href: '/#how-it-works', label: 'How It Works' },
+    { href: '/partner/register', label: 'For Shelters' },
+    { href: '/auth', label: 'Login' },
+  ]
+  const guestMobileNav = [
+    { href: '/', label: 'Home' },
+    { href: '/browse', label: 'Adopt' },
+    { href: '/#success-stories', label: 'Success Stories' },
+    { href: '/#how-it-works', label: 'How It Works' },
+    { href: '/partner/register', label: 'For Shelters' },
+    { href: '/support', label: 'Support' },
+    { href: '/auth', label: 'Login' },
+  ]
+
+  const userDesktopNav = [
+    { href: '/dashboard', label: 'Dashboard' },
+    { href: '/browse', label: 'Adopt' },
+    { href: '/#success-stories', label: 'Success Stories' },
+    { href: '/dashboard#favorites', label: 'Favorites' },
+  ]
+  const userMobileNav = [
+    { href: '/support', label: 'Support' },
+    ...userDesktopNav,
+  ]
+
+  const partnerDesktopNav = [
+    { href: '/partner', label: 'Partner Dashboard' },
+    { href: '/partner/listings', label: 'My Pets' },
+    { href: '/partner/listings/new', label: 'Create Listing' },
+  ]
+  const partnerMobileNav = [{ href: '/support', label: 'Support' }, ...partnerDesktopNav]
+
+  const adminDesktopNav = [{ href: '/admin', label: 'Admin Panel' }]
+  const adminMobileNav = [{ href: '/support', label: 'Support' }, ...adminDesktopNav]
+
   const desktopNavLinks = isAdmin
-    ? [{ href: '/admin', label: 'Admin Panel' }]
+    ? adminDesktopNav
     : isPartner
-      ? [
-          { href: '/partner', label: 'Partner Dashboard' },
-          { href: '/partner/listings', label: 'My Pets' },
-          { href: '/partner/listings/new', label: 'Create Listing' },
-        ]
+      ? partnerDesktopNav
       : isRegularUser
-        ? [
-            { href: '/dashboard', label: 'Dashboard' },
-            { href: '/browse', label: 'Adopt' },
-            { href: '/#success-stories', label: 'Success Stories' },
-            { href: '/dashboard#favorites', label: 'Favorites' },
-          ]
-      : [
-          { href: '/', label: 'Home' },
-          { href: '/browse', label: 'Adopt' },
-          { href: '/#success-stories', label: 'Success Stories' },
-          { href: '/#how-it-works', label: 'How It Works' },
-          { href: '/partner/register', label: 'For Shelters' },
-          { href: '/auth', label: 'Login' },
-        ]
-  const mobileNavLinks = desktopNavLinks
+        ? userDesktopNav
+        : guestDesktopNav
+  const mobileNavLinks = isAdmin
+    ? adminMobileNav
+    : isPartner
+      ? partnerMobileNav
+      : isRegularUser
+        ? userMobileNav
+        : guestMobileNav
   const ctaHref = isAdmin ? '/admin' : isPartner ? '/partner' : '/browse'
   const ctaLabel = isAdmin ? 'Admin Panel' : isPartner ? 'Partner Dashboard' : 'Browse Pets'
 
@@ -105,6 +135,12 @@ export function Navbar() {
           </div>
 
           <div className="hidden items-center gap-3 md:flex">
+            <Link
+              href="/support"
+              className="text-sm font-medium text-foreground transition-colors hover:text-primary"
+            >
+              Support
+            </Link>
             {!loading && user && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
