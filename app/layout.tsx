@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Analytics } from '@vercel/analytics/next'
 import { Footer } from '@/components/footer'
 import { Navbar } from '@/components/navbar'
+import { NavigationLoading } from '@/components/navigation-loading'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -59,6 +60,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="font-sans antialiased">
         <Navbar />
+        <NavigationLoading />
         <main className="pt-[4.75rem] lg:pt-20">
           {children}
         </main>
