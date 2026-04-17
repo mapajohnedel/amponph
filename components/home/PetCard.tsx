@@ -21,6 +21,7 @@ export function PetCard({ dog }: PetCardProps) {
       toast({
         title: 'Login required',
         description: 'Please login first to continue with adoption.',
+        className: 'border-amber-200 bg-amber-50 text-amber-900',
       })
       router.push('/auth')
       return false

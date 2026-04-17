@@ -83,10 +83,16 @@ export default function AuthPage() {
       return
     }
 
+    const emailRedirectTo =
+      typeof window !== 'undefined'
+        ? `${window.location.origin}/auth`
+        : `${process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'}/auth`
+
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
+        emailRedirectTo,
         data: {
           full_name: name,
           phone: contactNumber,
