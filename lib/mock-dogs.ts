@@ -1,3 +1,5 @@
+import { catBreedOptions } from './breed-options'
+
 export interface Dog {
   id: string
   name: string
@@ -255,6 +257,7 @@ export function getDogById(id: string, dogs: Dog[] = mockDogs): Dog | undefined 
 }
 
 export function filterDogs(filters: {
+  species?: string
   breed?: string
   minAge?: number
   maxAge?: number
@@ -262,6 +265,12 @@ export function filterDogs(filters: {
   location?: string
 }, dogs: Dog[] = mockDogs): Dog[] {
   return dogs.filter(dog => {
+    if (filters.species) {
+      const isCat = catBreedOptions.includes(dog.breed as any)
+      if (filters.species === 'cat' && !isCat) return false
+      if (filters.species === 'dog' && isCat) return false
+    }
+
     if (filters.breed && !dog.breed.toLowerCase().includes(filters.breed.toLowerCase())) {
       return false
     }

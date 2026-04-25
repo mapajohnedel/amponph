@@ -1,7 +1,6 @@
-export const breedOptions = [
+export const dogBreedOptions = [
   'Aspin',
   'Aspin Mix',
-  'Mixed Breed',
   'Labrador Retriever',
   'Labrador Mix',
   'Golden Retriever',
@@ -24,5 +23,20 @@ export const breedOptions = [
   'Belgian Malinois',
   'Boxer',
   'Doberman',
+  'Other',
+] as const
+
+export const catBreedOptions = [
+  'Puspin',
+  'Puspin Mix',
+  'Persian',
+  'Siamese',
+  'Maine Coon',
+  'British Shorthair',
+  'Scottish Fold',
+  'Bengal',
+  'Sphynx',
+  'Ragdoll',
+  'Russian Blue',
   'Other',
 ] as const

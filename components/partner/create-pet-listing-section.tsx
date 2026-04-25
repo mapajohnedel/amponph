@@ -2,8 +2,8 @@
 
 import { type ChangeEvent, type FormEvent, useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Camera, CheckCircle2, Dog, MapPin, ShieldCheck, Upload, X } from 'lucide-react'
-import { breedOptions } from '@/lib/breed-options'
+import { Camera, CheckCircle2, ChevronDown, Dog, MapPin, ShieldCheck, Upload, X } from 'lucide-react'
+import { dogBreedOptions, catBreedOptions } from '@/lib/breed-options'
 import {
   formatBytes,
   MAX_PET_IMAGE_BYTES,
@@ -14,6 +14,7 @@ import { createClient } from '@/lib/supabase/client'
 
 type ListingDraft = {
   name: string
+  species: 'dog' | 'cat'
   breed: string
   age: string
   gender: 'male' | 'female'
@@ -65,19 +66,30 @@ function getInitialBreedState(initialBreed = '') {
 
   if (!trimmedBreed) {
     return {
+      species: 'dog' as const,
       breed: '',
       customBreed: '',
     }
   }
 
-  if (breedOptions.some((breedOption) => breedOption === trimmedBreed)) {
+  if (dogBreedOptions.some((breedOption) => breedOption === trimmedBreed)) {
     return {
+      species: 'dog' as const,
+      breed: trimmedBreed,
+      customBreed: '',
+    }
+  }
+
+  if (catBreedOptions.some((breedOption) => breedOption === trimmedBreed)) {
+    return {
+      species: 'cat' as const,
       breed: trimmedBreed,
       customBreed: '',
     }
   }
 
   return {
+    species: 'dog' as const,
     breed: 'Other',
     customBreed: trimmedBreed,
   }
@@ -88,6 +100,7 @@ function createDraft(initialLocation = '', initialValues?: PetListingInitialValu
 
   return {
     name: initialValues?.name ?? '',
+    species: breedState.species,
     breed: breedState.breed,
     age: initialValues ? String(initialValues.age) : '',
     gender: initialValues?.gender ?? 'male',
@@ -457,20 +470,45 @@ export function CreatePetListingSection({
             </div>
 
             <div>
+              <label className="mb-2 block text-sm font-medium text-foreground">Species</label>
+              <div className="relative">
+                <select
+                  value={draft.species}
+                  onChange={(event) => {
+                    setDraft((current) => ({
+                      ...current,
+                      species: event.target.value as 'dog' | 'cat',
+                      breed: '',
+                    }))
+                    setCustomBreed('')
+                  }}
+                  className="w-full appearance-none rounded-2xl border border-border bg-background px-4 py-3 pr-10 text-sm capitalize text-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
+                >
+                  <option value="dog">Dog</option>
+                  <option value="cat">Cat</option>
+                </select>
+                <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              </div>
+            </div>
+
+            <div>
               <label className="mb-2 block text-sm font-medium text-foreground">Breed</label>
-              <select
-                value={draft.breed}
-                onChange={(event) => setDraft((current) => ({ ...current, breed: event.target.value }))}
-                className="w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm text-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
-                required
-              >
-                <option value="">Select a breed</option>
-                {breedOptions.map((breed) => (
-                  <option key={breed} value={breed}>
-                    {breed}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  value={draft.breed}
+                  onChange={(event) => setDraft((current) => ({ ...current, breed: event.target.value }))}
+                  className="w-full appearance-none rounded-2xl border border-border bg-background px-4 py-3 pr-10 text-sm text-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
+                  required
+                >
+                  <option value="">Select a breed</option>
+                  {(draft.species === 'cat' ? catBreedOptions : dogBreedOptions).map((breed) => (
+                    <option key={breed} value={breed}>
+                      {breed}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              </div>
               {isOtherBreed && (
                 <input
                   type="text"
@@ -514,56 +552,65 @@ export function CreatePetListingSection({
 
             <div>
               <label className="mb-2 block text-sm font-medium text-foreground">Gender</label>
-              <select
-                value={draft.gender}
-                onChange={(event) =>
-                  setDraft((current) => ({
-                    ...current,
-                    gender: event.target.value as ListingDraft['gender'],
-                  }))
-                }
-                className="w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm capitalize text-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
-              >
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-              </select>
+              <div className="relative">
+                <select
+                  value={draft.gender}
+                  onChange={(event) =>
+                    setDraft((current) => ({
+                      ...current,
+                      gender: event.target.value as ListingDraft['gender'],
+                    }))
+                  }
+                  className="w-full appearance-none rounded-2xl border border-border bg-background px-4 py-3 pr-10 text-sm capitalize text-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
+                >
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+                <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              </div>
             </div>
 
             <div>
               <label className="mb-2 block text-sm font-medium text-foreground">Size</label>
-              <select
-                value={draft.size}
-                onChange={(event) =>
-                  setDraft((current) => ({
-                    ...current,
-                    size: event.target.value as ListingDraft['size'],
-                  }))
-                }
-                className="w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm capitalize text-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
-              >
-                <option value="small">Small</option>
-                <option value="medium">Medium</option>
-                <option value="large">Large</option>
-              </select>
+              <div className="relative">
+                <select
+                  value={draft.size}
+                  onChange={(event) =>
+                    setDraft((current) => ({
+                      ...current,
+                      size: event.target.value as ListingDraft['size'],
+                    }))
+                  }
+                  className="w-full appearance-none rounded-2xl border border-border bg-background px-4 py-3 pr-10 text-sm capitalize text-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
+                >
+                  <option value="small">Small</option>
+                  <option value="medium">Medium</option>
+                  <option value="large">Large</option>
+                </select>
+                <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              </div>
             </div>
 
             {isEditMode && (
               <div>
                 <label className="mb-2 block text-sm font-medium text-foreground">Status</label>
-                <select
-                  value={draft.status}
-                  onChange={(event) =>
-                    setDraft((current) => ({
-                      ...current,
-                      status: event.target.value as ListingDraft['status'],
-                    }))
-                  }
-                  className="w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm capitalize text-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
-                >
-                  <option value="published">Published</option>
-                  <option value="fostered">Fostered</option>
-                  <option value="archived">Archived</option>
-                </select>
+                <div className="relative">
+                  <select
+                    value={draft.status}
+                    onChange={(event) =>
+                      setDraft((current) => ({
+                        ...current,
+                        status: event.target.value as ListingDraft['status'],
+                      }))
+                    }
+                    className="w-full appearance-none rounded-2xl border border-border bg-background px-4 py-3 pr-10 text-sm capitalize text-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
+                  >
+                    <option value="published">Published</option>
+                    <option value="fostered">Fostered</option>
+                    <option value="archived">Archived</option>
+                  </select>
+                  <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                </div>
                 <p className="mt-2 text-xs leading-6 text-muted-foreground">
                   Choose `Fostered` when this pet is no longer available for new adopters.
                 </p>

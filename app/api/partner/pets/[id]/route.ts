@@ -31,8 +31,8 @@ function normalizePublicIds(imageUrls: string[], imagePublicIds: string[]) {
     new Set([
       ...imagePublicIds.filter(isNonEmptyString),
       ...imageUrls
-        .map((url) => extractCloudinaryPublicId(url))
-        .filter((value): value is string => Boolean(value)),
+        .map((url: string) => extractCloudinaryPublicId(url))
+        .filter((value: unknown): value is string => Boolean(value)),
     ])
   )
 }
@@ -228,8 +228,8 @@ export async function DELETE(
 
     const storedPublicIds = (pet.image_public_ids ?? []).filter(Boolean)
     const fallbackPublicIds = (pet.image_urls ?? [])
-      .map((url) => extractCloudinaryPublicId(url))
-      .filter((value): value is string => Boolean(value))
+      .map((url: string) => extractCloudinaryPublicId(url))
+      .filter((value: unknown): value is string => Boolean(value))
 
     await deleteCloudinaryImages([...storedPublicIds, ...fallbackPublicIds])
 

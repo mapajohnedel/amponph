@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { ChevronDown, Filter, MapPin, SlidersHorizontal } from 'lucide-react'
-import { breedOptions } from '@/lib/breed-options'
+import { dogBreedOptions, catBreedOptions } from '@/lib/breed-options'
 import {
   getCityOptionsByProvince,
   getProvinceLabel,
@@ -10,6 +10,7 @@ import {
 } from '@/lib/philippines-locations'
 
 export interface FilterOptions {
+  species?: string
   breed?: string
   minAge?: number
   maxAge?: number
@@ -22,9 +23,9 @@ interface DogFilterProps {
 }
 
 const sizes = ['small', 'medium', 'large']
-const filterBreedOptions = breedOptions.filter((breed) => breed !== 'Other')
 
 export function DogFilter({ onFilterChange }: DogFilterProps) {
+  const [species, setSpecies] = useState<string>('')
   const [breed, setBreed] = useState<string>('')
   const [size, setSize] = useState<string>('')
   const [selectedProvinceKey, setSelectedProvinceKey] = useState<string>('')
@@ -32,11 +33,13 @@ export function DogFilter({ onFilterChange }: DogFilterProps) {
   const [isExpanded, setIsExpanded] = useState(true)
 
   const applyFilters = (nextValues?: {
+    species?: string
     breed?: string
     size?: string
     provinceKey?: string
     city?: string
   }) => {
+    const nextSpecies = nextValues?.species ?? species
     const nextBreed = nextValues?.breed ?? breed
     const nextSize = nextValues?.size ?? size
     const nextProvinceKey = nextValues?.provinceKey ?? selectedProvinceKey
@@ -45,6 +48,7 @@ export function DogFilter({ onFilterChange }: DogFilterProps) {
     const nextLocation =
       nextCity || (nextProvinceKey ? getProvinceLabel(nextProvinceKey) : '')
 
+    if (nextSpecies) filters.species = nextSpecies
     if (nextBreed) filters.breed = nextBreed
     if (nextSize) filters.size = nextSize
     if (nextLocation) filters.location = nextLocation
@@ -53,6 +57,7 @@ export function DogFilter({ onFilterChange }: DogFilterProps) {
   }
 
   const handleReset = () => {
+    setSpecies('')
     setBreed('')
     setSize('')
     setSelectedProvinceKey('')
@@ -84,6 +89,58 @@ export function DogFilter({ onFilterChange }: DogFilterProps) {
         <>
           <div className="mb-5">
             <label className="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-foreground/80">
+              Species
+            </label>
+            <div className="grid grid-cols-3 gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setSpecies('')
+                  setBreed('') // reset breed when species changes
+                  applyFilters({ species: '', breed: '' })
+                }}
+                className={`rounded-xl px-2 py-2 text-sm font-medium transition-all ${
+                  species === ''
+                    ? 'bg-primary text-primary-foreground shadow-[0_12px_26px_-18px_rgba(249,115,22,0.85)]'
+                    : 'border border-[#dce9f8] bg-[#fcfdff] text-foreground hover:bg-[#f7fbff]'
+                }`}
+              >
+                All Pets
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setSpecies('dog')
+                  setBreed('')
+                  applyFilters({ species: 'dog', breed: '' })
+                }}
+                className={`rounded-xl px-2 py-2 text-sm font-medium transition-all ${
+                  species === 'dog'
+                    ? 'bg-primary text-primary-foreground shadow-[0_12px_26px_-18px_rgba(249,115,22,0.85)]'
+                    : 'border border-[#dce9f8] bg-[#fcfdff] text-foreground hover:bg-[#f7fbff]'
+                }`}
+              >
+                Dogs
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setSpecies('cat')
+                  setBreed('')
+                  applyFilters({ species: 'cat', breed: '' })
+                }}
+                className={`rounded-xl px-2 py-2 text-sm font-medium transition-all ${
+                  species === 'cat'
+                    ? 'bg-primary text-primary-foreground shadow-[0_12px_26px_-18px_rgba(249,115,22,0.85)]'
+                    : 'border border-[#dce9f8] bg-[#fcfdff] text-foreground hover:bg-[#f7fbff]'
+                }`}
+              >
+                Cats
+              </button>
+            </div>
+          </div>
+          <div className="mb-5">
+            <label className="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-foreground/80">
               Breed
             </label>
             <div className="relative">
@@ -97,7 +154,14 @@ export function DogFilter({ onFilterChange }: DogFilterProps) {
                 className="w-full appearance-none rounded-xl border border-[#dce9f8] bg-[#fcfdff] px-3 py-2.5 pr-10 text-sm text-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
               >
                 <option value="">All breeds</option>
-                {filterBreedOptions.map((b) => (
+                {(species === 'cat'
+                  ? catBreedOptions.filter((b) => b !== 'Other')
+                  : species === 'dog'
+                    ? dogBreedOptions.filter((b) => b !== 'Other')
+                    : Array.from(new Set([...dogBreedOptions, ...catBreedOptions])).filter(
+                        (b) => b !== 'Other'
+                      )
+                ).map((b) => (
                   <option key={b} value={b}>
                     {b}
                   </option>

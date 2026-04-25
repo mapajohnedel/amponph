@@ -198,7 +198,8 @@ export async function uploadPetImageToCloudinary(file: File): Promise<UploadedPe
     | { error?: { message?: string } }
 
   if (!response.ok || !('secure_url' in payload)) {
-    throw new Error(payload.error?.message ?? 'Cloudinary upload failed.')
+    const errorPayload = payload as { error?: { message?: string } }
+    throw new Error(errorPayload.error?.message ?? 'Cloudinary upload failed.')
   }
 
   return {
