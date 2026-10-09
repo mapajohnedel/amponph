@@ -1,6 +1,12 @@
 import { NextResponse } from 'next/server'
 import { isPartnerUser } from '@/lib/auth/roles'
-import { deleteCloudinaryImages, extractCloudinaryPublicId } from '@/lib/cloudinary/server'
+import {
+  deleteCloudinaryImages,
+  extractCloudinaryPublicId,
+  filterOwnedPublicIds,
+  isAllowedCloudinaryImageUrl,
+  isOwnedPetImagePublicId,
+} from '@/lib/cloudinary/server'
 import { createClient } from '@/lib/supabase/server'
 
 export const runtime = 'nodejs'
@@ -119,6 +125,22 @@ export async function PATCH(
       )
     }
 
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+    const storedImageUrls = (pet.image_urls ?? []).filter(isNonEmptyString)
+    // Already-stored URLs (including legacy non-Cloudinary ones) may be kept; only new ones are validated.
+    const newImageUrls = imageUrls.filter((url) => !storedImageUrls.includes(url))
+
+    if (newImageUrls.some((url) => !isAllowedCloudinaryImageUrl(url, cloudName))) {
+      return NextResponse.json(
+        { error: 'Pet images must be uploaded through AmponPH.' },
+        { status: 400 }
+      )
+    }
+
+    if (newImageUrls.some((url) => !extractCloudinaryPublicId(url))) {
+      return NextResponse.json({ error: 'One or more pet image URLs are invalid.' }, { status: 400 })
+    }
+
     const normalizedPublicIds = normalizePublicIds(imageUrls, requestedPublicIds)
 
     if (normalizedPublicIds.length > MAX_PET_IMAGE_COUNT) {
@@ -129,12 +151,28 @@ export async function PATCH(
     }
 
     const previousPublicIds = normalizePublicIds(
-      (pet.image_urls ?? []).filter(isNonEmptyString),
+      storedImageUrls,
       (pet.image_public_ids ?? []).filter(isNonEmptyString)
     )
 
+    // New references must live in this partner's folder; previously stored ones may be kept as-is.
+    const hasForeignPublicId = normalizedPublicIds.some(
+      (publicId) => !isOwnedPetImagePublicId(publicId, user.id) && !previousPublicIds.includes(publicId)
+    )
+
+    if (hasForeignPublicId) {
+      return NextResponse.json(
+        { error: 'One or more pet images do not belong to your account.' },
+        { status: 400 }
+      )
+    }
+
     const removedPublicIds = previousPublicIds.filter(
       (publicId) => !normalizedPublicIds.includes(publicId)
+    )
+    const deletablePublicIds = filterOwnedPublicIds(removedPublicIds, user.id)
+    const skippedPublicIds = removedPublicIds.filter(
+      (publicId) => !deletablePublicIds.includes(publicId)
     )
 
     const { data: updatedPet, error: updateError } = await supabase
@@ -167,15 +205,20 @@ export async function PATCH(
 
     let cleanupWarning: string | null = null
 
-    if (removedPublicIds.length > 0) {
+    if (deletablePublicIds.length > 0) {
       try {
-        await deleteCloudinaryImages(removedPublicIds)
+        await deleteCloudinaryImages(deletablePublicIds)
       } catch (caughtError) {
         cleanupWarning =
           caughtError instanceof Error
             ? caughtError.message
             : 'The listing was updated, but some old Cloudinary images could not be deleted.'
       }
+    }
+
+    if (skippedPublicIds.length > 0) {
+      const skippedWarning = `${skippedPublicIds.length} older image(s) were removed from the listing but kept in storage for manual cleanup.`
+      cleanupWarning = cleanupWarning ? `${cleanupWarning} ${skippedWarning}` : skippedWarning
     }
 
     return NextResponse.json({
@@ -226,13 +269,6 @@ export async function DELETE(
       return NextResponse.json({ error: 'Pet listing not found.' }, { status: 404 })
     }
 
-    const storedPublicIds = (pet.image_public_ids ?? []).filter(Boolean)
-    const fallbackPublicIds = (pet.image_urls ?? [])
-      .map((url: string) => extractCloudinaryPublicId(url))
-      .filter((value: unknown): value is string => Boolean(value))
-
-    await deleteCloudinaryImages([...storedPublicIds, ...fallbackPublicIds])
-
     const { error: deleteError } = await supabase
       .from('pets')
       .delete()
@@ -243,7 +279,27 @@ export async function DELETE(
       return NextResponse.json({ error: deleteError.message }, { status: 500 })
     }
 
-    return NextResponse.json({ success: true })
+    // Legacy or foreign IDs (outside this partner's folder) are skipped, never destroyed.
+    const deletablePublicIds = filterOwnedPublicIds(
+      normalizePublicIds(
+        (pet.image_urls ?? []).filter(isNonEmptyString),
+        (pet.image_public_ids ?? []).filter(isNonEmptyString)
+      ),
+      user.id
+    )
+
+    let cleanupWarning: string | null = null
+
+    try {
+      await deleteCloudinaryImages(deletablePublicIds)
+    } catch (caughtError) {
+      cleanupWarning =
+        caughtError instanceof Error
+          ? caughtError.message
+          : 'The listing was deleted, but some Cloudinary images could not be removed.'
+    }
+
+    return NextResponse.json({ success: true, cleanupWarning })
   } catch (caughtError) {
     const message =
       caughtError instanceof Error ? caughtError.message : 'Unable to delete the pet listing.'

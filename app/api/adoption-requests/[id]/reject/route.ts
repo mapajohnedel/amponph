@@ -6,6 +6,8 @@ type RejectPayload = {
   reviewNote?: string
 }
 
+const MAX_REVIEW_NOTE_LENGTH = 1000
+
 function isNonEmptyString(value: unknown): value is string {
   return typeof value === 'string' && value.trim().length > 0
 }
@@ -53,9 +55,11 @@ export async function POST(
       )
     }
 
-    const reviewNote = isNonEmptyString(payload.reviewNote) ? payload.reviewNote.trim() : null
+    const reviewNote = isNonEmptyString(payload.reviewNote)
+      ? payload.reviewNote.trim().slice(0, MAX_REVIEW_NOTE_LENGTH)
+      : null
 
-    const { error: updateError } = await supabase
+    const { data: updatedRows, error: updateError } = await supabase
       .from('adoption_requests')
       .update({
         status: 'rejected',
@@ -66,9 +70,17 @@ export async function POST(
       .eq('id', id)
       .eq('partner_user_id', user.id)
       .eq('status', 'pending')
+      .select('id')
 
     if (updateError) {
       return NextResponse.json({ error: updateError.message }, { status: 500 })
+    }
+
+    if (!updatedRows || updatedRows.length === 0) {
+      return NextResponse.json(
+        { error: 'Only pending adoption requests can be rejected.' },
+        { status: 409 }
+      )
     }
 
     return NextResponse.json({ success: true, message: 'Adoption request rejected.' })
