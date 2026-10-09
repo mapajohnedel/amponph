@@ -450,12 +450,6 @@ export default function AuthPage() {
                   Apply as shelter or rescuer
                 </Link>
               </p>
-              <p>
-                Super-admin access only?{' '}
-                <Link href="/admin/login" className="font-semibold text-primary transition-opacity hover:opacity-80">
-                  Admin login
-                </Link>
-              </p>
             </div>
 
             <p className="mt-6 text-center text-xs leading-6 text-muted-foreground">

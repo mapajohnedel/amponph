@@ -59,7 +59,6 @@ export function Navbar() {
     { href: '/#success-stories', label: 'Success Stories' },
     { href: '/#how-it-works', label: 'How It Works' },
     { href: '/partner/register', label: 'For Shelters' },
-    { href: '/support', label: 'Support' },
     { href: '/auth', label: 'Login' },
   ]
 
@@ -69,10 +68,7 @@ export function Navbar() {
     { href: '/#success-stories', label: 'Success Stories' },
     { href: '/dashboard#favorites', label: 'Favorites' },
   ]
-  const userMobileNav = [
-    { href: '/support', label: 'Support' },
-    ...userDesktopNav,
-  ]
+  const userMobileNav = userDesktopNav
 
   const partnerDesktopNav = [
     { href: '/partner', label: 'Partner Dashboard' },
@@ -80,10 +76,10 @@ export function Navbar() {
     { href: '/partner/requests', label: 'Requests' },
     { href: '/partner/listings/new', label: 'Create Listing' },
   ]
-  const partnerMobileNav = [{ href: '/support', label: 'Support' }, ...partnerDesktopNav]
+  const partnerMobileNav = partnerDesktopNav
 
   const adminDesktopNav = [{ href: '/admin', label: 'Admin Panel' }]
-  const adminMobileNav = [{ href: '/support', label: 'Support' }, ...adminDesktopNav]
+  const adminMobileNav = adminDesktopNav
 
   const desktopNavLinks = isAdmin
     ? adminDesktopNav
@@ -147,12 +143,6 @@ export function Navbar() {
           </div>
 
           <div className="hidden items-center gap-3 md:flex">
-            <Link
-              href="/support"
-              className="text-sm font-medium text-foreground transition-colors hover:text-primary"
-            >
-              Support
-            </Link>
             {!loading && user && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>

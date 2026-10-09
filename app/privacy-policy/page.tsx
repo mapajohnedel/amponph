@@ -107,7 +107,7 @@ export default function PrivacyPolicyPage() {
       title: '7. Contact Us',
       content: (
         <p className="text-muted-foreground leading-relaxed">
-          If you have any questions about this Privacy Policy, please contact us via our Support page or email us at{' '}
+          If you have any questions about this Privacy Policy, please email us at{' '}
           <a href="mailto:mapajohnedel@gmail.com" className="text-primary hover:underline font-medium">mapajohnedel@gmail.com</a>.
         </p>
       ),

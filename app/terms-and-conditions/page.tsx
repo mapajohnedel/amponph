@@ -95,7 +95,7 @@ export default function TermsAndConditionsPage() {
       title: '7. Contact Information',
       content: (
         <p className="text-muted-foreground leading-relaxed">
-          If you have any questions or comments regarding these Terms, please contact us through our Support page or email us at{' '}
+          If you have any questions or comments regarding these Terms, please email us at{' '}
           <a href="mailto:mapajohnedel@gmail.com" className="text-primary hover:underline font-medium">mapajohnedel@gmail.com</a>.
         </p>
       ),
