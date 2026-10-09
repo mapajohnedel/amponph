@@ -19,6 +19,7 @@ import {
   Phone,
 } from 'lucide-react'
 import { useAuthUser } from '@/hooks/use-auth-user'
+import { navigateAfterAuthChange } from '@/lib/auth/navigation'
 
 export default function AdminPage() {
   const router = useRouter()
@@ -117,9 +118,7 @@ export default function AdminPage() {
   const handleSignOut = async () => {
     setIsSigningOut(true)
     await supabase.auth.signOut()
-    router.replace('/admin/login')
-    router.refresh()
-    setIsSigningOut(false)
+    navigateAfterAuthChange('/admin/login')
   }
 
   const handleApplicationAction = async (action: 'approve' | 'reject') => {

@@ -23,6 +23,7 @@ import {
   getProvinceLabel,
   philippineProvinceOptions,
 } from '@/lib/philippines-locations'
+import { navigateAfterAuthChange } from '@/lib/auth/navigation'
 
 export default function AuthPage() {
   const router = useRouter()
@@ -45,10 +46,11 @@ export default function AuthPage() {
   )
 
   useEffect(() => {
-    if (!loading && user) {
+    // While submitting, handleSubmit performs the redirect itself.
+    if (!loading && user && !isSubmitting) {
       router.replace(getAuthenticatedHome(user))
     }
-  }, [loading, router, user])
+  }, [isSubmitting, loading, router, user])
 
   const resetMessages = () => {
     setErrorMessage(null)
@@ -78,8 +80,7 @@ export default function AuthPage() {
         return
       }
 
-      router.replace(getAuthenticatedHome(data.user))
-      router.refresh()
+      navigateAfterAuthChange(getAuthenticatedHome(data.user))
       return
     }
 
@@ -110,8 +111,7 @@ export default function AuthPage() {
     }
 
     if (data.session) {
-      router.replace(getAuthenticatedHome(data.user))
-      router.refresh()
+      navigateAfterAuthChange(getAuthenticatedHome(data.user))
       return
     }
 

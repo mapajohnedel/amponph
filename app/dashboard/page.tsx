@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/dialog'
 import { useAuthUser } from '@/hooks/use-auth-user'
 import { Heart, FileText, Settings, LogOut, Clock, CheckCircle, XCircle } from 'lucide-react'
+import { navigateAfterAuthChange } from '@/lib/auth/navigation'
 
 type AdoptionRequestRow = {
   id: string
@@ -233,8 +234,7 @@ export default function DashboardPage() {
   const handleSignOut = async () => {
     setIsSigningOut(true)
     await supabase.auth.signOut()
-    router.replace('/auth')
-    router.refresh()
+    navigateAfterAuthChange('/auth')
   }
 
   useEffect(() => {

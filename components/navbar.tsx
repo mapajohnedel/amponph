@@ -3,7 +3,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import {
   ChevronDown,
   FilePlus2,
@@ -24,9 +23,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { navigateAfterAuthChange } from '@/lib/auth/navigation'
 
 export function Navbar() {
-  const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
   const [isSigningOut, setIsSigningOut] = useState(false)
   const { supabase, user, loading, isAdmin, isPartner } = useAuthUser()
@@ -102,9 +101,7 @@ export function Navbar() {
     setIsSigningOut(true)
     await supabase.auth.signOut()
     setIsOpen(false)
-    router.replace(signedOutHref)
-    router.refresh()
-    setIsSigningOut(false)
+    navigateAfterAuthChange(signedOutHref)
   }
 
   return (

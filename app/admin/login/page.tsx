@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { ArrowRight, Eye, EyeOff, Lock, Mail, ShieldCheck } from 'lucide-react'
 import { useAuthUser } from '@/hooks/use-auth-user'
 import { getAuthenticatedHome, isAdminUser } from '@/lib/auth/admin'
+import { navigateAfterAuthChange } from '@/lib/auth/navigation'
 
 export default function AdminLoginPage() {
   const router = useRouter()
@@ -17,10 +18,11 @@ export default function AdminLoginPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!loading && user) {
+    // While submitting, handleSubmit performs the redirect itself.
+    if (!loading && user && !isSubmitting) {
       router.replace(getAuthenticatedHome(user))
     }
-  }, [loading, router, user])
+  }, [isSubmitting, loading, router, user])
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -45,8 +47,7 @@ export default function AdminLoginPage() {
       return
     }
 
-    router.replace('/admin')
-    router.refresh()
+    navigateAfterAuthChange('/admin')
   }
 
   if (loading) {
