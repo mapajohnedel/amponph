@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto'
 import { NextResponse } from 'next/server'
 import { isPartnerUser } from '@/lib/auth/roles'
+import { getPartnerPetImagesFolder } from '@/lib/cloudinary/shared'
 import { createClient } from '@/lib/supabase/server'
 
 export const runtime = 'nodejs'
@@ -34,7 +35,7 @@ export async function POST() {
     const cloudName = getRequiredEnv('NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME')
     const apiKey = getRequiredEnv('CLOUDINARY_API_KEY')
     const apiSecret = getRequiredEnv('CLOUDINARY_API_SECRET')
-    const folder = process.env.CLOUDINARY_PET_IMAGES_FOLDER ?? 'amponph/pets'
+    const folder = getPartnerPetImagesFolder(user.id)
     const timestamp = Math.floor(Date.now() / 1000)
     const signaturePayload = `folder=${folder}&timestamp=${timestamp}`
     const signature = createHash('sha1')

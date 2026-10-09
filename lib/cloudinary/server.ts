@@ -1,4 +1,13 @@
+import 'server-only'
+
 import { createHash } from 'node:crypto'
+
+export {
+  filterOwnedPublicIds,
+  getPetImagesBaseFolder,
+  isAllowedCloudinaryImageUrl,
+  isOwnedPetImagePublicId,
+} from '@/lib/cloudinary/shared'
 
 function getCloudinaryEnv(
   name:
