@@ -13,7 +13,6 @@ const quickLinks = [
 const supportLinks = [
   { href: '/#featured-pets', label: 'Featured Pets' },
   { href: '/#contact', label: 'Adoption Support' },
-  { href: '/admin/login', label: 'Admin' },
 ]
 
 export function Footer() {
