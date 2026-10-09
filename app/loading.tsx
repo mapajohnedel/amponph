@@ -1,5 +1,5 @@
-import { AppLoadingScreen } from '@/components/app/app-loading-screen'
+import { HomePageSkeleton } from '@/components/skeletons/page-skeletons'
 
 export default function Loading() {
-  return <AppLoadingScreen variant="page" />
+  return <HomePageSkeleton />
 }

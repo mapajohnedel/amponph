@@ -1,19 +1,29 @@
 'use client'
 
-import { Suspense, useEffect, useState } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
 import { usePathname, useSearchParams } from 'next/navigation'
-import { AppLoadingScreen } from '@/components/app/app-loading-screen'
 
 function NavigationLoadingInner() {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const [navigating, setNavigating] = useState(false)
+  const [finishing, setFinishing] = useState(false)
+  const navigatingRef = useRef(false)
 
   const routeKey = `${pathname}?${searchParams.toString()}`
 
   useEffect(() => {
+    if (!navigatingRef.current) return
+    navigatingRef.current = false
     setNavigating(false)
+    setFinishing(true)
   }, [routeKey])
+
+  useEffect(() => {
+    if (!finishing) return
+    const timeout = window.setTimeout(() => setFinishing(false), 400)
+    return () => window.clearTimeout(timeout)
+  }, [finishing])
 
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
@@ -41,10 +51,14 @@ function NavigationLoadingInner() {
       const currentPath = `${window.location.pathname}${window.location.search}`
       if (nextPath === currentPath) return
 
+      navigatingRef.current = true
+      setFinishing(false)
       setNavigating(true)
     }
 
     const onPopState = () => {
+      navigatingRef.current = true
+      setFinishing(false)
       setNavigating(true)
     }
 
@@ -56,18 +70,22 @@ function NavigationLoadingInner() {
     }
   }, [])
 
-  useEffect(() => {
-    if (!navigating) return
-    const prev = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-    return () => {
-      document.body.style.overflow = prev
-    }
-  }, [navigating])
+  if (!navigating && !finishing) return null
 
-  if (!navigating) return null
-
-  return <AppLoadingScreen variant="overlay" />
+  return (
+    <div
+      role="progressbar"
+      aria-label="Loading page"
+      aria-busy={navigating}
+      className="pointer-events-none fixed inset-x-0 top-0 z-[60] h-[3px]"
+    >
+      <div
+        className={`h-full origin-left bg-gradient-to-r from-primary via-[#f59e0b] to-[#3b82f6] shadow-[0_0_10px_rgba(249,115,22,0.6)] ${
+          navigating ? 'navigation-progress-running' : 'navigation-progress-done'
+        }`}
+      />
+    </div>
+  )
 }
 
 export function NavigationLoading() {
