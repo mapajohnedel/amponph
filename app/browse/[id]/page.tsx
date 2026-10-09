@@ -52,25 +52,25 @@ export default async function DogProfilePage({
       : 'A home with more space and adopters ready for bigger-dog exercise needs.'
 
   return (
-    <div className="min-h-screen bg-[linear-gradient(180deg,#fff8f2_0%,#eef7ff_42%,#fffaf6_100%)]">
+    <div className="min-h-screen bg-[linear-gradient(180deg,#fff8f2_0%,#eef7ff_42%,#fffaf6_100%)] dark:bg-[linear-gradient(180deg,var(--page-gradient-from)_0%,var(--page-gradient-to)_100%)]">
       <div className="site-container py-12">
         <Link
           href="/browse"
-          className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/80 px-4 py-2 text-sm font-semibold text-primary shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+          className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/70 dark:border-white/10 bg-white/80 dark:bg-card/80 px-4 py-2 text-sm font-semibold text-primary shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
         >
           <ArrowLeft size={20} />
           Back to Browse
         </Link>
 
-        <div className="mb-8 rounded-[2.75rem] border border-white/70 bg-white/80 p-8 shadow-[0_30px_80px_-35px_rgba(20,44,90,0.35)] backdrop-blur sm:p-10">
+        <div className="mb-8 rounded-[2.75rem] border border-white/70 dark:border-white/10 bg-white/80 dark:bg-card/80 p-8 shadow-[0_30px_80px_-35px_rgba(20,44,90,0.35)] backdrop-blur sm:p-10">
           <div className="flex flex-col gap-8 xl:flex-row xl:items-end xl:justify-between">
             <div className="max-w-3xl">
               <div className="mb-5 flex flex-wrap gap-3">
-                <span className="inline-flex rounded-full bg-[#ffefe6] px-4 py-1.5 text-sm font-semibold text-primary">
+                <span className="inline-flex rounded-full bg-[#ffefe6] dark:bg-primary/15 px-4 py-1.5 text-sm font-semibold text-primary">
                   Meet {dog.name}
                 </span>
                 {dog.vaccinated && (
-                  <span className="inline-flex items-center gap-2 rounded-full bg-green-100 px-4 py-1.5 text-sm font-semibold text-green-800">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-green-100 dark:bg-green-500/15 px-4 py-1.5 text-sm font-semibold text-green-800 dark:text-green-300">
                     <CheckCircle className="h-4 w-4" />
                     Vaccinated
                   </span>
@@ -83,7 +83,7 @@ export default async function DogProfilePage({
               <p className="mt-3 text-xl text-muted-foreground sm:text-2xl">{dog.breed}</p>
 
               <div className="mt-6 flex flex-wrap gap-3">
-                <span className="rounded-full bg-[#fef1e8] px-4 py-2 text-sm font-semibold text-primary">
+                <span className="rounded-full bg-[#fef1e8] dark:bg-primary/15 px-4 py-2 text-sm font-semibold text-primary">
                   {dog.age} year{dog.age !== 1 ? 's' : ''} old
                 </span>
                 <span className="rounded-full bg-muted px-4 py-2 text-sm font-semibold capitalize text-foreground">
@@ -92,8 +92,8 @@ export default async function DogProfilePage({
                 <span className="rounded-full bg-muted px-4 py-2 text-sm font-semibold capitalize text-foreground">
                   {dog.size}
                 </span>
-                <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-muted-foreground shadow-sm ring-1 ring-border">
-                  <MapPin className="h-4 w-4 text-[#145da0]" />
+                <span className="inline-flex items-center gap-2 rounded-full bg-white dark:bg-card px-4 py-2 text-sm font-semibold text-muted-foreground shadow-sm ring-1 ring-border">
+                  <MapPin className="h-4 w-4 text-[#145da0] dark:text-sky-300" />
                   {dog.location}
                 </span>
               </div>
@@ -103,14 +103,14 @@ export default async function DogProfilePage({
               <AdoptActionButton petId={dog.id} petName={dog.name} />
               <a
                 href={`mailto:${dog.shelterEmail}`}
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-[#d6e8fb] bg-white px-6 py-3.5 font-semibold text-[#145da0] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-[#d6e8fb] dark:border-border bg-white dark:bg-card px-6 py-3.5 font-semibold text-[#145da0] dark:text-sky-300 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
               >
                 <Heart className="h-4 w-4" />
                 Email Shelter
               </a>
               <Link
                 href="/browse"
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-border bg-white px-6 py-3.5 font-semibold text-foreground shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-border bg-white dark:bg-card px-6 py-3.5 font-semibold text-foreground shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
               >
                 <Share2 className="h-4 w-4" />
                 More Pets
@@ -123,7 +123,7 @@ export default async function DogProfilePage({
           <div className="space-y-8">
             <DogGallery images={dog.images} dogName={dog.name} />
 
-            <div className="rounded-[2rem] border border-white/70 bg-white/85 p-8 shadow-[0_24px_70px_-36px_rgba(20,44,90,0.35)] backdrop-blur">
+            <div className="rounded-[2rem] border border-white/70 dark:border-white/10 bg-white/85 dark:bg-card/85 p-8 shadow-[0_24px_70px_-36px_rgba(20,44,90,0.35)] backdrop-blur">
               <div className="mb-6 flex items-center gap-3">
                 <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/15 to-[#3b82f6]/15 text-primary">
                   <Sparkles className="h-5 w-5" />
@@ -141,11 +141,11 @@ export default async function DogProfilePage({
               </p>
 
               <div className="mt-8 grid gap-5 md:grid-cols-2">
-                <div className="rounded-2xl bg-[#fff8f2] p-6">
+                <div className="rounded-2xl bg-[#fff8f2] dark:bg-primary/15 p-6">
                   <h3 className="mb-3 text-lg font-semibold text-foreground">Ideal Home</h3>
                   <p className="text-sm leading-7 text-muted-foreground">{idealHome}</p>
                 </div>
-                <div className="rounded-2xl bg-[#f3f9ff] p-6">
+                <div className="rounded-2xl bg-[#f3f9ff] dark:bg-sky-400/10 p-6">
                   <h3 className="mb-3 text-lg font-semibold text-foreground">Activity Level</h3>
                   <p className="text-sm leading-7 text-muted-foreground">{activityLevel}</p>
                 </div>
@@ -153,9 +153,9 @@ export default async function DogProfilePage({
             </div>
 
             {relatedDogs.length > 0 && (
-              <div className="rounded-[2rem] border border-white/70 bg-white/85 p-8 shadow-[0_24px_70px_-36px_rgba(20,44,90,0.35)] backdrop-blur">
+              <div className="rounded-[2rem] border border-white/70 dark:border-white/10 bg-white/85 dark:bg-card/85 p-8 shadow-[0_24px_70px_-36px_rgba(20,44,90,0.35)] backdrop-blur">
                 <div className="mb-8 flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#eef7ff] text-[#145da0]">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#eef7ff] dark:bg-sky-400/10 text-[#145da0] dark:text-sky-300">
                     <PawPrint className="h-5 w-5" />
                   </div>
                   <div>
@@ -177,7 +177,7 @@ export default async function DogProfilePage({
           <div className="space-y-8 xl:sticky xl:top-24 xl:self-start">
             <div
               id="contact-shelter"
-              className="rounded-[2rem] border border-white/70 bg-white/90 p-8 shadow-[0_24px_70px_-36px_rgba(20,44,90,0.35)] backdrop-blur"
+              className="rounded-[2rem] border border-white/70 dark:border-white/10 bg-white/90 dark:bg-card/90 p-8 shadow-[0_24px_70px_-36px_rgba(20,44,90,0.35)] backdrop-blur"
             >
               <h2 className="text-2xl font-bold text-foreground">Quick Facts</h2>
               <div className="mt-6 space-y-4">
@@ -210,7 +210,7 @@ export default async function DogProfilePage({
               </div>
             </div>
 
-            <div className="rounded-[2rem] border border-white/70 bg-white/90 p-8 shadow-[0_24px_70px_-36px_rgba(20,44,90,0.35)] backdrop-blur">
+            <div className="rounded-[2rem] border border-white/70 dark:border-white/10 bg-white/90 dark:bg-card/90 p-8 shadow-[0_24px_70px_-36px_rgba(20,44,90,0.35)] backdrop-blur">
               <h2 className="text-2xl font-bold text-foreground">Contact {dog.shelterName}</h2>
               <p className="mt-3 text-sm leading-7 text-muted-foreground">
                 Reach out to the rescue or shelter to express interest, ask follow-up questions,
@@ -222,23 +222,23 @@ export default async function DogProfilePage({
                   href={`mailto:${dog.shelterEmail}`}
                   className="flex items-center gap-3 rounded-2xl border border-border bg-background/40 px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-secondary/10"
                 >
-                  <Mail className="h-4 w-4 text-[#145da0]" />
+                  <Mail className="h-4 w-4 text-[#145da0] dark:text-sky-300" />
                   {dog.shelterEmail}
                 </a>
                 <a
                   href={dog.shelterPhone ? `tel:${dog.shelterPhone}` : '#'}
                   className="flex items-center gap-3 rounded-2xl border border-border bg-background/40 px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-secondary/10"
                 >
-                  <Phone className="h-4 w-4 text-[#145da0]" />
+                  <Phone className="h-4 w-4 text-[#145da0] dark:text-sky-300" />
                   {dog.shelterPhone || 'Phone number not listed yet'}
                 </a>
                 <div className="flex items-start gap-3 rounded-2xl border border-border bg-background/40 px-4 py-3 text-sm font-medium text-foreground">
-                  <MapPin className="mt-0.5 h-4 w-4 text-[#145da0]" />
+                  <MapPin className="mt-0.5 h-4 w-4 text-[#145da0] dark:text-sky-300" />
                   {dog.location}
                 </div>
               </div>
 
-              <div className="mt-8 rounded-2xl bg-[#fff8f2] p-6">
+              <div className="mt-8 rounded-2xl bg-[#fff8f2] dark:bg-primary/15 p-6">
                 <h3 className="text-lg font-semibold text-foreground">Adoption Process</h3>
                 <ol className="mt-4 space-y-3 text-sm leading-7 text-muted-foreground">
                   <li>1. Express interest and introduce your household.</li>

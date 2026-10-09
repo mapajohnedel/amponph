@@ -112,8 +112,8 @@ function RequestOutcomeModal({
           type="button"
           className={`rounded-full px-4 py-2 text-xs font-semibold transition-colors ${
             isApproved
-              ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
-              : 'bg-red-50 text-red-700 hover:bg-red-100'
+              ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-500/15'
+              : 'bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-500/15'
           }`}
         >
           View update
@@ -133,8 +133,8 @@ function RequestOutcomeModal({
 
         {isApproved ? (
           <div className="space-y-3">
-            <div className="rounded-lg border border-emerald-100 bg-emerald-50/50 p-4">
-              <p className="mb-3 text-sm font-semibold text-emerald-700">Next Steps</p>
+            <div className="rounded-lg border border-emerald-100 dark:border-emerald-500/30 bg-emerald-50/50 dark:bg-emerald-500/10 p-4">
+              <p className="mb-3 text-sm font-semibold text-emerald-700 dark:text-emerald-300">Next Steps</p>
               <ul className="space-y-2 text-sm text-foreground">
                 <li>✅ Contact the rescuer</li>
                 <li>📅 Schedule a visit</li>
@@ -148,7 +148,7 @@ function RequestOutcomeModal({
               <p className="mt-1 text-muted-foreground">
                 Email:{' '}
                 {hasEmail ? (
-                  <a href={`mailto:${partnerEmail}`} className="font-medium text-[#145da0] hover:underline">
+                  <a href={`mailto:${partnerEmail}`} className="font-medium text-[#145da0] dark:text-sky-300 hover:underline">
                     {partnerEmail}
                   </a>
                 ) : (
@@ -158,7 +158,7 @@ function RequestOutcomeModal({
               <p className="mt-1 text-muted-foreground">
                 Phone:{' '}
                 {hasPhone ? (
-                  <a href={`tel:${partnerPhone}`} className="font-medium text-[#145da0] hover:underline">
+                  <a href={`tel:${partnerPhone}`} className="font-medium text-[#145da0] dark:text-sky-300 hover:underline">
                     {partnerPhone}
                   </a>
                 ) : (
@@ -168,7 +168,7 @@ function RequestOutcomeModal({
             </div>
           </div>
         ) : (
-          <div className="rounded-lg border border-red-100 bg-red-50/60 p-4 text-sm text-red-700">
+          <div className="rounded-lg border border-red-100 dark:border-red-500/30 bg-red-50/60 dark:bg-red-500/10 p-4 text-sm text-red-700 dark:text-red-300">
             The partner selected another adopter for now. You can still browse and submit new
             requests for other pets.
           </div>
@@ -411,7 +411,7 @@ export default function DashboardPage() {
     return (
       <div className="min-h-screen bg-background">
         <div className="site-container py-12">
-          <div className="rounded-3xl border border-border bg-white p-10 text-center shadow-sm">
+          <div className="rounded-3xl border border-border bg-white dark:bg-card p-10 text-center shadow-sm">
             <h1 className="text-2xl font-bold text-foreground">Loading your dashboard...</h1>
             <p className="mt-3 text-muted-foreground">
               Checking your session and preparing your account.
@@ -444,7 +444,7 @@ export default function DashboardPage() {
 
         <div className="grid gap-6 lg:grid-cols-4">
           <div className="lg:col-span-1">
-            <div className="sticky top-20 rounded-lg border border-border bg-white p-4">
+            <div className="sticky top-20 rounded-lg border border-border bg-white dark:bg-card p-4">
               <div className="space-y-2">
                 <button
                   onClick={() => setActiveTab('favorites')}
@@ -482,7 +482,7 @@ export default function DashboardPage() {
                 <button
                   onClick={handleSignOut}
                   disabled={isSigningOut}
-                  className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left font-medium text-red-600 dark:text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   <LogOut size={20} />
                   {isSigningOut ? 'Signing Out...' : 'Sign Out'}
@@ -505,19 +505,19 @@ export default function DashboardPage() {
                   )}
                 </div>
                 {favoritesLoading ? (
-                  <div className="rounded-lg border border-border bg-white p-8">
+                  <div className="rounded-lg border border-border bg-white dark:bg-card p-8">
                     <p className="text-sm text-muted-foreground">Loading your favorites...</p>
                   </div>
                 ) : favoritesError ? (
-                  <div className="rounded-lg border border-red-200 bg-red-50 p-8">
-                    <p className="text-sm text-red-700">Failed to load favorites: {favoritesError}</p>
+                  <div className="rounded-lg border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 p-8">
+                    <p className="text-sm text-red-700 dark:text-red-300">Failed to load favorites: {favoritesError}</p>
                   </div>
                 ) : favorites.length > 0 ? (
                   <div className="grid gap-4 md:grid-cols-2">
                     {favorites.map((favorite) => (
                       <div
                         key={favorite.petId}
-                        className="overflow-hidden rounded-2xl border border-border bg-white shadow-sm"
+                        className="overflow-hidden rounded-2xl border border-border bg-white dark:bg-card shadow-sm"
                       >
                         <div className="flex items-start gap-4 p-4">
                           {favorite.imageUrl ? (
@@ -546,14 +546,14 @@ export default function DashboardPage() {
                         <div className="flex items-center justify-between border-t border-border px-4 py-3">
                           <Link
                             href={`/browse/${favorite.petId}`}
-                            className="text-sm font-medium text-[#145da0] transition-colors hover:text-primary"
+                            className="text-sm font-medium text-[#145da0] dark:text-sky-300 transition-colors hover:text-primary"
                           >
                             View pet
                           </Link>
                           <button
                             type="button"
                             onClick={() => handleRemoveFavorite(favorite.petId)}
-                            className="text-sm font-medium text-red-600 transition-colors hover:text-red-700"
+                            className="text-sm font-medium text-red-600 dark:text-red-400 transition-colors hover:text-red-700 dark:hover:text-red-300"
                           >
                             Remove
                           </button>
@@ -562,7 +562,7 @@ export default function DashboardPage() {
                     ))}
                   </div>
                 ) : (
-                  <div className="rounded-lg border border-border bg-white p-12 text-center">
+                  <div className="rounded-lg border border-border bg-white dark:bg-card p-12 text-center">
                     <Heart size={48} className="mx-auto mb-4 text-muted-foreground" />
                     <p className="mb-2 text-lg font-medium text-foreground">
                       No favorites yet
@@ -594,12 +594,12 @@ export default function DashboardPage() {
                   )}
                 </div>
                 {requestsLoading ? (
-                  <div className="rounded-lg border border-border bg-white p-8">
+                  <div className="rounded-lg border border-border bg-white dark:bg-card p-8">
                     <p className="text-sm text-muted-foreground">Loading your adoption requests...</p>
                   </div>
                 ) : requestsError ? (
-                  <div className="rounded-lg border border-red-200 bg-red-50 p-8">
-                    <p className="text-sm text-red-700">
+                  <div className="rounded-lg border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 p-8">
+                    <p className="text-sm text-red-700 dark:text-red-300">
                       Failed to load adoption requests: {requestsError}
                     </p>
                   </div>
@@ -608,7 +608,7 @@ export default function DashboardPage() {
                     {adoptionRequests.map((request) => (
                       <div
                         key={request.id}
-                        className="flex flex-col gap-4 rounded-lg border border-border bg-white p-6 sm:flex-row sm:items-center sm:justify-between"
+                        className="flex flex-col gap-4 rounded-lg border border-border bg-white dark:bg-card p-6 sm:flex-row sm:items-center sm:justify-between"
                       >
                         <div className="flex flex-1 items-start gap-3">
                           {request.dogImageUrl ? (
@@ -640,7 +640,7 @@ export default function DashboardPage() {
                           {request.status === 'pending' && (
                             <>
                               <div className="h-3 w-3 rounded-full bg-yellow-400" />
-                              <span className="text-sm font-medium text-yellow-700">
+                              <span className="text-sm font-medium text-yellow-700 dark:text-yellow-300">
                                 Pending
                               </span>
                             </>
@@ -648,8 +648,8 @@ export default function DashboardPage() {
                           {request.status === 'approved' && (
                             <div className="flex flex-col items-start gap-2 sm:items-end">
                               <span className="inline-flex items-center gap-2">
-                                <CheckCircle size={20} className="text-green-600" />
-                                <span className="text-sm font-medium text-green-600">
+                                <CheckCircle size={20} className="text-green-600 dark:text-green-400" />
+                                <span className="text-sm font-medium text-green-600 dark:text-green-400">
                                   Approved
                                 </span>
                               </span>
@@ -666,8 +666,8 @@ export default function DashboardPage() {
                           {request.status === 'rejected' && (
                             <div className="flex flex-col items-start gap-2 sm:items-end">
                               <span className="inline-flex items-center gap-2">
-                                <XCircle size={20} className="text-red-600" />
-                                <span className="text-sm font-medium text-red-600">
+                                <XCircle size={20} className="text-red-600 dark:text-red-400" />
+                                <span className="text-sm font-medium text-red-600 dark:text-red-400">
                                   Rejected
                                 </span>
                               </span>
@@ -686,7 +686,7 @@ export default function DashboardPage() {
                     ))}
                   </div>
                 ) : (
-                  <div className="rounded-lg border border-border bg-white p-12 text-center">
+                  <div className="rounded-lg border border-border bg-white dark:bg-card p-12 text-center">
                     <FileText size={48} className="mx-auto mb-4 text-muted-foreground" />
                     <p className="mb-2 text-lg font-medium text-foreground">
                       No adoption requests yet
@@ -710,7 +710,7 @@ export default function DashboardPage() {
                   </p>
                 </div>
 
-                <div className="rounded-lg border border-border bg-white p-8">
+                <div className="rounded-lg border border-border bg-white dark:bg-card p-8">
                   <div className="mb-8">
                     <h3 className="mb-6 text-xl font-bold text-foreground">
                       Personal Information

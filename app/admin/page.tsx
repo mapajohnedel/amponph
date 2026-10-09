@@ -208,7 +208,7 @@ export default function AdminPage() {
     return (
       <div className="min-h-screen bg-background">
         <div className="site-container py-12">
-          <div className="rounded-3xl border border-border bg-white p-10 text-center shadow-sm">
+          <div className="rounded-3xl border border-border bg-white dark:bg-card p-10 text-center shadow-sm">
             <h1 className="text-2xl font-bold text-foreground">Loading admin dashboard...</h1>
             <p className="mt-3 text-muted-foreground">
               Checking your admin session before opening the control panel.
@@ -239,7 +239,7 @@ export default function AdminPage() {
           <button
             onClick={handleSignOut}
             disabled={isSigningOut}
-            className="inline-flex items-center justify-center gap-2 rounded-lg border border-red-200 px-4 py-2 font-semibold text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex items-center justify-center gap-2 rounded-lg border border-red-200 dark:border-red-500/30 px-4 py-2 font-semibold text-red-600 dark:text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-60"
           >
             <LogOut size={18} />
             {isSigningOut ? 'Signing Out...' : 'Sign Out'}
@@ -295,7 +295,7 @@ export default function AdminPage() {
               </button>
             </div>
 
-            <div className="overflow-hidden rounded-lg border border-border bg-white">
+            <div className="overflow-hidden rounded-lg border border-border bg-white dark:bg-card">
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead className="border-b border-border bg-secondary/5">
@@ -341,7 +341,7 @@ export default function AdminPage() {
                           {dog.location}
                         </td>
                         <td className="px-6 py-4 text-sm">
-                          <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-800">
+                          <span className="rounded-full bg-green-100 dark:bg-green-500/15 px-3 py-1 text-xs font-semibold text-green-800 dark:text-green-300">
                             Available
                           </span>
                         </td>
@@ -352,7 +352,7 @@ export default function AdminPage() {
                           <button className="rounded p-2 text-primary transition-colors hover:bg-secondary/20">
                             <Edit size={18} />
                           </button>
-                          <button className="rounded p-2 text-red-600 transition-colors hover:bg-red-50">
+                          <button className="rounded p-2 text-red-600 dark:text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-500/10">
                             <Trash2 size={18} />
                           </button>
                         </td>
@@ -365,7 +365,7 @@ export default function AdminPage() {
 
             {showAddModal && (
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-                <div className="w-full max-w-md rounded-lg bg-white p-8">
+                <div className="w-full max-w-md rounded-lg bg-white dark:bg-card p-8">
                   <h3 className="mb-6 text-2xl font-bold text-foreground">Add New Dog</h3>
                   <div className="mb-6 space-y-4">
                     <div>
@@ -439,7 +439,7 @@ export default function AdminPage() {
 
             <div className="space-y-4">
               {adoptionRequests.map((request) => (
-                <div key={request.id} className="rounded-lg border border-border bg-white p-6">
+                <div key={request.id} className="rounded-lg border border-border bg-white dark:bg-card p-6">
                   <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                     <div className="flex-1">
                       <h3 className="mb-2 text-lg font-bold text-foreground">{request.userName}</h3>
@@ -461,14 +461,14 @@ export default function AdminPage() {
                       <button
                         className={`flex items-center gap-2 rounded-lg px-4 py-2 font-semibold transition-colors ${
                           request.status === 'approved'
-                            ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                            ? 'bg-green-100 dark:bg-green-500/15 text-green-700 dark:text-green-300 hover:bg-green-200 dark:hover:bg-green-500/20'
                             : 'border border-primary text-primary hover:bg-primary/10'
                         }`}
                       >
                         <Check size={18} />
                         Approve
                       </button>
-                      <button className="flex items-center gap-2 rounded-lg border border-red-300 px-4 py-2 font-semibold text-red-600 transition-colors hover:bg-red-50">
+                      <button className="flex items-center gap-2 rounded-lg border border-red-300 dark:border-red-500/30 px-4 py-2 font-semibold text-red-600 dark:text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-500/10">
                         <X size={18} />
                         Reject
                       </button>
@@ -489,20 +489,20 @@ export default function AdminPage() {
                   Review shelter and rescuer onboarding requests before creating partner accounts.
                 </p>
               </div>
-              <div className="rounded-2xl border border-border bg-white px-4 py-3 text-sm text-muted-foreground">
+              <div className="rounded-2xl border border-border bg-white dark:bg-card px-4 py-3 text-sm text-muted-foreground">
                 {pendingApplications.length} pending application
                 {pendingApplications.length === 1 ? '' : 's'}
               </div>
             </div>
 
             {reviewMessage && (
-              <div className="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+              <div className="mb-6 rounded-2xl border border-emerald-200 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 px-4 py-3 text-sm text-emerald-700 dark:text-emerald-300">
                 {reviewMessage}
               </div>
             )}
 
             {generatedCredentials && (
-              <div className="mb-6 rounded-2xl border border-[#dce9f8] bg-[#f8fbff] p-5 text-sm text-foreground">
+              <div className="mb-6 rounded-2xl border border-[#dce9f8] dark:border-border bg-[#f8fbff] dark:bg-muted/60 p-5 text-sm text-foreground">
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <h3 className="font-semibold text-foreground">Generated partner credentials</h3>
@@ -512,14 +512,14 @@ export default function AdminPage() {
                       after approval.
                     </p>
                     {copyMessage && (
-                      <p className="mt-2 text-sm text-[#145da0]">{copyMessage}</p>
+                      <p className="mt-2 text-sm text-[#145da0] dark:text-sky-300">{copyMessage}</p>
                     )}
                   </div>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => void handleCopyCredentials()}
                       disabled={isCopyingCredentials}
-                      className="rounded-full border border-[#d6e8fb] bg-white px-4 py-2 text-xs font-semibold text-[#145da0] transition-colors hover:bg-[#eef7ff] disabled:cursor-not-allowed disabled:opacity-60"
+                      className="rounded-full border border-[#d6e8fb] dark:border-border bg-white dark:bg-card px-4 py-2 text-xs font-semibold text-[#145da0] dark:text-sky-300 transition-colors hover:bg-[#eef7ff] dark:hover:bg-sky-400/10 disabled:cursor-not-allowed disabled:opacity-60"
                     >
                       {isCopyingCredentials ? 'Copying...' : 'Copy credentials'}
                     </button>
@@ -528,7 +528,7 @@ export default function AdminPage() {
                         setGeneratedCredentials(null)
                         setCopyMessage(null)
                       }}
-                      className="rounded-full border border-border p-2 text-muted-foreground transition-colors hover:bg-white hover:text-foreground"
+                      className="rounded-full border border-border p-2 text-muted-foreground transition-colors hover:bg-white dark:hover:bg-card hover:text-foreground"
                       aria-label="Dismiss generated credentials"
                     >
                       <X size={16} />
@@ -536,16 +536,16 @@ export default function AdminPage() {
                   </div>
                 </div>
                 <div className="mt-4 grid gap-4 md:grid-cols-2">
-                  <div className="rounded-xl border border-border bg-white p-4">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-[#145da0]">
+                  <div className="rounded-xl border border-border bg-white dark:bg-card p-4">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-[#145da0] dark:text-sky-300">
                       Email
                     </p>
                     <p className="mt-2 font-mono text-sm text-foreground">
                       {generatedCredentials.email}
                     </p>
                   </div>
-                  <div className="rounded-xl border border-border bg-white p-4">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-[#145da0]">
+                  <div className="rounded-xl border border-border bg-white dark:bg-card p-4">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-[#145da0] dark:text-sky-300">
                       Password
                     </p>
                     <p className="mt-2 font-mono text-sm text-foreground">
@@ -557,20 +557,20 @@ export default function AdminPage() {
             )}
 
             {applicationsError && (
-              <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              <div className="mb-6 rounded-2xl border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 px-4 py-3 text-sm text-red-700 dark:text-red-300">
                 {applicationsError}
               </div>
             )}
 
             {applicationsLoading ? (
-              <div className="rounded-3xl border border-border bg-white p-10 text-center">
+              <div className="rounded-3xl border border-border bg-white dark:bg-card p-10 text-center">
                 <h3 className="text-xl font-semibold text-foreground">Loading partner applications...</h3>
                 <p className="mt-2 text-muted-foreground">
                   Pulling the latest submissions from Supabase.
                 </p>
               </div>
             ) : applications.length === 0 ? (
-              <div className="rounded-3xl border border-border bg-white p-10 text-center">
+              <div className="rounded-3xl border border-border bg-white dark:bg-card p-10 text-center">
                 <h3 className="text-xl font-semibold text-foreground">No partner applications yet</h3>
                 <p className="mt-2 text-muted-foreground">
                   New shelter and rescuer submissions will appear here for review.
@@ -581,21 +581,21 @@ export default function AdminPage() {
                 {applications.map((application) => (
                   <div
                     key={application.id}
-                    className="rounded-3xl border border-border bg-white p-6 shadow-sm"
+                    className="rounded-3xl border border-border bg-white dark:bg-card p-6 shadow-sm"
                   >
                     <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                       <div className="space-y-4">
                         <div className="flex flex-wrap items-center gap-3">
-                          <span className="inline-flex items-center rounded-full bg-[#ffefe6] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
+                          <span className="inline-flex items-center rounded-full bg-[#ffefe6] dark:bg-primary/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
                             {application.applicant_type}
                           </span>
                           <span
                             className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${
                               application.status === 'pending'
-                                ? 'bg-amber-100 text-amber-700'
+                                ? 'bg-amber-100 dark:bg-amber-500/15 text-amber-700 dark:text-amber-300'
                                 : application.status === 'approved'
-                                  ? 'bg-emerald-100 text-emerald-700'
-                                  : 'bg-red-100 text-red-700'
+                                  ? 'bg-emerald-100 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300'
+                                  : 'bg-red-100 dark:bg-red-500/15 text-red-700 dark:text-red-300'
                             }`}
                           >
                             {application.status}
@@ -613,15 +613,15 @@ export default function AdminPage() {
 
                         <div className="grid gap-3 text-sm text-muted-foreground md:grid-cols-3">
                           <div className="flex items-start gap-2">
-                            <Mail className="mt-0.5 h-4 w-4 text-[#145da0]" />
+                            <Mail className="mt-0.5 h-4 w-4 text-[#145da0] dark:text-sky-300" />
                             <span>{application.email}</span>
                           </div>
                           <div className="flex items-start gap-2">
-                            <Phone className="mt-0.5 h-4 w-4 text-[#145da0]" />
+                            <Phone className="mt-0.5 h-4 w-4 text-[#145da0] dark:text-sky-300" />
                             <span>{application.phone}</span>
                           </div>
                           <div className="flex items-start gap-2">
-                            <MapPin className="mt-0.5 h-4 w-4 text-[#145da0]" />
+                            <MapPin className="mt-0.5 h-4 w-4 text-[#145da0] dark:text-sky-300" />
                             <span>
                               {application.city}, {application.province_or_region}
                             </span>
@@ -659,10 +659,10 @@ export default function AdminPage() {
 
         {selectedApplication && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-            <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-[2rem] bg-white p-8 shadow-2xl">
+            <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-[2rem] bg-white dark:bg-card p-8 shadow-2xl">
               <div className="mb-6 flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#145da0]">
+                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#145da0] dark:text-sky-300">
                     Partner application review
                   </p>
                   <h3 className="mt-2 text-2xl font-bold text-foreground">
@@ -764,7 +764,7 @@ export default function AdminPage() {
                   value={reviewNotes}
                   onChange={(event) => setReviewNotes(event.target.value)}
                   placeholder="Optional notes for this approval or rejection."
-                  className="min-h-28 w-full rounded-2xl border border-[#dce9f8] bg-[#fcfdff] px-4 py-3 text-sm text-foreground placeholder-muted-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
+                  className="min-h-28 w-full rounded-2xl border border-[#dce9f8] dark:border-border bg-[#fcfdff] dark:bg-muted/60 px-4 py-3 text-sm text-foreground placeholder-muted-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
                 />
               </div>
 
@@ -774,7 +774,7 @@ export default function AdminPage() {
                     <button
                       onClick={() => void handleApplicationAction('reject')}
                       disabled={isApproving || isRejecting}
-                      className="inline-flex items-center justify-center gap-2 rounded-lg border border-red-300 px-5 py-3 font-semibold text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
+                      className="inline-flex items-center justify-center gap-2 rounded-lg border border-red-300 dark:border-red-500/30 px-5 py-3 font-semibold text-red-600 dark:text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-60"
                     >
                       <X size={18} />
                       {isRejecting ? 'Rejecting...' : 'Reject'}

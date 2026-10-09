@@ -14,6 +14,7 @@ import {
   PawPrint,
   X,
 } from 'lucide-react'
+import { ThemeToggle } from '@/components/theme-toggle'
 import { useAuthUser } from '@/hooks/use-auth-user'
 import {
   DropdownMenu,
@@ -105,11 +106,11 @@ export function Navbar() {
   }
 
   return (
-    <nav className="fixed top-0 z-50 w-full border-b border-white/60 bg-white/80 shadow-sm backdrop-blur-xl">
+    <nav className="fixed top-0 z-50 w-full border-b border-white/60 dark:border-white/10 bg-white/80 dark:bg-card/80 shadow-sm backdrop-blur-xl">
       <div className="site-container">
         <div className="flex h-[4.75rem] items-center justify-between lg:h-20">
           <Link href="/" className="group flex items-center gap-3">
-            <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-border/80">
+            <div className="overflow-hidden rounded-2xl bg-white dark:bg-card shadow-sm ring-1 ring-border/80">
               <Image
                 src="/amponph-logo.png"
                 alt="AmponPH logo"
@@ -119,12 +120,9 @@ export function Navbar() {
                 priority
               />
             </div>
-            <div className="hidden leading-tight sm:block">
-              <span className="block text-xs font-semibold uppercase tracking-[0.22em] text-[#145da0]">
-                Pet adoption platform
-              </span>
-              <span className="block text-sm text-muted-foreground">Find your next best friend</span>
-            </div>
+            <span className="text-xl font-bold tracking-tight text-[#145da0] dark:text-sky-300">
+              Ampon<span className="text-primary">PH</span>
+            </span>
           </Link>
 
           <div className="hidden items-center gap-9 md:flex">
@@ -140,10 +138,11 @@ export function Navbar() {
           </div>
 
           <div className="hidden items-center gap-3 md:flex">
+            <ThemeToggle />
             {!loading && user && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="inline-flex items-center gap-2 rounded-full border border-[#d6e8fb] bg-white px-4 py-2 text-sm font-medium text-foreground shadow-sm transition-colors hover:text-primary">
+                  <button className="inline-flex items-center gap-2 rounded-full border border-[#d6e8fb] dark:border-border bg-white dark:bg-card px-4 py-2 text-sm font-medium text-foreground shadow-sm transition-colors hover:text-primary">
                     <span className="max-w-40 truncate">{accountLabel}</span>
                     <ChevronDown className="h-4 w-4 text-muted-foreground" />
                   </button>
@@ -213,13 +212,16 @@ export function Navbar() {
             )}
           </div>
 
-          <button
-            className="rounded-xl p-2.5 transition-colors hover:bg-white/70 md:hidden"
-            onClick={() => setIsOpen(!isOpen)}
-            aria-label="Toggle menu"
-          >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          <div className="flex items-center gap-2 md:hidden">
+            <ThemeToggle />
+            <button
+              className="rounded-xl p-2.5 transition-colors hover:bg-white/70 dark:hover:bg-card/70"
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label="Toggle menu"
+            >
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
 
         {isOpen && (
@@ -287,7 +289,7 @@ export function Navbar() {
                   <button
                     onClick={handleSignOut}
                     disabled={isSigningOut}
-                    className="block w-full rounded-xl px-4 py-3 text-left text-base font-medium text-red-600 transition-colors hover:bg-red-50 disabled:opacity-60"
+                    className="block w-full rounded-xl px-4 py-3 text-left text-base font-medium text-red-600 dark:text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-500/10 disabled:opacity-60"
                   >
                     {isSigningOut ? 'Logging out...' : 'Log out'}
                   </button>

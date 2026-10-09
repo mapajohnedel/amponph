@@ -67,7 +67,7 @@ export default async function Home() {
   const featuredDogs = dogs.slice(0, 4)
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-card">
       <Hero dogs={featuredDogs} />
 
       <section
@@ -78,14 +78,14 @@ export default async function Home() {
           <div className="grid gap-16 xl:grid-cols-2 xl:items-start">
             <div className="space-y-8">
               <div className="space-y-4">
-                <span className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-1.5 text-sm font-medium text-blue-600">
+                <span className="inline-flex items-center gap-2 rounded-full border border-blue-100 dark:border-blue-500/30 bg-blue-50 dark:bg-blue-500/10 px-4 py-1.5 text-sm font-medium text-blue-600 dark:text-blue-400">
                   <span className="flex h-2 w-2 rounded-full bg-blue-500"></span>
                   Success Stories
                 </span>
-                <h2 className="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
+                <h2 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-foreground sm:text-5xl">
                   Stories of rescue, healing, and happy new beginnings.
                 </h2>
-                <p className="text-lg leading-8 text-slate-600">
+                <p className="text-lg leading-8 text-slate-600 dark:text-slate-300">
                   Every rescued dog has a story of waiting, healing, and hoping for love. Here
                   at AmponPH, we celebrate the beautiful moments when dogs find a safe and caring
                   tahanan through the kindness of people who choose to adopt. These stories
@@ -96,14 +96,14 @@ export default async function Home() {
               <div className="flex flex-wrap gap-4">
                 <Link
                   href="/browse"
-                  className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-slate-900 px-6 font-semibold text-white transition-all hover:bg-slate-800"
+                  className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-slate-900 dark:bg-slate-700 px-6 font-semibold text-white transition-all hover:bg-slate-800 dark:hover:bg-slate-600"
                 >
                   Be Part of the Mission
                   <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link
                   href="/partner/register"
-                  className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-6 font-semibold text-slate-700 transition-all hover:bg-slate-50"
+                  className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-slate-200 dark:border-border bg-white dark:bg-card px-6 font-semibold text-slate-700 dark:text-slate-200 transition-all hover:bg-slate-50 dark:hover:bg-muted"
                 >
                   For Shelters
                 </Link>
@@ -114,13 +114,13 @@ export default async function Home() {
               {successStoryHighlights.map(({ title, description, icon: Icon }) => (
                 <div
                   key={title}
-                  className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
+                  className="group rounded-2xl border border-slate-200 dark:border-border bg-white dark:bg-card p-6 shadow-sm transition-shadow hover:shadow-md"
                 >
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 text-orange-600">
+                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400">
                     <Icon className="h-6 w-6" />
                   </div>
-                  <h3 className="mb-2 text-xl font-semibold text-slate-900">{title}</h3>
-                  <p className="leading-relaxed text-slate-600">{description}</p>
+                  <h3 className="mb-2 text-xl font-semibold text-slate-900 dark:text-foreground">{title}</h3>
+                  <p className="leading-relaxed text-slate-600 dark:text-slate-300">{description}</p>
                 </div>
               ))}
             </div>
@@ -128,10 +128,10 @@ export default async function Home() {
 
           <div className="mt-24">
             <div className="mb-10 max-w-2xl space-y-4">
-              <h3 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+              <h3 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-foreground sm:text-4xl">
                 Meet the dogs who found loving homes.
               </h3>
-              <p className="text-lg leading-8 text-slate-600">
+              <p className="text-lg leading-8 text-slate-600 dark:text-slate-300">
                 Here are some of the adopted and fostered dogs whose journeys inspire the
                 AmponPH community.
               </p>
@@ -141,25 +141,25 @@ export default async function Home() {
               {happyTails.map((story) => (
                 <div
                   key={story.name}
-                  className="flex flex-col rounded-3xl border border-slate-100 bg-slate-50 p-8 transition-all hover:bg-slate-100"
+                  className="flex flex-col rounded-3xl border border-slate-100 dark:border-border bg-slate-50 dark:bg-muted p-8 transition-all hover:bg-slate-100 dark:hover:bg-muted"
                 >
                   <div className="mb-6 flex items-center justify-between gap-4">
                     <div>
-                      <h4 className="text-xl font-bold text-slate-900">{story.name}</h4>
-                      <p className="text-sm font-medium text-slate-500">{story.location}</p>
+                      <h4 className="text-xl font-bold text-slate-900 dark:text-foreground">{story.name}</h4>
+                      <p className="text-sm font-medium text-slate-500 dark:text-slate-400">{story.location}</p>
                     </div>
                     <span
                       className={`rounded-full px-3 py-1 text-xs font-semibold ${
                         story.status === 'Adopted'
-                          ? 'bg-orange-100 text-orange-700'
-                          : 'bg-emerald-100 text-emerald-700'
+                          ? 'bg-orange-100 dark:bg-orange-500/15 text-orange-700 dark:text-orange-300'
+                          : 'bg-emerald-100 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300'
                       }`}
                     >
                       {story.status}
                     </span>
                   </div>
 
-                  <p className="flex-1 leading-relaxed text-slate-600">{story.story}</p>
+                  <p className="flex-1 leading-relaxed text-slate-600 dark:text-slate-300">{story.story}</p>
                 </div>
               ))}
             </div>
@@ -169,14 +169,14 @@ export default async function Home() {
 
       <HowItWorks />
 
-      <section id="featured-pets" className="bg-slate-50 py-24 sm:py-32">
+      <section id="featured-pets" className="bg-slate-50 dark:bg-muted py-24 sm:py-32">
         <div className="site-container">
           <div className="mb-12 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
             <div className="max-w-2xl space-y-4">
-              <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+              <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-foreground sm:text-4xl">
                 Meet friendly faces waiting for you.
               </h2>
-              <p className="text-lg leading-8 text-slate-600">
+              <p className="text-lg leading-8 text-slate-600 dark:text-slate-300">
                 A few lovable companions to get your search started, with quick details that make
                 it easy to take the next step.
               </p>
@@ -184,7 +184,7 @@ export default async function Home() {
 
             <Link
               href="/browse"
-              className="inline-flex h-12 items-center gap-2 self-start rounded-full border border-slate-200 bg-white px-6 font-semibold text-slate-700 transition-all hover:bg-slate-100 hover:text-slate-900"
+              className="inline-flex h-12 items-center gap-2 self-start rounded-full border border-slate-200 dark:border-border bg-white dark:bg-card px-6 font-semibold text-slate-700 dark:text-slate-200 transition-all hover:bg-slate-100 dark:hover:bg-muted hover:text-slate-900 dark:hover:text-foreground"
             >
               Explore all pets
               <ArrowRight className="h-4 w-4" />
@@ -199,16 +199,16 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="contact" className="bg-white py-24 sm:py-32">
+      <section id="contact" className="bg-white dark:bg-card py-24 sm:py-32">
         <div className="site-container">
-          <div className="relative overflow-hidden rounded-3xl bg-slate-900 px-6 py-16 shadow-2xl sm:px-12 sm:py-20 lg:px-20">
+          <div className="relative overflow-hidden rounded-3xl bg-slate-900 dark:bg-slate-700 px-6 py-16 shadow-2xl sm:px-12 sm:py-20 lg:px-20">
             {/* Subtle light effects instead of harsh gradients */}
             <div className="absolute -left-48 -top-48 h-96 w-96 rounded-full bg-orange-500/10 blur-3xl" />
             <div className="absolute -bottom-48 -right-48 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl" />
 
             <div className="relative mx-auto flex max-w-4xl flex-col items-center text-center gap-8">
               <div className="space-y-6">
-                <span className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-800 px-4 py-1.5 text-sm font-medium text-slate-300">
+                <span className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-800 dark:bg-slate-600 px-4 py-1.5 text-sm font-medium text-slate-300">
                   <span className="flex h-2 w-2 rounded-full bg-emerald-400"></span>
                   Ready when you are
                 </span>

@@ -115,20 +115,20 @@ export default function PrivacyPolicyPage() {
   ]
 
   return (
-    <div className="relative min-h-screen bg-slate-50/30">
+    <div className="relative min-h-screen bg-slate-50/30 dark:bg-muted/30">
       {/* Header Section */}
-      <div className="relative overflow-hidden border-b border-white/60 bg-[linear-gradient(180deg,#fffaf6_0%,#eef7ff_100%)] pb-24 pt-20 lg:pt-28">
+      <div className="relative overflow-hidden border-b border-white/60 dark:border-white/10 bg-[linear-gradient(180deg,#fffaf6_0%,#eef7ff_100%)] dark:bg-[linear-gradient(180deg,var(--page-gradient-from)_0%,var(--page-gradient-to)_100%)] pb-24 pt-20 lg:pt-28">
         <div className="absolute left-[10%] top-0 h-48 w-48 rounded-full bg-primary/10 blur-3xl" />
         <div className="absolute right-[10%] top-10 h-48 w-48 rounded-full bg-[#84c5ff]/20 blur-3xl" />
         
         <div className="site-container relative text-center">
-          <div className="mx-auto mb-6 inline-flex items-center justify-center rounded-2xl bg-white/60 p-4 shadow-sm ring-1 ring-border/50 backdrop-blur">
+          <div className="mx-auto mb-6 inline-flex items-center justify-center rounded-2xl bg-white/60 dark:bg-card/60 p-4 shadow-sm ring-1 ring-border/50 backdrop-blur">
             <ShieldCheck className="h-8 w-8 text-primary" />
           </div>
-          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
+          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-foreground sm:text-5xl lg:text-6xl">
             Privacy Policy
           </h1>
-          <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-slate-600">
+          <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-slate-600 dark:text-slate-300">
             How we collect, use, and protect your information to create a safer pet adoption community.
           </p>
           <p className="mt-4 text-sm font-medium text-slate-400 uppercase tracking-wider">
@@ -139,17 +139,17 @@ export default function PrivacyPolicyPage() {
 
       {/* Content Section */}
       <div className="site-container relative -mt-12 pb-24">
-        <div className="mx-auto max-w-4xl rounded-[2.5rem] border border-white/70 bg-white/80 p-6 shadow-[0_24px_70px_-36px_rgba(20,44,90,0.2)] backdrop-blur sm:p-12 md:p-16">
+        <div className="mx-auto max-w-4xl rounded-[2.5rem] border border-white/70 dark:border-white/10 bg-white/80 dark:bg-card/80 p-6 shadow-[0_24px_70px_-36px_rgba(20,44,90,0.2)] backdrop-blur sm:p-12 md:p-16">
           <div className="space-y-12 sm:space-y-16">
             {sections.map((section, idx) => (
               <section key={idx} className="group relative">
-                <div className="absolute -inset-x-4 -inset-y-4 z-0 hidden rounded-2xl bg-slate-50/50 opacity-0 transition-opacity group-hover:opacity-100 sm:block" />
+                <div className="absolute -inset-x-4 -inset-y-4 z-0 hidden rounded-2xl bg-slate-50/50 dark:bg-muted/50 opacity-0 transition-opacity group-hover:opacity-100 sm:block" />
                 <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:gap-6">
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-100">
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white dark:bg-card shadow-sm ring-1 ring-slate-100 dark:ring-border">
                     {section.icon}
                   </div>
                   <div className="flex-1 space-y-3 pt-2">
-                    <h2 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
+                    <h2 className="text-xl font-bold tracking-tight text-slate-900 dark:text-foreground sm:text-2xl">
                       {section.title}
                     </h2>
                     {section.content}

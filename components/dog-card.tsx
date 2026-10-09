@@ -24,7 +24,7 @@ export function DogCard({ dog, layout = 'default' }: DogCardProps) {
       toast({
         title: 'Login required',
         description: 'Please login first to continue with adoption.',
-        className: 'border-amber-200 bg-amber-50 text-amber-900',
+        className: 'border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/10 text-amber-900 dark:text-amber-300',
       })
       router.push('/auth')
       return false
@@ -165,10 +165,10 @@ export function DogCard({ dog, layout = 'default' }: DogCardProps) {
       tabIndex={0}
       onClick={handleCardClick}
       onKeyDown={handleCardKeyDown}
-      className="group cursor-pointer overflow-hidden rounded-[2rem] border border-[#edf3fb] bg-white shadow-[0_20px_60px_-36px_rgba(20,44,90,0.32)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_80px_-40px_rgba(20,44,90,0.45)] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+      className="group cursor-pointer overflow-hidden rounded-[2rem] border border-[#edf3fb] dark:border-border bg-white dark:bg-card shadow-[0_20px_60px_-36px_rgba(20,44,90,0.32)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_80px_-40px_rgba(20,44,90,0.45)] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
     >
       <div
-        className={`relative overflow-hidden bg-gradient-to-br from-[#fff2e7] to-[#eef7ff] ${
+        className={`relative overflow-hidden bg-gradient-to-br from-[#fff2e7] dark:from-primary/10 to-[#eef7ff] dark:to-sky-400/10 ${
           isLandscape ? 'aspect-[16/9]' : 'h-64 sm:h-72'
         }`}
       >
@@ -179,7 +179,7 @@ export function DogCard({ dog, layout = 'default' }: DogCardProps) {
         />
         <button
           type="button"
-          className="absolute right-4 top-4 rounded-full bg-white/90 p-2.5 shadow-lg backdrop-blur transition-all duration-200 hover:bg-white"
+          className="absolute right-4 top-4 rounded-full bg-white/90 dark:bg-card/90 p-2.5 shadow-lg backdrop-blur transition-all duration-200 hover:bg-white dark:hover:bg-card"
           onPointerDown={preventCardNavigation}
           onMouseDown={preventCardNavigation}
           onKeyDown={preventCardNavigation}
@@ -192,7 +192,7 @@ export function DogCard({ dog, layout = 'default' }: DogCardProps) {
           />
         </button>
 
-        <div className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-primary shadow-sm backdrop-blur">
+        <div className="absolute left-4 top-4 rounded-full bg-white/90 dark:bg-card/90 px-3 py-1 text-xs font-semibold text-primary shadow-sm backdrop-blur">
           {dog.breed}
         </div>
       </div>
@@ -203,7 +203,7 @@ export function DogCard({ dog, layout = 'default' }: DogCardProps) {
             {dog.name}
           </h3>
           {dog.vaccinated && (
-            <span className="rounded-full bg-[#eef7ff] px-3 py-1.5 text-xs font-semibold text-[#145da0]">
+            <span className="rounded-full bg-[#eef7ff] dark:bg-sky-400/10 px-3 py-1.5 text-xs font-semibold text-[#145da0] dark:text-sky-300">
               Vaccinated
             </span>
           )}
@@ -214,13 +214,13 @@ export function DogCard({ dog, layout = 'default' }: DogCardProps) {
         </p>
 
         <div className="mb-4 flex gap-2">
-          <span className="rounded-full bg-[#fef1e8] px-3 py-1.5 text-xs font-semibold capitalize text-primary">
+          <span className="rounded-full bg-[#fef1e8] dark:bg-primary/15 px-3 py-1.5 text-xs font-semibold capitalize text-primary">
             {dog.size}
           </span>
         </div>
 
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <MapPin size={16} className="flex-shrink-0 text-[#145da0]" />
+          <MapPin size={16} className="flex-shrink-0 text-[#145da0] dark:text-sky-300" />
           <span>{dog.location}</span>
         </div>
 

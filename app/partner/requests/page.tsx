@@ -59,14 +59,14 @@ export default async function PartnerRequestsPage() {
       <div className="site-container py-12">
         <Link
           href="/partner"
-          className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-white px-4 py-2 text-sm font-medium text-foreground shadow-sm transition-colors hover:text-primary"
+          className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-white dark:bg-card px-4 py-2 text-sm font-medium text-foreground shadow-sm transition-colors hover:text-primary"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to partner dashboard
         </Link>
 
-        <div className="mb-8 rounded-[2.5rem] bg-gradient-to-br from-[#fff3e8] via-white to-[#eef7ff] p-8 shadow-[0_30px_80px_-35px_rgba(20,44,90,0.35)] sm:p-10">
-          <span className="inline-flex rounded-full bg-[#ffefe6] px-4 py-1.5 text-sm font-semibold uppercase tracking-wide text-primary">
+        <div className="mb-8 rounded-[2.5rem] bg-gradient-to-br from-[#fff3e8] dark:from-primary/10 via-white dark:via-card to-[#eef7ff] dark:to-sky-400/10 p-8 shadow-[0_30px_80px_-35px_rgba(20,44,90,0.35)] sm:p-10">
+          <span className="inline-flex rounded-full bg-[#ffefe6] dark:bg-primary/15 px-4 py-1.5 text-sm font-semibold uppercase tracking-wide text-primary">
             Partner workflow
           </span>
           <h1 className="mt-6 flex items-center gap-3 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
@@ -79,13 +79,13 @@ export default async function PartnerRequestsPage() {
         </div>
 
         {error && (
-          <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          <div className="rounded-2xl border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 px-4 py-3 text-sm text-red-700 dark:text-red-300">
             Failed to load adoption requests: {error.message}
           </div>
         )}
 
         {!error && adoptionRequests.length === 0 && (
-          <div className="rounded-3xl border border-dashed border-border bg-white p-10 text-center shadow-sm">
+          <div className="rounded-3xl border border-dashed border-border bg-white dark:bg-card p-10 text-center shadow-sm">
             <h2 className="text-lg font-semibold text-foreground">No adoption requests yet</h2>
             <p className="mt-2 text-sm leading-7 text-muted-foreground">
               New requests will appear here as adopters click the adopt action on your listings.
@@ -98,7 +98,7 @@ export default async function PartnerRequestsPage() {
             {adoptionRequests.map((request) => (
               <div
                 key={request.id}
-                className="rounded-2xl border border-border bg-white p-6 shadow-sm"
+                className="rounded-2xl border border-border bg-white dark:bg-card p-6 shadow-sm"
               >
                 <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
                   <div className="space-y-3">
@@ -133,11 +133,11 @@ export default async function PartnerRequestsPage() {
                         {request.requester_name?.trim() || 'Unnamed adopter'}
                       </p>
                       <p className="flex items-center gap-2">
-                        <Mail className="h-4 w-4 text-[#145da0]" />
+                        <Mail className="h-4 w-4 text-[#145da0] dark:text-sky-300" />
                         {request.requester_email ?? 'No email shared'}
                       </p>
                       <p className="flex items-center gap-2">
-                        <Clock3 className="h-4 w-4 text-[#145da0]" />
+                        <Clock3 className="h-4 w-4 text-[#145da0] dark:text-sky-300" />
                         Submitted {new Date(request.created_at).toLocaleDateString()}
                       </p>
                     </div>
@@ -152,7 +152,7 @@ export default async function PartnerRequestsPage() {
                   <div className="md:text-right">
                     {request.status === 'pending' && (
                       <div className="space-y-3">
-                        <span className="inline-flex items-center gap-2 rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
+                        <span className="inline-flex items-center gap-2 rounded-full bg-amber-100 dark:bg-amber-500/15 px-3 py-1 text-xs font-semibold text-amber-700 dark:text-amber-300">
                           <Clock3 className="h-3.5 w-3.5" />
                           Pending
                         </span>
@@ -161,14 +161,14 @@ export default async function PartnerRequestsPage() {
                     )}
 
                     {request.status === 'approved' && (
-                      <span className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                      <span className="inline-flex items-center gap-2 rounded-full bg-emerald-100 dark:bg-emerald-500/15 px-3 py-1 text-xs font-semibold text-emerald-700 dark:text-emerald-300">
                         <CheckCircle className="h-3.5 w-3.5" />
                         Approved
                       </span>
                     )}
 
                     {request.status === 'rejected' && (
-                      <span className="inline-flex items-center gap-2 rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
+                      <span className="inline-flex items-center gap-2 rounded-full bg-red-100 dark:bg-red-500/15 px-3 py-1 text-xs font-semibold text-red-700 dark:text-red-300">
                         <XCircle className="h-3.5 w-3.5" />
                         Rejected
                       </span>

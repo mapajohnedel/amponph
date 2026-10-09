@@ -80,12 +80,12 @@ export function AdoptionRequestReviewActions({
           type="button"
           onClick={handleReject}
           disabled={isApproving || isRejecting}
-          className="rounded-full border border-red-300 px-4 py-2 text-xs font-semibold text-red-700 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-70"
+          className="rounded-full border border-red-300 dark:border-red-500/30 px-4 py-2 text-xs font-semibold text-red-700 dark:text-red-300 transition-colors hover:bg-red-50 dark:hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-70"
         >
           {isRejecting ? 'Rejecting...' : 'Reject'}
         </button>
       </div>
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      {error && <p className="text-xs text-red-600 dark:text-red-400">{error}</p>}
     </div>
   )
 }

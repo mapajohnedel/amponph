@@ -424,7 +424,7 @@ export function CreatePetListingSection({
   }
 
   return (
-    <div className="rounded-3xl border border-border bg-white p-8 shadow-sm">
+    <div className="rounded-3xl border border-border bg-white dark:bg-card p-8 shadow-sm">
       <div className="mb-6 flex items-start justify-between gap-4">
         <div>
           <h2 className="flex items-center gap-2 text-2xl font-bold text-foreground">
@@ -437,19 +437,19 @@ export function CreatePetListingSection({
               : 'Add the pet details, choose up to three photos, and we&apos;ll compress each image to about 200 KB before uploading it to Cloudinary and saving the URLs to Supabase.'}
           </p>
         </div>
-        <span className="rounded-full bg-[#eef7ff] px-3 py-1.5 text-xs font-semibold text-[#145da0]">
+        <span className="rounded-full bg-[#eef7ff] dark:bg-sky-400/10 px-3 py-1.5 text-xs font-semibold text-[#145da0] dark:text-sky-300">
           Partner tool
         </span>
       </div>
 
       {errorMessage && (
-        <div className="mb-5 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div className="mb-5 rounded-2xl border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 px-4 py-3 text-sm text-red-700 dark:text-red-300">
           {errorMessage}
         </div>
       )}
 
       {successMessage && (
-        <div className="mb-5 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+        <div className="mb-5 rounded-2xl border border-emerald-200 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 px-4 py-3 text-sm text-emerald-700 dark:text-emerald-300">
           {successMessage}
         </div>
       )}
@@ -634,13 +634,13 @@ export function CreatePetListingSection({
           <div>
             <div className="mb-2 flex items-center justify-between gap-3">
               <label className="block text-sm font-medium text-foreground">Pet Photos</label>
-              <span className="text-xs font-semibold text-[#145da0]">
+              <span className="text-xs font-semibold text-[#145da0] dark:text-sky-300">
                 {totalImageCount}/{MAX_PET_IMAGE_COUNT} selected
               </span>
             </div>
 
-            <label className="flex cursor-pointer flex-col items-center justify-center rounded-[1.75rem] border border-dashed border-[#d6e8fb] bg-[#f8fbff] px-6 py-8 text-center transition-colors hover:border-primary/40 hover:bg-[#f3f9ff]">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-primary shadow-sm">
+            <label className="flex cursor-pointer flex-col items-center justify-center rounded-[1.75rem] border border-dashed border-[#d6e8fb] dark:border-border bg-[#f8fbff] dark:bg-muted/60 px-6 py-8 text-center transition-colors hover:border-primary/40 hover:bg-[#f3f9ff] dark:hover:bg-sky-400/10">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white dark:bg-card text-primary shadow-sm">
                 <Upload className="h-5 w-5" />
               </div>
               <p className="mt-4 text-sm font-semibold text-foreground">
@@ -665,7 +665,7 @@ export function CreatePetListingSection({
                 {existingImages.map((image, index) => (
                   <div
                     key={image.id}
-                    className="overflow-hidden rounded-3xl border border-border bg-white shadow-sm"
+                    className="overflow-hidden rounded-3xl border border-border bg-white dark:bg-card shadow-sm"
                   >
                     <div className="relative aspect-[4/3] bg-muted">
                       <img
@@ -693,7 +693,7 @@ export function CreatePetListingSection({
                 {selectedImages.map((image, index) => (
                   <div
                     key={image.id}
-                    className="overflow-hidden rounded-3xl border border-border bg-white shadow-sm"
+                    className="overflow-hidden rounded-3xl border border-border bg-white dark:bg-card shadow-sm"
                   >
                     <div className="relative aspect-[4/3] bg-muted">
                       <img
@@ -766,7 +766,7 @@ export function CreatePetListingSection({
               type="button"
               disabled={isSubmitting}
               onClick={resetForm}
-              className="inline-flex items-center justify-center rounded-full border border-border bg-white px-6 py-3 font-semibold text-foreground transition-colors hover:bg-secondary/10 disabled:cursor-not-allowed disabled:opacity-70"
+              className="inline-flex items-center justify-center rounded-full border border-border bg-white dark:bg-card px-6 py-3 font-semibold text-foreground transition-colors hover:bg-secondary/10 disabled:cursor-not-allowed disabled:opacity-70"
             >
               {isEditMode ? 'Reset Changes' : 'Clear Form'}
             </button>
@@ -774,13 +774,13 @@ export function CreatePetListingSection({
         </div>
 
         <div className="space-y-5">
-          <div className="rounded-[2rem] border border-[#edf3fb] bg-[linear-gradient(180deg,#fffaf5_0%,#ffffff_100%)] p-6 shadow-[0_20px_60px_-36px_rgba(20,44,90,0.28)]">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#145da0]">
+          <div className="rounded-[2rem] border border-[#edf3fb] dark:border-border bg-[linear-gradient(180deg,#fffaf5_0%,#ffffff_100%)] dark:bg-[linear-gradient(180deg,var(--page-gradient-from)_0%,var(--page-gradient-to)_100%)] p-6 shadow-[0_20px_60px_-36px_rgba(20,44,90,0.28)]">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#145da0] dark:text-sky-300">
               Listing preview
             </p>
 
-            <div className="mt-5 overflow-hidden rounded-3xl border border-border bg-white">
-              <div className="relative aspect-[4/3] bg-[linear-gradient(180deg,#fff3e8_0%,#eef7ff_100%)]">
+            <div className="mt-5 overflow-hidden rounded-3xl border border-border bg-white dark:bg-card">
+              <div className="relative aspect-[4/3] bg-[linear-gradient(180deg,#fff3e8_0%,#eef7ff_100%)] dark:bg-[linear-gradient(180deg,var(--page-gradient-from)_0%,var(--page-gradient-to)_100%)]">
                 {primaryPreviewUrl ? (
                   <img
                     src={primaryPreviewUrl}
@@ -810,14 +810,14 @@ export function CreatePetListingSection({
                     <p className="text-sm text-muted-foreground">{resolvedBreed || 'Breed'}</p>
                   </div>
                   {draft.vaccinated && (
-                    <span className="rounded-full bg-[#eef7ff] px-3 py-1.5 text-xs font-semibold text-[#145da0]">
+                    <span className="rounded-full bg-[#eef7ff] dark:bg-sky-400/10 px-3 py-1.5 text-xs font-semibold text-[#145da0] dark:text-sky-300">
                       Vaccinated
                     </span>
                   )}
                 </div>
 
                 <div className="flex flex-wrap gap-2">
-                  <span className="rounded-full bg-[#fef1e8] px-3 py-1.5 text-xs font-semibold text-primary">
+                  <span className="rounded-full bg-[#fef1e8] dark:bg-primary/15 px-3 py-1.5 text-xs font-semibold text-primary">
                     {previewAge}
                   </span>
                   <span className="rounded-full bg-muted px-3 py-1.5 text-xs font-semibold capitalize text-foreground">
@@ -827,14 +827,14 @@ export function CreatePetListingSection({
                     {draft.size}
                   </span>
                   {draft.neutered && (
-                    <span className="rounded-full bg-green-100 px-3 py-1.5 text-xs font-semibold text-green-700">
+                    <span className="rounded-full bg-green-100 dark:bg-green-500/15 px-3 py-1.5 text-xs font-semibold text-green-700 dark:text-green-300">
                       Neutered / Spayed
                     </span>
                   )}
                 </div>
 
                 <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
-                  <MapPin className="h-4 w-4 text-[#145da0]" />
+                  <MapPin className="h-4 w-4 text-[#145da0] dark:text-sky-300" />
                   <span>{draft.location.trim() || 'Set a city or area'}</span>
                 </div>
 
@@ -874,12 +874,12 @@ export function CreatePetListingSection({
           </div>
 
           {hasPreview && (
-            <div className="rounded-3xl border border-emerald-200 bg-emerald-50 p-5">
-              <p className="flex items-center gap-2 text-sm font-semibold text-emerald-800">
+            <div className="rounded-3xl border border-emerald-200 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 p-5">
+              <p className="flex items-center gap-2 text-sm font-semibold text-emerald-800 dark:text-emerald-300">
                 <CheckCircle2 className="h-4 w-4" />
                 {isEditMode ? 'Listing updated successfully' : 'Listing published successfully'}
               </p>
-              <p className="mt-2 text-sm leading-6 text-emerald-700">
+              <p className="mt-2 text-sm leading-6 text-emerald-700 dark:text-emerald-300">
                 {isEditMode
                   ? 'Your pet listing details and gallery have been updated. Removed Cloudinary images were scheduled for cleanup after the save.'
                   : 'Your pet listing now has optimized Cloudinary image URLs stored in the `pets` table and is published automatically.'}

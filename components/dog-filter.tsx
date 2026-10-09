@@ -79,7 +79,7 @@ export function DogFilter() {
   }
 
   return (
-    <div className="rounded-[1.5rem] border border-white/70 bg-white/85 p-4 shadow-[0_18px_45px_-28px_rgba(20,44,90,0.28)] backdrop-blur">
+    <div className="rounded-[1.5rem] border border-white/70 dark:border-white/10 bg-white/85 dark:bg-card/85 p-4 shadow-[0_18px_45px_-28px_rgba(20,44,90,0.28)] backdrop-blur">
       <div className="mb-4 hidden items-center gap-3 md:flex">
         <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary/15 to-[#3b82f6]/15 text-primary">
           <SlidersHorizontal size={16} />
@@ -115,7 +115,7 @@ export function DogFilter() {
                 className={`rounded-xl px-2 py-2 text-sm font-medium transition-all ${
                   species === ''
                     ? 'bg-primary text-primary-foreground shadow-[0_12px_26px_-18px_rgba(249,115,22,0.85)]'
-                    : 'border border-[#dce9f8] bg-[#fcfdff] text-foreground hover:bg-[#f7fbff]'
+                    : 'border border-[#dce9f8] dark:border-border bg-[#fcfdff] dark:bg-muted/60 text-foreground hover:bg-[#f7fbff] dark:hover:bg-muted/60'
                 }`}
               >
                 All Pets
@@ -130,7 +130,7 @@ export function DogFilter() {
                 className={`rounded-xl px-2 py-2 text-sm font-medium transition-all ${
                   species === 'dog'
                     ? 'bg-primary text-primary-foreground shadow-[0_12px_26px_-18px_rgba(249,115,22,0.85)]'
-                    : 'border border-[#dce9f8] bg-[#fcfdff] text-foreground hover:bg-[#f7fbff]'
+                    : 'border border-[#dce9f8] dark:border-border bg-[#fcfdff] dark:bg-muted/60 text-foreground hover:bg-[#f7fbff] dark:hover:bg-muted/60'
                 }`}
               >
                 Dogs
@@ -145,7 +145,7 @@ export function DogFilter() {
                 className={`rounded-xl px-2 py-2 text-sm font-medium transition-all ${
                   species === 'cat'
                     ? 'bg-primary text-primary-foreground shadow-[0_12px_26px_-18px_rgba(249,115,22,0.85)]'
-                    : 'border border-[#dce9f8] bg-[#fcfdff] text-foreground hover:bg-[#f7fbff]'
+                    : 'border border-[#dce9f8] dark:border-border bg-[#fcfdff] dark:bg-muted/60 text-foreground hover:bg-[#f7fbff] dark:hover:bg-muted/60'
                 }`}
               >
                 Cats
@@ -164,7 +164,7 @@ export function DogFilter() {
                   setBreed(nextBreed)
                   applyFilters({ breed: nextBreed })
                 }}
-                className="w-full appearance-none rounded-xl border border-[#dce9f8] bg-[#fcfdff] px-3 py-2.5 pr-10 text-sm text-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
+                className="w-full appearance-none rounded-xl border border-[#dce9f8] dark:border-border bg-[#fcfdff] dark:bg-muted/60 px-3 py-2.5 pr-10 text-sm text-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
               >
                 <option value="">All breeds</option>
                 {(species === 'cat'
@@ -180,7 +180,7 @@ export function DogFilter() {
                   </option>
                 ))}
               </select>
-              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#145da0]" />
+              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#145da0] dark:text-sky-300" />
             </div>
           </div>
 
@@ -198,7 +198,7 @@ export function DogFilter() {
                 className={`rounded-xl px-3 py-2 text-sm font-medium transition-all ${
                   size === ''
                     ? 'bg-primary text-primary-foreground shadow-[0_12px_26px_-18px_rgba(249,115,22,0.85)]'
-                    : 'border border-[#dce9f8] bg-[#fcfdff] text-foreground hover:bg-[#f7fbff]'
+                    : 'border border-[#dce9f8] dark:border-border bg-[#fcfdff] dark:bg-muted/60 text-foreground hover:bg-[#f7fbff] dark:hover:bg-muted/60'
                 }`}
               >
                 All Sizes
@@ -214,7 +214,7 @@ export function DogFilter() {
                   className={`rounded-xl px-3 py-2 text-sm font-medium capitalize transition-all ${
                     size === s
                       ? 'bg-primary text-primary-foreground shadow-[0_12px_26px_-18px_rgba(249,115,22,0.85)]'
-                      : 'border border-[#dce9f8] bg-[#fcfdff] text-foreground hover:bg-[#f7fbff]'
+                      : 'border border-[#dce9f8] dark:border-border bg-[#fcfdff] dark:bg-muted/60 text-foreground hover:bg-[#f7fbff] dark:hover:bg-muted/60'
                   }`}
                 >
                   {s}
@@ -229,7 +229,7 @@ export function DogFilter() {
             </label>
             <div className="space-y-3">
               <div className="relative">
-                <MapPin className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#145da0]" />
+                <MapPin className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#145da0] dark:text-sky-300" />
                 <select
                   value={selectedProvinceKey}
                   onChange={(e) => {
@@ -238,7 +238,7 @@ export function DogFilter() {
                     setCity('')
                     applyFilters({ provinceKey: nextProvinceKey, city: '' })
                   }}
-                  className="w-full appearance-none rounded-xl border border-[#dce9f8] bg-[#fcfdff] py-2.5 pl-9 pr-10 text-sm text-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
+                  className="w-full appearance-none rounded-xl border border-[#dce9f8] dark:border-border bg-[#fcfdff] dark:bg-muted/60 py-2.5 pl-9 pr-10 text-sm text-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
                 >
                   <option value="">All provinces or regions</option>
                   {philippineProvinceOptions.map((province) => (
@@ -247,7 +247,7 @@ export function DogFilter() {
                     </option>
                   ))}
                 </select>
-                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#145da0]" />
+                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#145da0] dark:text-sky-300" />
               </div>
 
               <div className="relative">
@@ -259,7 +259,7 @@ export function DogFilter() {
                     applyFilters({ city: nextCity })
                   }}
                   disabled={!selectedProvinceKey}
-                  className="w-full appearance-none rounded-xl border border-[#dce9f8] bg-[#fcfdff] px-3 py-2.5 pr-10 text-sm text-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="w-full appearance-none rounded-xl border border-[#dce9f8] dark:border-border bg-[#fcfdff] dark:bg-muted/60 px-3 py-2.5 pr-10 text-sm text-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   <option value="">
                     {selectedProvinceKey ? 'All cities' : 'Select a province first'}
@@ -270,7 +270,7 @@ export function DogFilter() {
                     </option>
                   ))}
                 </select>
-                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#145da0]" />
+                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#145da0] dark:text-sky-300" />
               </div>
             </div>
           </div>

@@ -58,14 +58,14 @@ export function DeletePetListingButton({
         type="button"
         onClick={handleDelete}
         disabled={isDeleting}
-        className="inline-flex items-center gap-2 rounded-full border border-red-200 bg-red-50 px-4 py-2 text-xs font-semibold text-red-700 transition-colors hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-70"
+        className="inline-flex items-center gap-2 rounded-full border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 px-4 py-2 text-xs font-semibold text-red-700 dark:text-red-300 transition-colors hover:bg-red-100 dark:hover:bg-red-500/15 disabled:cursor-not-allowed disabled:opacity-70"
       >
         {isDeleting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
         {isDeleting ? 'Deleting...' : 'Delete'}
       </button>
 
       {errorMessage && (
-        <p className="max-w-[12rem] text-xs leading-5 text-red-600">{errorMessage}</p>
+        <p className="max-w-[12rem] text-xs leading-5 text-red-600 dark:text-red-400">{errorMessage}</p>
       )}
     </div>
   )

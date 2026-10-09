@@ -37,8 +37,8 @@ export default async function PartnerPage() {
   return (
     <div className="min-h-screen bg-background">
       <div className="site-container py-12">
-        <div className="mb-8 rounded-[2.5rem] bg-gradient-to-br from-[#fff3e8] via-white to-[#eef7ff] p-8 shadow-[0_30px_80px_-35px_rgba(20,44,90,0.35)] sm:p-10">
-          <span className="inline-flex rounded-full bg-[#ffefe6] px-4 py-1.5 text-sm font-semibold uppercase tracking-wide text-primary">
+        <div className="mb-8 rounded-[2.5rem] bg-gradient-to-br from-[#fff3e8] dark:from-primary/10 via-white dark:via-card to-[#eef7ff] dark:to-sky-400/10 p-8 shadow-[0_30px_80px_-35px_rgba(20,44,90,0.35)] sm:p-10">
+          <span className="inline-flex rounded-full bg-[#ffefe6] dark:bg-primary/15 px-4 py-1.5 text-sm font-semibold uppercase tracking-wide text-primary">
             {applicantType}
           </span>
           <h1 className="mt-6 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
@@ -51,7 +51,7 @@ export default async function PartnerPage() {
         </div>
 
         <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="rounded-3xl border border-border bg-white p-8 shadow-sm">
+          <div className="rounded-3xl border border-border bg-white dark:bg-card p-8 shadow-sm">
             <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold text-foreground">
               <Building2 className="h-5 w-5 text-primary" />
               Organization Profile
@@ -68,21 +68,21 @@ export default async function PartnerPage() {
               </div>
               <div className="rounded-2xl border border-border bg-background/40 p-5">
                 <p className="flex items-center gap-2 text-sm font-medium text-foreground">
-                  <Mail className="h-4 w-4 text-[#145da0]" />
+                  <Mail className="h-4 w-4 text-[#145da0] dark:text-sky-300" />
                   Email
                 </p>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">{email}</p>
               </div>
               <div className="rounded-2xl border border-border bg-background/40 p-5">
                 <p className="flex items-center gap-2 text-sm font-medium text-foreground">
-                  <Phone className="h-4 w-4 text-[#145da0]" />
+                  <Phone className="h-4 w-4 text-[#145da0] dark:text-sky-300" />
                   Phone
                 </p>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">{phone}</p>
               </div>
               <div className="rounded-2xl border border-border bg-background/40 p-5">
                 <p className="flex items-center gap-2 text-sm font-medium text-foreground">
-                  <MapPin className="h-4 w-4 text-[#145da0]" />
+                  <MapPin className="h-4 w-4 text-[#145da0] dark:text-sky-300" />
                   City
                 </p>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">{city}</p>
@@ -104,7 +104,7 @@ export default async function PartnerPage() {
           </div>
 
           <div className="space-y-6">
-            <div className="rounded-3xl border border-border bg-white p-8 shadow-sm">
+            <div className="rounded-3xl border border-border bg-white dark:bg-card p-8 shadow-sm">
               <h2 className="mb-4 flex items-center gap-2 text-2xl font-bold text-foreground">
                 <HeartHandshake className="h-5 w-5 text-primary" />
                 Next Partner Tools
@@ -120,7 +120,7 @@ export default async function PartnerPage() {
               </ul>
             </div>
 
-            <div className="rounded-3xl border border-border bg-white p-8 shadow-sm">
+            <div className="rounded-3xl border border-border bg-white dark:bg-card p-8 shadow-sm">
               <h2 className="mb-4 flex items-center gap-2 text-2xl font-bold text-foreground">
                 <FileText className="h-5 w-5 text-primary" />
                 Quick Links

@@ -24,7 +24,7 @@ export function DogGallery({ images, dogName }: DogGalleryProps) {
   }
 
   return (
-    <div className="bg-white rounded-2xl overflow-hidden border border-border shadow-sm">
+    <div className="bg-white dark:bg-card rounded-2xl overflow-hidden border border-border shadow-sm">
       {/* Main Image - Larger */}
       <div className="relative bg-muted h-96 sm:h-[600px] lg:h-[650px] flex items-center justify-center overflow-hidden">
         <img
@@ -38,7 +38,7 @@ export function DogGallery({ images, dogName }: DogGalleryProps) {
             {/* Previous Button */}
             <button
               onClick={goToPrevious}
-              className="absolute left-6 top-1/2 transform -translate-y-1/2 bg-white/95 hover:bg-white rounded-full p-3 shadow-xl transition-all duration-200 hover:scale-110"
+              className="absolute left-6 top-1/2 transform -translate-y-1/2 bg-white/95 dark:bg-card/95 hover:bg-white dark:hover:bg-card rounded-full p-3 shadow-xl transition-all duration-200 hover:scale-110"
               aria-label="Previous image"
             >
               <ChevronLeft size={28} className="text-foreground" />
@@ -47,7 +47,7 @@ export function DogGallery({ images, dogName }: DogGalleryProps) {
             {/* Next Button */}
             <button
               onClick={goToNext}
-              className="absolute right-6 top-1/2 transform -translate-y-1/2 bg-white/95 hover:bg-white rounded-full p-3 shadow-xl transition-all duration-200 hover:scale-110"
+              className="absolute right-6 top-1/2 transform -translate-y-1/2 bg-white/95 dark:bg-card/95 hover:bg-white dark:hover:bg-card rounded-full p-3 shadow-xl transition-all duration-200 hover:scale-110"
               aria-label="Next image"
             >
               <ChevronRight size={28} className="text-foreground" />

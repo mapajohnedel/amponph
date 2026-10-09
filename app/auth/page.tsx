@@ -126,9 +126,9 @@ export default function AuthPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[linear-gradient(180deg,#fff8f2_0%,#eef7ff_50%,#fffaf6_100%)] py-12">
+      <div className="min-h-screen bg-[linear-gradient(180deg,#fff8f2_0%,#eef7ff_50%,#fffaf6_100%)] dark:bg-[linear-gradient(180deg,var(--page-gradient-from)_0%,var(--page-gradient-to)_100%)] py-12">
         <div className="site-container">
-          <div className="rounded-[2.5rem] border border-white/70 bg-white/85 p-10 text-center shadow-[0_30px_80px_-35px_rgba(20,44,90,0.35)] backdrop-blur">
+          <div className="rounded-[2.5rem] border border-white/70 dark:border-white/10 bg-white/85 dark:bg-card/85 p-10 text-center shadow-[0_30px_80px_-35px_rgba(20,44,90,0.35)] backdrop-blur">
             <h1 className="text-2xl font-bold text-foreground">Checking your account...</h1>
             <p className="mt-3 text-muted-foreground">
               We&apos;re confirming your session before showing the auth form.
@@ -140,14 +140,14 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[linear-gradient(180deg,#fff8f2_0%,#eef7ff_50%,#fffaf6_100%)] py-12">
+    <div className="min-h-screen bg-[linear-gradient(180deg,#fff8f2_0%,#eef7ff_50%,#fffaf6_100%)] dark:bg-[linear-gradient(180deg,var(--page-gradient-from)_0%,var(--page-gradient-to)_100%)] py-12">
       <div className="site-container grid min-h-[calc(100vh-9rem)] items-center gap-8 lg:grid-cols-[0.95fr_1.05fr]">
-        <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-[#fff3e8] via-white to-[#eef7ff] p-8 shadow-[0_30px_80px_-35px_rgba(20,44,90,0.35)] sm:p-10">
+        <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-[#fff3e8] dark:from-primary/10 via-white dark:via-card to-[#eef7ff] dark:to-sky-400/10 p-8 shadow-[0_30px_80px_-35px_rgba(20,44,90,0.35)] sm:p-10">
           <div className="absolute left-10 top-10 h-24 w-24 rounded-full bg-primary/15 blur-3xl" />
           <div className="absolute bottom-10 right-10 h-28 w-28 rounded-full bg-[#84c5ff]/20 blur-3xl" />
 
           <div className="relative">
-            <div className="inline-flex rounded-[1.5rem] bg-white p-2 shadow-sm ring-1 ring-border/70">
+            <div className="inline-flex rounded-[1.5rem] bg-white dark:bg-card p-2 shadow-sm ring-1 ring-border/70">
               <Image
                 src="/amponph-logo.png"
                 alt="AmponPH logo"
@@ -159,7 +159,7 @@ export default function AuthPage() {
             </div>
 
             <div className="mt-8 space-y-4">
-              <span className="inline-flex rounded-full bg-[#ffefe6] px-4 py-1.5 text-sm font-semibold text-primary">
+              <span className="inline-flex rounded-full bg-[#ffefe6] dark:bg-primary/15 px-4 py-1.5 text-sm font-semibold text-primary">
                 Safe, simple adoption
               </span>
               <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
@@ -173,7 +173,7 @@ export default function AuthPage() {
             </div>
 
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
-              <div className="rounded-[1.75rem] border border-white/70 bg-white/80 p-5 backdrop-blur">
+              <div className="rounded-[1.75rem] border border-white/70 dark:border-white/10 bg-white/80 dark:bg-card/80 p-5 backdrop-blur">
                 <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/15 to-[#3b82f6]/15 text-primary">
                   <HeartHandshake className="h-5 w-5" />
                 </div>
@@ -183,8 +183,8 @@ export default function AuthPage() {
                 </p>
               </div>
 
-              <div className="rounded-[1.75rem] border border-white/70 bg-white/80 p-5 backdrop-blur">
-                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-[#eef7ff] text-[#145da0]">
+              <div className="rounded-[1.75rem] border border-white/70 dark:border-white/10 bg-white/80 dark:bg-card/80 p-5 backdrop-blur">
+                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-[#eef7ff] dark:bg-sky-400/10 text-[#145da0] dark:text-sky-300">
                   <ShieldCheck className="h-5 w-5" />
                 </div>
                 <h2 className="font-semibold text-foreground">Trusted platform</h2>
@@ -194,7 +194,7 @@ export default function AuthPage() {
               </div>
             </div>
 
-            <div className="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-medium text-muted-foreground shadow-sm">
+            <div className="mt-8 inline-flex items-center gap-2 rounded-full bg-white dark:bg-card px-4 py-2 text-sm font-medium text-muted-foreground shadow-sm">
               <span className="h-2.5 w-2.5 rounded-full bg-primary" />
               Start with your account, then browse and connect with rescues.
             </div>
@@ -202,9 +202,9 @@ export default function AuthPage() {
         </div>
 
         <div className="w-full">
-          <div className="rounded-[2.5rem] border border-white/70 bg-white/85 p-8 shadow-[0_30px_80px_-35px_rgba(20,44,90,0.35)] backdrop-blur sm:p-10">
+          <div className="rounded-[2.5rem] border border-white/70 dark:border-white/10 bg-white/85 dark:bg-card/85 p-8 shadow-[0_30px_80px_-35px_rgba(20,44,90,0.35)] backdrop-blur sm:p-10">
             <div className="mb-8">
-              <div className="flex gap-2 rounded-full bg-[#f6f9fe] p-1.5">
+              <div className="flex gap-2 rounded-full bg-[#f6f9fe] dark:bg-muted/60 p-1.5">
                 <button
                   onClick={() => toggleMode(true)}
                   className={`flex-1 rounded-full py-3 transition-all font-medium text-sm ${
@@ -240,13 +240,13 @@ export default function AuthPage() {
             </div>
 
             {errorMessage && (
-              <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              <div className="mb-6 rounded-2xl border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 px-4 py-3 text-sm text-red-700 dark:text-red-300">
                 {errorMessage}
               </div>
             )}
 
             {successMessage && (
-              <div className="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+              <div className="mb-6 rounded-2xl border border-emerald-200 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 px-4 py-3 text-sm text-emerald-700 dark:text-emerald-300">
                 {successMessage}
               </div>
             )}
@@ -265,7 +265,7 @@ export default function AuthPage() {
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Juan Dela Cruz"
-                        className="w-full rounded-2xl border border-[#dce9f8] bg-[#fcfdff] py-3 pl-12 pr-4 text-sm text-foreground placeholder-muted-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
+                        className="w-full rounded-2xl border border-[#dce9f8] dark:border-border bg-[#fcfdff] dark:bg-muted/60 py-3 pl-12 pr-4 text-sm text-foreground placeholder-muted-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
                         required
                       />
                     </div>
@@ -282,7 +282,7 @@ export default function AuthPage() {
                         value={contactNumber}
                         onChange={(e) => setContactNumber(e.target.value)}
                         placeholder="+63 917 000 0000"
-                        className="w-full rounded-2xl border border-[#dce9f8] bg-[#fcfdff] py-3 pl-12 pr-4 text-sm text-foreground placeholder-muted-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
+                        className="w-full rounded-2xl border border-[#dce9f8] dark:border-border bg-[#fcfdff] dark:bg-muted/60 py-3 pl-12 pr-4 text-sm text-foreground placeholder-muted-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
                         required
                       />
                     </div>
@@ -297,7 +297,7 @@ export default function AuthPage() {
                         <select
                           value={selectedProvinceKey}
                           onChange={(event) => handleProvinceChange(event.target.value)}
-                          className="w-full appearance-none rounded-2xl border border-[#dce9f8] bg-[#fcfdff] px-4 py-3 pr-12 text-sm text-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
+                          className="w-full appearance-none rounded-2xl border border-[#dce9f8] dark:border-border bg-[#fcfdff] dark:bg-muted/60 px-4 py-3 pr-12 text-sm text-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
                           required
                         >
                           <option value="">Select a province or region</option>
@@ -319,7 +319,7 @@ export default function AuthPage() {
                           value={city}
                           onChange={(event) => setCity(event.target.value)}
                           disabled={!selectedProvinceKey}
-                          className="w-full appearance-none rounded-2xl border border-[#dce9f8] bg-[#fcfdff] px-4 py-3 pr-12 text-sm text-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25 disabled:cursor-not-allowed disabled:opacity-60"
+                          className="w-full appearance-none rounded-2xl border border-[#dce9f8] dark:border-border bg-[#fcfdff] dark:bg-muted/60 px-4 py-3 pr-12 text-sm text-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25 disabled:cursor-not-allowed disabled:opacity-60"
                           required
                         >
                           <option value="">
@@ -349,7 +349,7 @@ export default function AuthPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@example.com"
-                    className="w-full rounded-2xl border border-[#dce9f8] bg-[#fcfdff] py-3 pl-12 pr-4 text-sm text-foreground placeholder-muted-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
+                    className="w-full rounded-2xl border border-[#dce9f8] dark:border-border bg-[#fcfdff] dark:bg-muted/60 py-3 pl-12 pr-4 text-sm text-foreground placeholder-muted-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
                     required
                   />
                 </div>
@@ -366,7 +366,7 @@ export default function AuthPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full rounded-2xl border border-[#dce9f8] bg-[#fcfdff] py-3 pl-12 pr-12 text-sm text-foreground placeholder-muted-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
+                    className="w-full rounded-2xl border border-[#dce9f8] dark:border-border bg-[#fcfdff] dark:bg-muted/60 py-3 pl-12 pr-12 text-sm text-foreground placeholder-muted-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
                     required
                   />
                   <button
@@ -408,7 +408,7 @@ export default function AuthPage() {
                 <div className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="bg-white px-3 text-muted-foreground">
+                <span className="bg-white dark:bg-card px-3 text-muted-foreground">
                   Or continue with
                 </span>
               </div>
@@ -418,7 +418,7 @@ export default function AuthPage() {
               <button
                 type="button"
                 disabled
-                className="flex w-full items-center justify-center gap-2 rounded-2xl border border-[#dce9f8] bg-[#fcfdff] py-3 font-medium text-foreground opacity-60"
+                className="flex w-full items-center justify-center gap-2 rounded-2xl border border-[#dce9f8] dark:border-border bg-[#fcfdff] dark:bg-muted/60 py-3 font-medium text-foreground opacity-60"
               >
                 <span>🔵</span>
                 Google coming soon
@@ -426,7 +426,7 @@ export default function AuthPage() {
               <button
                 type="button"
                 disabled
-                className="flex w-full items-center justify-center gap-2 rounded-2xl border border-[#dce9f8] bg-[#fcfdff] py-3 font-medium text-foreground opacity-60"
+                className="flex w-full items-center justify-center gap-2 rounded-2xl border border-[#dce9f8] dark:border-border bg-[#fcfdff] dark:bg-muted/60 py-3 font-medium text-foreground opacity-60"
               >
                 <span>👤</span>
                 Facebook coming soon

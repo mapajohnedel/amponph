@@ -16,16 +16,16 @@ type BrowsePageClientProps = {
 
 export function BrowsePageClient({ dogs, currentPage, totalPages, totalCount }: BrowsePageClientProps) {
   return (
-    <div className="min-h-screen bg-[linear-gradient(180deg,#fff8f2_0%,#eef7ff_42%,#fffaf6_100%)]">
+    <div className="min-h-screen bg-[linear-gradient(180deg,#fff8f2_0%,#eef7ff_42%,#fffaf6_100%)] dark:bg-[linear-gradient(180deg,var(--page-gradient-from)_0%,var(--page-gradient-to)_100%)]">
       <section className="relative overflow-hidden pb-16 pt-12">
         <div className="absolute left-[8%] top-24 -z-10 h-24 w-24 rounded-full bg-primary/15 blur-3xl" />
         <div className="absolute right-[12%] top-20 -z-10 h-28 w-28 rounded-full bg-[#84c5ff]/25 blur-3xl" />
 
         <div className="site-container">
-          {/* <div className="mb-12 rounded-[2.5rem] border border-white/70 bg-white/75 p-8 shadow-[0_30px_80px_-35px_rgba(20,44,90,0.35)] backdrop-blur sm:p-10">
+          {/* <div className="mb-12 rounded-[2.5rem] border border-white/70 dark:border-white/10 bg-white/75 dark:bg-card/75 p-8 shadow-[0_30px_80px_-35px_rgba(20,44,90,0.35)] backdrop-blur sm:p-10">
             <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
               <div className="max-w-2xl space-y-4">
-                <span className="inline-flex rounded-full bg-[#ffefe6] px-4 py-1.5 text-sm font-semibold text-primary shadow-sm">
+                <span className="inline-flex rounded-full bg-[#ffefe6] dark:bg-primary/15 px-4 py-1.5 text-sm font-semibold text-primary shadow-sm">
                   Browse adoptable pets
                 </span>
                 <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
@@ -38,17 +38,17 @@ export function BrowsePageClient({ dogs, currentPage, totalPages, totalCount }: 
               </div>
 
               <div className="grid gap-4 sm:grid-cols-3 lg:min-w-[24rem]">
-                <div className="rounded-[1.75rem] bg-[#fff7f1] p-5 shadow-sm">
+                <div className="rounded-[1.75rem] bg-[#fff7f1] dark:bg-primary/15 p-5 shadow-sm">
                   <p className="text-2xl font-bold text-foreground">{totalCount}</p>
                   <p className="text-sm text-muted-foreground">
                     Available pet{totalCount !== 1 ? 's' : ''}
                   </p>
                 </div>
-                <div className="rounded-[1.75rem] bg-[#f3f9ff] p-5 shadow-sm">
+                <div className="rounded-[1.75rem] bg-[#f3f9ff] dark:bg-sky-400/10 p-5 shadow-sm">
                   <p className="text-2xl font-bold text-foreground">PH</p>
                   <p className="text-sm text-muted-foreground">Local adoption-ready listings</p>
                 </div>
-                <div className="rounded-[1.75rem] bg-[#fff9ea] p-5 shadow-sm">
+                <div className="rounded-[1.75rem] bg-[#fff9ea] dark:bg-primary/15 p-5 shadow-sm">
                   <p className="text-2xl font-bold text-foreground">Easy</p>
                   <p className="text-sm text-muted-foreground">Filters to match your lifestyle</p>
                 </div>
@@ -65,7 +65,7 @@ export function BrowsePageClient({ dogs, currentPage, totalPages, totalCount }: 
               </a>
               <Link
                 href="/auth"
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-[#d6e8fb] bg-white px-6 py-3.5 font-semibold text-[#145da0] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-[#d6e8fb] dark:border-border bg-white dark:bg-card px-6 py-3.5 font-semibold text-[#145da0] dark:text-sky-300 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
               >
                 Start Your Adoption Profile
                 <ArrowRight className="h-4 w-4" />
@@ -77,7 +77,7 @@ export function BrowsePageClient({ dogs, currentPage, totalPages, totalCount }: 
             <div>
               <div className="sticky top-24 space-y-4">
                 <DogFilter />
-                <div className="rounded-[1.5rem] border border-white/70 bg-white/80 p-4 shadow-[0_18px_45px_-28px_rgba(20,44,90,0.28)] backdrop-blur">
+                <div className="rounded-[1.5rem] border border-white/70 dark:border-white/10 bg-white/80 dark:bg-card/80 p-4 shadow-[0_18px_45px_-28px_rgba(20,44,90,0.28)] backdrop-blur">
                   <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary/15 to-[#3b82f6]/15 text-primary">
                     <HeartHandshake className="h-5 w-5" />
                   </div>
@@ -101,7 +101,7 @@ export function BrowsePageClient({ dogs, currentPage, totalPages, totalCount }: 
                   <BrowsePagination currentPage={currentPage} totalPages={totalPages} />
                 </>
               ) : (
-                <div className="flex flex-col items-center justify-center rounded-[2.5rem] border border-white/70 bg-white/80 py-20 text-center shadow-[0_24px_70px_-36px_rgba(20,44,90,0.35)] backdrop-blur">
+                <div className="flex flex-col items-center justify-center rounded-[2.5rem] border border-white/70 dark:border-white/10 bg-white/80 dark:bg-card/80 py-20 text-center shadow-[0_24px_70px_-36px_rgba(20,44,90,0.35)] backdrop-blur">
                   <p className="mb-3 text-2xl font-semibold text-foreground">No pets found</p>
                   <p className="max-w-md text-base leading-7 text-muted-foreground">
                     Try adjusting your filters to see more available pets near your preferred

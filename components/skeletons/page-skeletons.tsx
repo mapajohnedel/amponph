@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils'
 
 const panelClass =
-  'rounded-[2rem] border border-white/70 bg-white/85 shadow-[0_24px_70px_-36px_rgba(20,44,90,0.35)] backdrop-blur'
+  'rounded-[2rem] border border-white/70 dark:border-white/10 bg-white/85 dark:bg-card/85 shadow-[0_24px_70px_-36px_rgba(20,44,90,0.35)] backdrop-blur'
 
 export function Bone({ className }: { className?: string }) {
   return <div aria-hidden="true" className={cn('skeleton-shimmer rounded-full', className)} />
@@ -13,7 +13,7 @@ function LoadingStatus({ label }: { label: string }) {
 
 export function PetCardSkeleton() {
   return (
-    <div className="overflow-hidden rounded-[2rem] border border-[#edf3fb] bg-white shadow-[0_20px_60px_-36px_rgba(20,44,90,0.32)]">
+    <div className="overflow-hidden rounded-[2rem] border border-[#edf3fb] dark:border-border bg-white dark:bg-card shadow-[0_20px_60px_-36px_rgba(20,44,90,0.32)]">
       <Bone className="h-64 rounded-none sm:h-72" />
       <div className="space-y-4 p-6">
         <div className="flex items-start justify-between gap-4">
@@ -31,7 +31,7 @@ export function PetCardSkeleton() {
 
 function FilterSkeleton() {
   return (
-    <div className="rounded-[1.5rem] border border-white/70 bg-white/85 p-4 shadow-[0_18px_45px_-28px_rgba(20,44,90,0.28)] backdrop-blur">
+    <div className="rounded-[1.5rem] border border-white/70 dark:border-white/10 bg-white/85 dark:bg-card/85 p-4 shadow-[0_18px_45px_-28px_rgba(20,44,90,0.28)] backdrop-blur">
       <div className="mb-5 flex items-center gap-3">
         <Bone className="h-9 w-9 rounded-xl" />
         <div className="flex-1 space-y-2">
@@ -52,14 +52,14 @@ function FilterSkeleton() {
 
 export function BrowsePageSkeleton() {
   return (
-    <div className="min-h-screen bg-[linear-gradient(180deg,#fff8f2_0%,#eef7ff_42%,#fffaf6_100%)]">
+    <div className="min-h-screen bg-[linear-gradient(180deg,#fff8f2_0%,#eef7ff_42%,#fffaf6_100%)] dark:bg-[linear-gradient(180deg,var(--page-gradient-from)_0%,var(--page-gradient-to)_100%)]">
       <section className="pb-16 pt-12" aria-busy="true">
         <LoadingStatus label="Loading pets" />
         <div className="site-container">
           <div className="grid items-start gap-6 lg:grid-cols-[16rem_minmax(0,1fr)]">
             <div className="space-y-4">
               <FilterSkeleton />
-              <div className="hidden rounded-[1.5rem] border border-white/70 bg-white/80 p-4 lg:block">
+              <div className="hidden rounded-[1.5rem] border border-white/70 dark:border-white/10 bg-white/80 dark:bg-card/80 p-4 lg:block">
                 <Bone className="mb-3 h-10 w-10 rounded-xl" />
                 <Bone className="h-4 w-32" />
                 <Bone className="mt-3 h-3 w-full" />
@@ -80,7 +80,7 @@ export function BrowsePageSkeleton() {
 
 export function PetDetailSkeleton() {
   return (
-    <div className="min-h-screen bg-[linear-gradient(180deg,#fff8f2_0%,#eef7ff_42%,#fffaf6_100%)]">
+    <div className="min-h-screen bg-[linear-gradient(180deg,#fff8f2_0%,#eef7ff_42%,#fffaf6_100%)] dark:bg-[linear-gradient(180deg,var(--page-gradient-from)_0%,var(--page-gradient-to)_100%)]">
       <div className="site-container py-12" aria-busy="true">
         <LoadingStatus label="Loading pet profile" />
         <Bone className="mb-8 h-5 w-36" />
@@ -139,13 +139,13 @@ export function DashboardPageSkeleton() {
     <div className="min-h-screen bg-background">
       <div className="site-container py-12" aria-busy="true">
         <LoadingStatus label="Loading page" />
-        <div className="mb-8 rounded-[2.5rem] bg-gradient-to-br from-[#fff3e8] via-white to-[#eef7ff] p-8 shadow-[0_30px_80px_-35px_rgba(20,44,90,0.35)] sm:p-10">
+        <div className="mb-8 rounded-[2.5rem] bg-gradient-to-br from-[#fff3e8] dark:from-primary/10 via-white dark:via-card to-[#eef7ff] dark:to-sky-400/10 p-8 shadow-[0_30px_80px_-35px_rgba(20,44,90,0.35)] sm:p-10">
           <Bone className="h-7 w-36" />
           <Bone className="mt-6 h-11 w-2/3 rounded-2xl sm:w-1/2" />
           <Bone className="mt-4 h-5 w-full max-w-3xl" />
           <Bone className="mt-2 h-5 w-4/5 max-w-2xl" />
         </div>
-        <div className="overflow-hidden rounded-3xl border border-border bg-white shadow-sm">
+        <div className="overflow-hidden rounded-3xl border border-border bg-white dark:bg-card shadow-sm">
           {Array.from({ length: 5 }, (_, index) => (
             <div key={index} className="flex items-center gap-4 border-b border-border p-5 last:border-b-0">
               <Bone className="h-14 w-14 shrink-0 rounded-2xl" />
@@ -164,7 +164,7 @@ export function DashboardPageSkeleton() {
 
 export function HomePageSkeleton() {
   return (
-    <div className="min-h-screen bg-[linear-gradient(180deg,#fff8f2_0%,#eef7ff_50%,#fffaf6_100%)]">
+    <div className="min-h-screen bg-[linear-gradient(180deg,#fff8f2_0%,#eef7ff_50%,#fffaf6_100%)] dark:bg-[linear-gradient(180deg,var(--page-gradient-from)_0%,var(--page-gradient-to)_100%)]">
       <div className="site-container py-12" aria-busy="true">
         <LoadingStatus label="Loading page" />
         <div className="grid items-center gap-10 py-8 lg:grid-cols-2">

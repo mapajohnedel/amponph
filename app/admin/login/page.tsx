@@ -52,9 +52,9 @@ export default function AdminLoginPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[linear-gradient(180deg,#fff8f2_0%,#eef7ff_50%,#fffaf6_100%)] py-12">
+      <div className="min-h-screen bg-[linear-gradient(180deg,#fff8f2_0%,#eef7ff_50%,#fffaf6_100%)] dark:bg-[linear-gradient(180deg,var(--page-gradient-from)_0%,var(--page-gradient-to)_100%)] py-12">
         <div className="site-container">
-          <div className="rounded-[2.5rem] border border-white/70 bg-white/85 p-10 text-center shadow-[0_30px_80px_-35px_rgba(20,44,90,0.35)] backdrop-blur">
+          <div className="rounded-[2.5rem] border border-white/70 dark:border-white/10 bg-white/85 dark:bg-card/85 p-10 text-center shadow-[0_30px_80px_-35px_rgba(20,44,90,0.35)] backdrop-blur">
             <h1 className="text-2xl font-bold text-foreground">Checking admin access...</h1>
             <p className="mt-3 text-muted-foreground">
               Verifying whether this device already has an active admin session.
@@ -70,14 +70,14 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[linear-gradient(180deg,#fff8f2_0%,#eef7ff_50%,#fffaf6_100%)] py-12">
+    <div className="min-h-screen bg-[linear-gradient(180deg,#fff8f2_0%,#eef7ff_50%,#fffaf6_100%)] dark:bg-[linear-gradient(180deg,var(--page-gradient-from)_0%,var(--page-gradient-to)_100%)] py-12">
       <div className="site-container grid min-h-[calc(100vh-9rem)] items-center gap-8 lg:grid-cols-[0.92fr_1.08fr]">
-        <div className="rounded-[2.5rem] bg-gradient-to-br from-[#fff3e8] via-white to-[#eef7ff] p-8 shadow-[0_30px_80px_-35px_rgba(20,44,90,0.35)] sm:p-10">
+        <div className="rounded-[2.5rem] bg-gradient-to-br from-[#fff3e8] dark:from-primary/10 via-white dark:via-card to-[#eef7ff] dark:to-sky-400/10 p-8 shadow-[0_30px_80px_-35px_rgba(20,44,90,0.35)] sm:p-10">
           <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary">
             <ShieldCheck className="h-7 w-7" />
           </div>
           <div className="mt-8 space-y-4">
-            <span className="inline-flex rounded-full bg-[#ffefe6] px-4 py-1.5 text-sm font-semibold text-primary">
+            <span className="inline-flex rounded-full bg-[#ffefe6] dark:bg-primary/15 px-4 py-1.5 text-sm font-semibold text-primary">
               Shelter admin access
             </span>
             <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
@@ -89,7 +89,7 @@ export default function AdminLoginPage() {
             </p>
           </div>
 
-          <div className="mt-8 rounded-[1.75rem] border border-white/70 bg-white/80 p-5 backdrop-blur">
+          <div className="mt-8 rounded-[1.75rem] border border-white/70 dark:border-white/10 bg-white/80 dark:bg-card/80 p-5 backdrop-blur">
             <h2 className="font-semibold text-foreground">How admin access works</h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
               This page only accepts accounts marked as admins through user metadata or the
@@ -98,7 +98,7 @@ export default function AdminLoginPage() {
           </div>
         </div>
 
-        <div className="rounded-[2.5rem] border border-white/70 bg-white/85 p-8 shadow-[0_30px_80px_-35px_rgba(20,44,90,0.35)] backdrop-blur sm:p-10">
+        <div className="rounded-[2.5rem] border border-white/70 dark:border-white/10 bg-white/85 dark:bg-card/85 p-8 shadow-[0_30px_80px_-35px_rgba(20,44,90,0.35)] backdrop-blur sm:p-10">
           <div className="mb-8">
             <h2 className="text-2xl font-bold text-foreground">Admin login</h2>
             <p className="mt-2 text-sm text-muted-foreground">
@@ -107,7 +107,7 @@ export default function AdminLoginPage() {
           </div>
 
           {errorMessage && (
-            <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            <div className="mb-6 rounded-2xl border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 px-4 py-3 text-sm text-red-700 dark:text-red-300">
               {errorMessage}
             </div>
           )}
@@ -122,7 +122,7 @@ export default function AdminLoginPage() {
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
                   placeholder="admin@example.com"
-                  className="w-full rounded-2xl border border-[#dce9f8] bg-[#fcfdff] py-3 pl-12 pr-4 text-sm text-foreground placeholder-muted-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
+                  className="w-full rounded-2xl border border-[#dce9f8] dark:border-border bg-[#fcfdff] dark:bg-muted/60 py-3 pl-12 pr-4 text-sm text-foreground placeholder-muted-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
                   required
                 />
               </div>
@@ -137,7 +137,7 @@ export default function AdminLoginPage() {
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
                   placeholder="••••••••"
-                  className="w-full rounded-2xl border border-[#dce9f8] bg-[#fcfdff] py-3 pl-12 pr-12 text-sm text-foreground placeholder-muted-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
+                  className="w-full rounded-2xl border border-[#dce9f8] dark:border-border bg-[#fcfdff] dark:bg-muted/60 py-3 pl-12 pr-12 text-sm text-foreground placeholder-muted-foreground shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/25"
                   required
                 />
                 <button

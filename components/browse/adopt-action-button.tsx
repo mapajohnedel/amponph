@@ -23,7 +23,7 @@ export function AdoptActionButton({ petId, petName }: AdoptActionButtonProps) {
       toast({
         title: 'Login required',
         description: 'Please login first to continue with adoption.',
-        className: 'border-amber-200 bg-amber-50 text-amber-900',
+        className: 'border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/10 text-amber-900 dark:text-amber-300',
       })
       router.push('/auth')
       return
