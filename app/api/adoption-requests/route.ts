@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { errorResponse, internalErrorResponse } from '@/lib/api/errors'
 import { isAdminUser, isPartnerUser } from '@/lib/auth/roles'
 import { createClient } from '@/lib/supabase/server'
 
@@ -45,7 +46,7 @@ export async function POST(request: Request) {
       .maybeSingle()
 
     if (petError) {
-      return NextResponse.json({ error: petError.message }, { status: 500 })
+      return internalErrorResponse(petError, 'Unable to load this pet.')
     }
 
     if (!pet) {
@@ -68,7 +69,7 @@ export async function POST(request: Request) {
       .maybeSingle()
 
     if (existingError) {
-      return NextResponse.json({ error: existingError.message }, { status: 500 })
+      return internalErrorResponse(existingError, 'Unable to check your existing requests.')
     }
 
     if (existingRequest) {
@@ -94,7 +95,7 @@ export async function POST(request: Request) {
       .single()
 
     if (insertError) {
-      return NextResponse.json({ error: insertError.message }, { status: 500 })
+      return internalErrorResponse(insertError, 'Unable to submit adoption request.')
     }
 
     return NextResponse.json({
@@ -103,8 +104,6 @@ export async function POST(request: Request) {
       request: createdRequest,
     })
   } catch (caughtError) {
-    const message =
-      caughtError instanceof Error ? caughtError.message : 'Unable to submit adoption request.'
-    return NextResponse.json({ error: message }, { status: 500 })
+    return errorResponse(caughtError, 'Unable to submit adoption request.')
   }
 }

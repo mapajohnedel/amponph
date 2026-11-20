@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { errorResponse, internalErrorResponse } from '@/lib/api/errors'
 import { createClient } from '@/lib/supabase/server'
 import { isAdminUser } from '@/lib/auth/roles'
 import { partnerApplicationSchema } from '@/lib/partner/applications'
@@ -18,8 +19,7 @@ export async function GET() {
     const applications = await listPartnerApplications()
     return NextResponse.json({ applications })
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Failed to load partner applications.'
-    return NextResponse.json({ error: message }, { status: 500 })
+    return internalErrorResponse(error, 'Failed to load partner applications.')
   }
 }
 
@@ -38,10 +38,6 @@ export async function POST(request: Request) {
       { status: 201 }
     )
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : 'Failed to submit your partner application.'
-    const status = message.includes('already exists') ? 409 : 400
-
-    return NextResponse.json({ error: message }, { status })
+    return errorResponse(error, 'Failed to submit your partner application.')
   }
 }

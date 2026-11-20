@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { errorResponse, internalErrorResponse } from '@/lib/api/errors'
 import { isAdminUser, isPartnerUser } from '@/lib/auth/roles'
 import { createClient } from '@/lib/supabase/server'
 
@@ -51,13 +52,12 @@ export async function POST(request: Request) {
     )
 
     if (insertError) {
-      return NextResponse.json({ error: insertError.message }, { status: 500 })
+      return internalErrorResponse(insertError, 'Unable to save favorite.')
     }
 
     return NextResponse.json({ success: true })
   } catch (caughtError) {
-    const message = caughtError instanceof Error ? caughtError.message : 'Unable to save favorite.'
-    return NextResponse.json({ error: message }, { status: 500 })
+    return errorResponse(caughtError, 'Unable to save favorite.')
   }
 }
 
@@ -90,13 +90,11 @@ export async function DELETE(request: Request) {
       .eq('pet_id', petId)
 
     if (deleteError) {
-      return NextResponse.json({ error: deleteError.message }, { status: 500 })
+      return internalErrorResponse(deleteError, 'Unable to remove favorite.')
     }
 
     return NextResponse.json({ success: true })
   } catch (caughtError) {
-    const message =
-      caughtError instanceof Error ? caughtError.message : 'Unable to remove favorite.'
-    return NextResponse.json({ error: message }, { status: 500 })
+    return errorResponse(caughtError, 'Unable to remove favorite.')
   }
 }

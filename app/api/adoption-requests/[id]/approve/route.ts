@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { errorResponse, internalErrorResponse } from '@/lib/api/errors'
 import { isPartnerUser } from '@/lib/auth/roles'
 import { createClient } from '@/lib/supabase/server'
 
@@ -35,13 +36,11 @@ export async function POST(
         return NextResponse.json({ error: approveError.message }, { status: 409 })
       }
 
-      return NextResponse.json({ error: approveError.message }, { status: 500 })
+      return internalErrorResponse(approveError, 'Unable to approve adoption request.')
     }
 
     return NextResponse.json({ success: true, message: 'Adoption request approved.' })
   } catch (caughtError) {
-    const message =
-      caughtError instanceof Error ? caughtError.message : 'Unable to approve adoption request.'
-    return NextResponse.json({ error: message }, { status: 500 })
+    return errorResponse(caughtError, 'Unable to approve adoption request.')
   }
 }

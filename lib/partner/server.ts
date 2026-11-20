@@ -10,6 +10,7 @@ import {
   type PartnerApplicationRecord,
   type PartnerApplicationReviewInput,
 } from '@/lib/partner/applications'
+import { UserFacingError } from '@/lib/api/errors'
 import { createServiceRoleClient } from '@/lib/supabase/service-role'
 
 function createGeneratedPassword() {
@@ -38,7 +39,7 @@ export async function submitPartnerApplication(input: PartnerApplicationInput) {
 
   if (error) {
     if (error.code === '23505') {
-      throw new Error('An application already exists for this email address.')
+      throw new UserFacingError('An application already exists for this email address.', 409)
     }
 
     throw new Error(error.message)
@@ -76,13 +77,13 @@ export async function approvePartnerApplication(
     .single()
 
   if (applicationError || !application) {
-    throw new Error('Partner application not found.')
+    throw new UserFacingError('Partner application not found.', 404)
   }
 
   const partnerApplication = application as PartnerApplicationRecord
 
   if (partnerApplication.status !== 'pending') {
-    throw new Error('Only pending partner applications can be approved.')
+    throw new UserFacingError('Only pending partner applications can be approved.', 409)
   }
 
   const generatedPassword = createGeneratedPassword()
@@ -179,6 +180,6 @@ export async function rejectPartnerApplication(
     .single()
 
   if (error || !data) {
-    throw new Error('Only pending partner applications can be rejected.')
+    throw new UserFacingError('Only pending partner applications can be rejected.', 409)
   }
 }

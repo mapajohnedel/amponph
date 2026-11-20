@@ -3,12 +3,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { getAuthenticatedHome } from '@/lib/auth/roles'
-import { mockDogs } from '@/lib/mock-dogs'
 import type { PartnerApplicationRecord } from '@/lib/partner/applications'
 import {
-  Plus,
-  Edit,
-  Trash2,
   Eye,
   Check,
   X,
@@ -24,8 +20,6 @@ import { navigateAfterAuthChange } from '@/lib/auth/navigation'
 export default function AdminPage() {
   const router = useRouter()
   const { supabase, user, loading, isAdmin } = useAuthUser()
-  const [activeTab, setActiveTab] = useState<'dogs' | 'requests' | 'applications'>('dogs')
-  const [showAddModal, setShowAddModal] = useState(false)
   const [isSigningOut, setIsSigningOut] = useState(false)
   const [applications, setApplications] = useState<PartnerApplicationRecord[]>([])
   const [applicationsLoading, setApplicationsLoading] = useState(true)
@@ -45,27 +39,6 @@ export default function AdminPage() {
   const [copyMessage, setCopyMessage] = useState<string | null>(null)
   const [isApproving, setIsApproving] = useState(false)
   const [isRejecting, setIsRejecting] = useState(false)
-
-  const adoptionRequests = [
-    {
-      id: 1,
-      userName: 'John Doe',
-      dogName: 'Max',
-      email: 'john@example.com',
-      phone: '(555) 123-4567',
-      date: '2024-03-10',
-      status: 'pending',
-    },
-    {
-      id: 2,
-      userName: 'Sarah Smith',
-      dogName: 'Luna',
-      email: 'sarah@example.com',
-      phone: '(555) 987-6543',
-      date: '2024-03-08',
-      status: 'approved',
-    },
-  ]
 
   const pendingApplications = useMemo(
     () => applications.filter((application) => application.status === 'pending'),
@@ -232,7 +205,7 @@ export default function AdminPage() {
               Admin Dashboard
             </h1>
             <p className="text-lg text-muted-foreground">
-              Manage platform operations, partner approvals, and rescue listings
+              Review shelter and rescuer applications to join AmponPH
             </p>
             <p className="mt-2 text-sm text-muted-foreground">{user.email}</p>
           </div>
@@ -246,241 +219,6 @@ export default function AdminPage() {
           </button>
         </div>
 
-        <div className="mb-8 flex flex-wrap gap-2 border-b border-border">
-          <button
-            onClick={() => setActiveTab('dogs')}
-            className={`border-b-2 px-6 py-4 font-semibold transition-colors ${
-              activeTab === 'dogs'
-                ? 'border-primary text-primary'
-                : 'border-transparent text-muted-foreground hover:text-foreground'
-            }`}
-          >
-            Manage Dogs
-          </button>
-          <button
-            onClick={() => setActiveTab('requests')}
-            className={`border-b-2 px-6 py-4 font-semibold transition-colors ${
-              activeTab === 'requests'
-                ? 'border-primary text-primary'
-                : 'border-transparent text-muted-foreground hover:text-foreground'
-            }`}
-          >
-            Adoption Requests
-          </button>
-          <button
-            onClick={() => setActiveTab('applications')}
-            className={`border-b-2 px-6 py-4 font-semibold transition-colors ${
-              activeTab === 'applications'
-                ? 'border-primary text-primary'
-                : 'border-transparent text-muted-foreground hover:text-foreground'
-            }`}
-          >
-            Partner Applications
-          </button>
-        </div>
-
-        {activeTab === 'dogs' && (
-          <div>
-            <div className="mb-8 flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-foreground">Dog Listings</h2>
-                <p className="text-muted-foreground">{mockDogs.length} dogs in your catalog</p>
-              </div>
-              <button
-                onClick={() => setShowAddModal(true)}
-                className="flex items-center gap-2 rounded-lg bg-primary px-6 py-2 font-semibold text-primary-foreground transition-opacity hover:opacity-90"
-              >
-                <Plus size={20} />
-                Add Dog
-              </button>
-            </div>
-
-            <div className="overflow-hidden rounded-lg border border-border bg-white dark:bg-card">
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="border-b border-border bg-secondary/5">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">
-                        Name
-                      </th>
-                      <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">
-                        Breed
-                      </th>
-                      <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">
-                        Age
-                      </th>
-                      <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">
-                        Size
-                      </th>
-                      <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">
-                        Location
-                      </th>
-                      <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">
-                        Status
-                      </th>
-                      <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {mockDogs.map((dog) => (
-                      <tr
-                        key={dog.id}
-                        className="border-b border-border transition-colors hover:bg-secondary/5"
-                      >
-                        <td className="px-6 py-4 text-sm font-medium text-foreground">
-                          {dog.name}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-muted-foreground">{dog.breed}</td>
-                        <td className="px-6 py-4 text-sm text-muted-foreground">{dog.age}</td>
-                        <td className="px-6 py-4 text-sm capitalize text-muted-foreground">
-                          {dog.size}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-muted-foreground">
-                          {dog.location}
-                        </td>
-                        <td className="px-6 py-4 text-sm">
-                          <span className="rounded-full bg-green-100 dark:bg-green-500/15 px-3 py-1 text-xs font-semibold text-green-800 dark:text-green-300">
-                            Available
-                          </span>
-                        </td>
-                        <td className="flex gap-2 px-6 py-4 text-sm">
-                          <button className="rounded p-2 text-primary transition-colors hover:bg-secondary/20">
-                            <Eye size={18} />
-                          </button>
-                          <button className="rounded p-2 text-primary transition-colors hover:bg-secondary/20">
-                            <Edit size={18} />
-                          </button>
-                          <button className="rounded p-2 text-red-600 dark:text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-500/10">
-                            <Trash2 size={18} />
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {showAddModal && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-                <div className="w-full max-w-md rounded-lg bg-white dark:bg-card p-8">
-                  <h3 className="mb-6 text-2xl font-bold text-foreground">Add New Dog</h3>
-                  <div className="mb-6 space-y-4">
-                    <div>
-                      <label className="mb-2 block text-sm font-medium text-foreground">
-                        Dog Name
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="e.g., Buddy"
-                        className="w-full rounded-lg border border-border bg-background px-4 py-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                      />
-                    </div>
-                    <div>
-                      <label className="mb-2 block text-sm font-medium text-foreground">
-                        Breed
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="e.g., Labrador"
-                        className="w-full rounded-lg border border-border bg-background px-4 py-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                      />
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="mb-2 block text-sm font-medium text-foreground">
-                          Age
-                        </label>
-                        <input
-                          type="number"
-                          placeholder="Years"
-                          className="w-full rounded-lg border border-border bg-background px-4 py-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                        />
-                      </div>
-                      <div>
-                        <label className="mb-2 block text-sm font-medium text-foreground">
-                          Size
-                        </label>
-                        <select className="w-full rounded-lg border border-border bg-background px-4 py-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary">
-                          <option>Small</option>
-                          <option>Medium</option>
-                          <option>Large</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex gap-3">
-                    <button
-                      onClick={() => setShowAddModal(false)}
-                      className="flex-1 rounded-lg border border-border px-4 py-2 font-semibold text-foreground transition-colors hover:bg-secondary/10"
-                    >
-                      Cancel
-                    </button>
-                    <button className="flex-1 rounded-lg bg-primary px-4 py-2 font-semibold text-primary-foreground transition-opacity hover:opacity-90">
-                      Add Dog
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {activeTab === 'requests' && (
-          <div>
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-foreground">Adoption Requests</h2>
-              <p className="text-muted-foreground">
-                {adoptionRequests.length} pending request{adoptionRequests.length !== 1 ? 's' : ''}
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              {adoptionRequests.map((request) => (
-                <div key={request.id} className="rounded-lg border border-border bg-white dark:bg-card p-6">
-                  <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                    <div className="flex-1">
-                      <h3 className="mb-2 text-lg font-bold text-foreground">{request.userName}</h3>
-                      <p className="mb-3 text-sm text-muted-foreground">
-                        Interested in: <span className="font-semibold">{request.dogName}</span>
-                      </p>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div className="text-sm">
-                          <p className="text-muted-foreground">Email</p>
-                          <p className="font-medium text-foreground">{request.email}</p>
-                        </div>
-                        <div className="text-sm">
-                          <p className="text-muted-foreground">Phone</p>
-                          <p className="font-medium text-foreground">{request.phone}</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex gap-2">
-                      <button
-                        className={`flex items-center gap-2 rounded-lg px-4 py-2 font-semibold transition-colors ${
-                          request.status === 'approved'
-                            ? 'bg-green-100 dark:bg-green-500/15 text-green-700 dark:text-green-300 hover:bg-green-200 dark:hover:bg-green-500/20'
-                            : 'border border-primary text-primary hover:bg-primary/10'
-                        }`}
-                      >
-                        <Check size={18} />
-                        Approve
-                      </button>
-                      <button className="flex items-center gap-2 rounded-lg border border-red-300 dark:border-red-500/30 px-4 py-2 font-semibold text-red-600 dark:text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-500/10">
-                        <X size={18} />
-                        Reject
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'applications' && (
           <div>
             <div className="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
               <div>
@@ -655,7 +393,6 @@ export default function AdminPage() {
               </div>
             )}
           </div>
-        )}
 
         {selectedApplication && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">

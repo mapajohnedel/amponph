@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { errorResponse, internalErrorResponse } from '@/lib/api/errors'
 import { isPartnerUser } from '@/lib/auth/roles'
 import {
   deleteCloudinaryImages,
@@ -78,7 +79,7 @@ export async function PATCH(
     const { data: pet, error: petError } = await getOwnedPet(supabase, id, user.id)
 
     if (petError) {
-      return NextResponse.json({ error: petError.message }, { status: 500 })
+      return internalErrorResponse(petError, 'Unable to load this pet listing.')
     }
 
     if (!pet) {
@@ -200,7 +201,7 @@ export async function PATCH(
       .single()
 
     if (updateError) {
-      return NextResponse.json({ error: updateError.message }, { status: 500 })
+      return internalErrorResponse(updateError, 'Unable to update the pet listing.')
     }
 
     let cleanupWarning: string | null = null
@@ -209,10 +210,8 @@ export async function PATCH(
       try {
         await deleteCloudinaryImages(deletablePublicIds)
       } catch (caughtError) {
-        cleanupWarning =
-          caughtError instanceof Error
-            ? caughtError.message
-            : 'The listing was updated, but some old Cloudinary images could not be deleted.'
+        console.error('Cloudinary cleanup failed.', caughtError)
+        cleanupWarning = 'The listing was updated, but some old Cloudinary images could not be deleted.'
       }
     }
 
@@ -227,10 +226,7 @@ export async function PATCH(
       pet: updatedPet,
     })
   } catch (caughtError) {
-    const message =
-      caughtError instanceof Error ? caughtError.message : 'Unable to update the pet listing.'
-
-    return NextResponse.json({ error: message }, { status: 500 })
+    return errorResponse(caughtError, 'Unable to update the pet listing.')
   }
 }
 
@@ -262,7 +258,7 @@ export async function DELETE(
       .maybeSingle()
 
     if (petError) {
-      return NextResponse.json({ error: petError.message }, { status: 500 })
+      return internalErrorResponse(petError, 'Unable to load this pet listing.')
     }
 
     if (!pet) {
@@ -276,7 +272,7 @@ export async function DELETE(
       .eq('partner_user_id', user.id)
 
     if (deleteError) {
-      return NextResponse.json({ error: deleteError.message }, { status: 500 })
+      return internalErrorResponse(deleteError, 'Unable to delete the pet listing.')
     }
 
     // Legacy or foreign IDs (outside this partner's folder) are skipped, never destroyed.
@@ -293,17 +289,12 @@ export async function DELETE(
     try {
       await deleteCloudinaryImages(deletablePublicIds)
     } catch (caughtError) {
-      cleanupWarning =
-        caughtError instanceof Error
-          ? caughtError.message
-          : 'The listing was deleted, but some Cloudinary images could not be removed.'
+      console.error('Cloudinary cleanup failed.', caughtError)
+      cleanupWarning = 'The listing was deleted, but some Cloudinary images could not be removed.'
     }
 
     return NextResponse.json({ success: true, cleanupWarning })
   } catch (caughtError) {
-    const message =
-      caughtError instanceof Error ? caughtError.message : 'Unable to delete the pet listing.'
-
-    return NextResponse.json({ error: message }, { status: 500 })
+    return errorResponse(caughtError, 'Unable to delete the pet listing.')
   }
 }

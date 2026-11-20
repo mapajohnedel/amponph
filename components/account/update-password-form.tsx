@@ -8,12 +8,14 @@ type UpdatePasswordFormProps = {
   title?: string
   description?: string
   className?: string
+  onSuccess?: () => void
 }
 
 export function UpdatePasswordForm({
   title = 'Update Password',
   description = 'Choose a new password for your account.',
   className,
+  onSuccess,
 }: UpdatePasswordFormProps) {
   const supabase = useMemo(() => createClient(), [])
   const [newPassword, setNewPassword] = useState('')
@@ -55,6 +57,7 @@ export function UpdatePasswordForm({
     setConfirmPassword('')
     setSuccessMessage('Your password has been updated successfully.')
     setIsSubmitting(false)
+    onSuccess?.()
   }
 
   return (

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { errorResponse, internalErrorResponse } from '@/lib/api/errors'
 import { isPartnerUser } from '@/lib/auth/roles'
 import { createClient } from '@/lib/supabase/server'
 
@@ -41,7 +42,7 @@ export async function POST(
       .maybeSingle()
 
     if (requestError) {
-      return NextResponse.json({ error: requestError.message }, { status: 500 })
+      return internalErrorResponse(requestError, 'Unable to load this adoption request.')
     }
 
     if (!requestRow) {
@@ -73,7 +74,7 @@ export async function POST(
       .select('id')
 
     if (updateError) {
-      return NextResponse.json({ error: updateError.message }, { status: 500 })
+      return internalErrorResponse(updateError, 'Unable to reject adoption request.')
     }
 
     if (!updatedRows || updatedRows.length === 0) {
@@ -85,8 +86,6 @@ export async function POST(
 
     return NextResponse.json({ success: true, message: 'Adoption request rejected.' })
   } catch (caughtError) {
-    const message =
-      caughtError instanceof Error ? caughtError.message : 'Unable to reject adoption request.'
-    return NextResponse.json({ error: message }, { status: 500 })
+    return errorResponse(caughtError, 'Unable to reject adoption request.')
   }
 }

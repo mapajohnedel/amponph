@@ -185,7 +185,10 @@ describe('DELETE /api/partner/pets/[id]', () => {
     const response = await callDelete()
 
     expect(response.status).toBe(200)
-    expect(await response.json()).toEqual({ success: true, cleanupWarning: 'Cloudinary down' })
+    expect(await response.json()).toEqual({
+      success: true,
+      cleanupWarning: 'The listing was deleted, but some Cloudinary images could not be removed.',
+    })
   })
 
   it('returns 404 when the pet is not owned', async () => {

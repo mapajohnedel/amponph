@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { errorResponse } from '@/lib/api/errors'
 import { isAdminUser } from '@/lib/auth/roles'
 import { partnerApplicationReviewSchema } from '@/lib/partner/applications'
 import { approvePartnerApplication } from '@/lib/partner/server'
@@ -28,8 +29,6 @@ export async function POST(
       ...result,
     })
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Failed to approve partner application.'
-    const status = message.includes('Only pending') ? 409 : 400
-    return NextResponse.json({ error: message }, { status })
+    return errorResponse(error, 'Failed to approve partner application.')
   }
 }

@@ -383,7 +383,7 @@ export default function AuthPage() {
               {isLogin && (
                 <div className="text-right">
                   <Link
-                    href="#"
+                    href="/auth/forgot-password"
                     className="text-sm font-medium text-primary transition-opacity hover:opacity-80"
                   >
                     Forgot password?

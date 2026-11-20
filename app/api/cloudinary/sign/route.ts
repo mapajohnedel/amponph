@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto'
 import { NextResponse } from 'next/server'
+import { errorResponse } from '@/lib/api/errors'
 import { isPartnerUser } from '@/lib/auth/roles'
 import { getPartnerPetImagesFolder } from '@/lib/cloudinary/shared'
 import { createClient } from '@/lib/supabase/server'
@@ -50,9 +51,6 @@ export async function POST() {
       timestamp,
     })
   } catch (caughtError) {
-    const message =
-      caughtError instanceof Error ? caughtError.message : 'Unable to prepare Cloudinary upload.'
-
-    return NextResponse.json({ error: message }, { status: 500 })
+    return errorResponse(caughtError, 'Unable to prepare Cloudinary upload.')
   }
 }
