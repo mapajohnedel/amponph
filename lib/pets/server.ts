@@ -1,7 +1,7 @@
 import 'server-only'
 
 import { catBreedOptions, dogBreedOptions } from '@/lib/breed-options'
-import type { Dog } from '@/lib/mock-dogs'
+import type { Dog } from '@/lib/pets/types'
 import { createClient } from '@/lib/supabase/server'
 
 type PetRow = {

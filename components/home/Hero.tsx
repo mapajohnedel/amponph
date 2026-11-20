@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight, Heart, Search, ShieldCheck } from 'lucide-react'
-import type { Dog } from '@/lib/mock-dogs'
+import type { Dog } from '@/lib/pets/types'
 
 type HeroProps = {
   dogs: Dog[]

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { ArrowRight, Heart, MapPin } from 'lucide-react'
 import { useAuthUser } from '@/hooks/use-auth-user'
 import { toast } from '@/hooks/use-toast'
-import type { Dog } from '@/lib/mock-dogs'
+import type { Dog } from '@/lib/pets/types'
 
 type DogCardProps = {
   dog: Dog

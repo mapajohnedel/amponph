@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { ArrowRight, HeartHandshake, Search } from 'lucide-react'
 import { DogCard } from '@/components/dog-card'
 import { DogFilter } from '@/components/dog-filter'
-import { type Dog } from '@/lib/mock-dogs'
+import type { Dog } from '@/lib/pets/types'
 import { BrowsePagination } from './browse-pagination'
 
 type BrowsePageClientProps = {
